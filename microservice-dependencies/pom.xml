@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.somnus</groupId>
+    <artifactId>microservice-dependencies</artifactId>
+    <version>2.0.0.RELEASE</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <spring-boot.version>2.4.6</spring-boot.version>
+        <spring-cloud.version>2020.0.4</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
+
+        <dubbo.version>2.7.8</dubbo.version>
+        <dubbo-spring-boot.version>2.7.8</dubbo-spring-boot.version>
+        <dubbo-registry-nacos.version>2.7.8</dubbo-registry-nacos.version>
+        <dubbo-serialization-kryo.version>2.7.14</dubbo-serialization-kryo.version>
+        <reactivefeign.version>3.1.1</reactivefeign.version>
+        <mybatis-plus.version>3.4.3</mybatis-plus.version>
+        <alibaba-druid.version>1.1.14</alibaba-druid.version>
+        <alibaba-easyexcel.version>2.2.3</alibaba-easyexcel.version>
+        <redisson.version>3.11.3</redisson.version>
+        <google-guava.version>27.1-jre</google-guava.version>
+        <netease-cloud.version>1.3.1</netease-cloud.version>
+        <aliyun-oss.version>3.4.2</aliyun-oss.version>
+        <ucloud-ufile.version>2.4.4</ucloud-ufile.version>
+        <modelmapper.version>2.3.3</modelmapper.version>
+        <user-agent.version>1.21</user-agent.version>
+        <wechat.version>3.4.0</wechat.version>
+        <logstash-logback.version>5.0</logstash-logback.version>
+        <logback-kafka.version>0.2.0-RC2</logback-kafka.version>
+        <elastic-job.version>2.1.5</elastic-job.version>
+        <elasticjob.version>3.0.1</elasticjob.version>
+        <curator.version>5.2.0</curator.version>
+        <springfox.version>3.0.0</springfox.version>
+        <persistence-api.version>2.2</persistence-api.version>
+
+        <repo.distribution.release.id>wt-releases</repo.distribution.release.id>
+        <repo.distribution.release.url>https://maven.aliyun.com/repository/releases</repo.distribution.release.url>
+        <repo.distribution.snapshot.id>wt-snapshots</repo.distribution.snapshot.id>
+        <repo.distribution.snapshot.url>https://maven.aliyun.com/repository/snapshots</repo.distribution.snapshot.url>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Spring Cloud Dependencies-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Spring Cloud Alibaba-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Apache Dubbo  -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-dependencies-bom</artifactId>
+                <version>${dubbo.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Dubbo  -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo-spring-boot.version}</version>
+            </dependency>
+            <!-- Dubbo Nacos registry dependency -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-registry-nacos</artifactId>
+                <version>${dubbo-registry-nacos.version}</version>
+            </dependency>
+            <!-- Dubbo kryo dependency -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-serialization-kryo</artifactId>
+                <version>${dubbo-serialization-kryo.version}</version>
+            </dependency>
+
+            <!-- Reactive Feign-->
+            <dependency>
+                <groupId>com.playtika.reactivefeign</groupId>
+                <artifactId>feign-reactor-cloud</artifactId>
+                <version>${reactivefeign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.playtika.reactivefeign</groupId>
+                <artifactId>feign-reactor-webclient</artifactId>
+                <version>${reactivefeign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.playtika.reactivefeign</groupId>
+                <artifactId>feign-reactor-spring-configuration</artifactId>
+                <version>${reactivefeign.version}</version>
+            </dependency>
+
+            <!-- Mybatis -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- Redisson -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-data-21</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+
+            <!-- for swagger -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-boot-starter</artifactId>
+                <version>${springfox.version}</version>
+            </dependency>
+            <!-- for swagger -->
+
+            <dependency>
+                <groupId>org.apache.shardingsphere.elasticjob</groupId>
+                <artifactId>elasticjob-lite-spring-boot-starter</artifactId>
+                <version>${elasticjob.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${alibaba-easyexcel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google-guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.modelmapper</groupId>
+                <artifactId>modelmapper</artifactId>
+                <version>${modelmapper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>eu.bitwalker</groupId>
+                <artifactId>UserAgentUtils</artifactId>
+                <version>${user-agent.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.netease.cloud</groupId>
+                <artifactId>nos-sdk-java-publiccloud</artifactId>
+                <version>${netease-cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun-oss.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.ucloud.ufile</groupId>
+                <artifactId>ufile-client-java</artifactId>
+                <version>${ucloud-ufile.version}</version>
+            </dependency>
+            <!-- 微信开发 Java SDK（开发工具包） -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-mp</artifactId>
+                <version>${wechat.version}</version>
+            </dependency>
+            <!--logstash依赖-->
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${logstash-logback.version}</version>
+            </dependency>
+            <!--logback-kafka-appender依赖-->
+            <dependency>
+                <groupId>com.github.danielwegener</groupId>
+                <artifactId>logback-kafka-appender</artifactId>
+                <version>${logback-kafka.version}</version>
+            </dependency>
+            <!-- elastic-job依赖-->
+            <dependency>
+                <groupId>com.dangdang</groupId>
+                <artifactId>elastic-job-lite-core</artifactId>
+                <version>${elastic-job.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dangdang</groupId>
+                <artifactId>elastic-job-lite-spring</artifactId>
+                <version>${elastic-job.version}</version>
+            </dependency>
+            <!--<dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-recipes</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-framework</artifactId>
+                <version>${curator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.curator</groupId>
+                <artifactId>curator-client</artifactId>
+                <version>${curator.version}</version>
+            </dependency>-->
+
+            <dependency>
+                <groupId>javax.persistence</groupId>
+                <artifactId>javax.persistence-api</artifactId>
+                <version>${persistence-api.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <distributionManagement>
+        <!-- 正式版本发布仓库 -->
+        <repository>
+            <id>${repo.distribution.release.id}</id>
+            <url>${repo.distribution.release.url}</url>
+        </repository>
+        <!-- 快照版本发布仓库 -->
+        <snapshotRepository>
+            <id>${repo.distribution.snapshot.id}</id>
+            <url>${repo.distribution.snapshot.url}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>
