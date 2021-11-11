@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.somnus.microservice.commons.dubbo.core.DubboAutoConfiguration
