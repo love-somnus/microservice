@@ -1,6 +1,5 @@
 package com.somnus.microservice.commons.base.request;
 
-import com.somnus.microservice.commons.utils.JacksonUtil;
 import lombok.Data;
 
 /**
@@ -24,11 +23,6 @@ public class BaiduStatisticsMessage {
     public BaiduStatisticsMessage(BaiduStatisticsHeader header, BaiduStatisticsBody body){
         this.header = header;
         this.body = body;
-    }
-
-    @Override
-    public String toString(){
-        return JacksonUtil.toJson(this);
     }
 
 }

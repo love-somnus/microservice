@@ -1,6 +1,5 @@
 package com.somnus.microservice.commons.base.enums;
 
-import com.somnus.microservice.commons.utils.PublicUtil;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 import lombok.AccessLevel;
@@ -76,28 +75,6 @@ public enum PlatformEnum {
             }
         }
         return null;
-    }
-
-    public static String typeOf(String orderType, String platform){
-        if(PublicUtil.isEmpty(orderType)){
-            String type = "";
-            PlatformEnum platformEnum = PlatformEnum.platOf(platform);
-            switch (platformEnum) {
-                case ANDROID:
-                    type = "android";
-                    break;
-                case IPAD:
-                case IPHONE:
-                    type = "ios";
-                    break;
-                case WINDOWS:
-                case MAC:
-                    type = "pc";
-                    break;
-            }
-            return type;
-        }
-        return orderType;
     }
 
 }

@@ -1,7 +1,7 @@
 package com.somnus.microservice.provider.oauth2.api.service.hystrix;
 
-import com.somnus.microservice.commons.utils.wrapper.WrapMapper;
-import com.somnus.microservice.commons.utils.wrapper.Wrapper;
+import com.somnus.microservice.commons.base.wrapper.WrapMapper;
+import com.somnus.microservice.commons.base.wrapper.Wrapper;
 import com.somnus.microservice.provider.oauth2.api.service.AuthenticateFeignApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

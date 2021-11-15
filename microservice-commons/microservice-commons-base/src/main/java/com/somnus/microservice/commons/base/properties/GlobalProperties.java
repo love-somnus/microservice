@@ -12,8 +12,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.somnus.microservice.commons.utils.MathsUtil;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.commons.base.properties
@@ -345,5 +346,27 @@ public class GlobalProperties implements Serializable {
     @Override
     public String toString() {
         return map.toString();
+    }
+
+    public static class MathsUtil {
+        private static final char ASTERISK = '*';
+
+        public static Long calculate(String value) {
+            if (StringUtils.isEmpty(value)) {
+                return null;
+            }
+
+            long result = 1;
+            try {
+                String[] array = StringUtils.split(value, ASTERISK);
+                for (String data : array) {
+                    result *= Long.parseLong(data.trim());
+                }
+            } catch (NumberFormatException e) {
+                return null;
+            }
+
+            return result;
+        }
     }
 }
