@@ -40,7 +40,7 @@ import java.util.LinkedList;
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
-    private final String[] urls = {"/swagger-ui/**","/swagger-resources/**","/uac/v3/api-docs"};
+    private final String[] urls = {"/login", "/swagger-ui/**","/swagger-resources/**","/uac/v3/api-docs"};
 
     @Lazy
     @Autowired

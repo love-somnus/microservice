@@ -28,10 +28,15 @@ public class DefaultAccessDeniedHandler implements ServerAccessDeniedHandler {
         return Mono.defer(() -> Mono.just(exchange.getResponse()))
                 .flatMap(response -> {
                     response.setStatusCode(HttpStatus.OK);
+
                     response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
                     DataBufferFactory dataBufferFactory = response.bufferFactory();
+
                     String result = JacksonUtil.toJson(WrapMapper.fail(ErrorCodeEnum.PERMISSION_DENIED));
+
                     DataBuffer buffer = dataBufferFactory.wrap(result.getBytes(Charset.defaultCharset()));
+
                     return response.writeWith(Mono.just(buffer));
                 });
     }

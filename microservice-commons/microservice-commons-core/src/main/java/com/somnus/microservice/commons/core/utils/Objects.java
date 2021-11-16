@@ -1,10 +1,6 @@
 package com.somnus.microservice.commons.core.utils;
 
 import lombok.SneakyThrows;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.converters.BigDecimalConverter;
-import org.apache.commons.beanutils.converters.DateConverter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.util.StringUtils;
@@ -12,7 +8,6 @@ import org.springframework.util.StringUtils;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -24,19 +19,6 @@ import java.util.stream.Collectors;
  * @date 2021/2/4 15:46
  */
 public abstract class Objects {
-
-    static {
-        BigDecimalConverter bdc = new BigDecimalConverter(null);
-        ConvertUtils.register(bdc, java.math.BigDecimal.class);
-
-        DateConverter dc = new DateConverter(null);
-        String[] patterns = {"yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd", };
-        dc.setPatterns(patterns);
-        //Date顺利被转换成String
-        ConvertUtils.register(dc, String.class);
-        //null可以用来正常转换
-        ConvertUtils.register(dc, java.util.Date.class);
-    }
 
     /**
      * 对象转换
@@ -96,24 +78,6 @@ public abstract class Objects {
         return list;
     }
 
-
-
-    /**
-     * map转换为Object
-     * @param map
-     * @param clazz
-     * @param <P>
-     * @return
-     */
-    @SneakyThrows
-    public static <P> P convert(Map<String, Object> map, Class<P> clazz){
-
-        P p = clazz.newInstance();
-
-        BeanUtils.populate(p, map);
-
-        return p;
-    }
 
     /**
      * 判断对象是否为空，且对象的所有属性都为空

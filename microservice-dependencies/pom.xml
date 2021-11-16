@@ -28,6 +28,7 @@
         <ucloud-ufile.version>2.4.4</ucloud-ufile.version>
         <modelmapper.version>2.3.3</modelmapper.version>
         <user-agent.version>1.21</user-agent.version>
+        <jjwt.version>0.11.2</jjwt.version>
         <wechat.version>3.4.0</wechat.version>
         <logstash-logback.version>5.0</logstash-logback.version>
         <logback-kafka.version>0.2.0-RC2</logback-kafka.version>
@@ -115,6 +116,18 @@
                 <groupId>com.playtika.reactivefeign</groupId>
                 <artifactId>feign-reactor-spring-configuration</artifactId>
                 <version>${reactivefeign.version}</version>
+            </dependency>
+
+            <!-- JWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
 
             <!-- Mybatis -->
@@ -216,21 +229,6 @@
                 <artifactId>elastic-job-lite-spring</artifactId>
                 <version>${elastic-job.version}</version>
             </dependency>
-            <!--<dependency>
-                <groupId>org.apache.curator</groupId>
-                <artifactId>curator-recipes</artifactId>
-                <version>${curator.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.curator</groupId>
-                <artifactId>curator-framework</artifactId>
-                <version>${curator.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.curator</groupId>
-                <artifactId>curator-client</artifactId>
-                <version>${curator.version}</version>
-            </dependency>-->
 
             <dependency>
                 <groupId>javax.persistence</groupId>

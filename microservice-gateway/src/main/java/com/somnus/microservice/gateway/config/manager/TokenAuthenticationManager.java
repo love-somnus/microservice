@@ -27,8 +27,8 @@ public class TokenAuthenticationManager implements ReactiveAuthenticationManager
                 .map(claims -> {
                     Collection<? extends GrantedAuthority> roles = (Collection<? extends GrantedAuthority>) claims.get("roles");
                     return new UsernamePasswordAuthenticationToken(
-                            claims.getSubject(),
-                            null,
+                            claims.get("username"),
+                            claims.get("realname"),
                             roles
                     );
                 });

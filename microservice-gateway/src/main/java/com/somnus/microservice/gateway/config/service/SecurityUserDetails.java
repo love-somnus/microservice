@@ -17,15 +17,15 @@ public class SecurityUserDetails extends User implements Serializable {
 
     @Getter
     @Setter
-    private Long userId;
+    private String realname;
 
     public SecurityUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities, Long userId) {
         super(username, password, authorities);
-        this.userId = userId;
+        this.realname = realname;
     }
 
-    public SecurityUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities, Long userId) {
+    public SecurityUserDetails(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities, String realname) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-        this.userId = userId;
+        this.realname = realname;
     }
 }

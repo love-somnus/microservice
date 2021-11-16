@@ -26,11 +26,17 @@ public class DefaultAuthenticationEntryPoint implements ServerAuthenticationEntr
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException ex) {
         return Mono.defer(() -> Mono.just(exchange.getResponse())).flatMap(response -> {
+
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
+
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
             DataBufferFactory dataBufferFactory = response.bufferFactory();
+
             String result = JacksonUtil.toJson(WrapMapper.fail(ErrorCodeEnum.USER_UNAUTHORIZED));
+
             DataBuffer buffer = dataBufferFactory.wrap(result.getBytes(Charset.defaultCharset()));
+
             return response.writeWith(Mono.just(buffer));
         });
     }

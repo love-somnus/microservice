@@ -1,18 +1,18 @@
 package com.somnus.microservice.commons.base.utils;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Ints;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClock;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Date;
 import java.util.Map;
@@ -26,34 +26,17 @@ import java.util.Map;
 @Slf4j
 public class JwtTokenUtil {
 
-    private final static Clock CLOCK = DefaultClock.INSTANCE;
+    private static final Clock CLOCK = DefaultClock.INSTANCE;
 
+    private static final String secretKey = "V1beFinb07YUJuAjdBevbvCqv9FNqyw4KhM5bMKxCyU=";
 
-    /* 寻找证书文件 */
-    private static final InputStream INPUT_STREAM = Thread.currentThread().getContextClassLoader().getResourceAsStream("mirror-privateKey.jks");
-    private static PrivateKey privateKey = null;
-    private static PublicKey publicKey = null;
-
-    static { // 将证书文件里边的私钥公钥拿出来
-        try {
-            /* java key store 固定常量 */
-            KeyStore keyStore = KeyStore.getInstance("JKS");
-            keyStore.load(INPUT_STREAM, "3d-mirror".toCharArray());
-            /* jwt 为 命令生成整数文件时的别名*/
-            privateKey = (PrivateKey) keyStore.getKey("mirror-privateKey", "3d-mirror".toCharArray());
-            publicKey = keyStore.getCertificate("mirror-privateKey").getPublicKey();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
+    private static final Key key = new SecretKeySpec(secretKey.getBytes(), "HmacSHA256");
 
     /**
      * @date 2021/3/9 17:36
      * @description 生成jwt token
      */
     public static String generateToken(Map<String, Object> claims, String subject, long expiration, TemporalUnit unit) {
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.RS256;
         /* 生成签名密钥 */
         final Date createdDate = CLOCK.now();
         final LocalDateTime expirationDate = LocalDateTime.ofInstant(createdDate.toInstant(), ZoneId.systemDefault()).plus(expiration, unit);
@@ -62,7 +45,7 @@ public class JwtTokenUtil {
                 .setSubject(subject)
                 .setIssuedAt(createdDate)
                 .setExpiration(Date.from(expirationDate.atZone(ZoneId.systemDefault()).toInstant()))
-                .signWith(privateKey)
+                .signWith(key)
                 .compact();
     }
 
@@ -74,9 +57,18 @@ public class JwtTokenUtil {
      */
     public static Claims parseJwtRsa256(String jwt) {
         return Jwts.parserBuilder()
-                .setSigningKey(publicKey)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
+    }
+
+    public static void main(String[] args) {
+        String jwt = JwtTokenUtil.generateToken(ImmutableMap.of(
+                "userId", 1,
+                "username", "admin",
+                "roles", Ints.asList(1, 2, 3)), "jwt", 8L, ChronoUnit.HOURS);
+        System.out.println(jwt);
+        System.out.println(JwtTokenUtil.parseJwtRsa256(jwt));
     }
 }

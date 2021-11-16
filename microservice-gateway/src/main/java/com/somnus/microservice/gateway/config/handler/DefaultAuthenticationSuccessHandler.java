@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,17 +42,25 @@ public class DefaultAuthenticationSuccessHandler implements ServerAuthentication
     @Override
     public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange, Authentication authentication) {
         return Mono.defer(() -> Mono.just(webFilterExchange.getExchange().getResponse()).flatMap(response -> {
+
             DataBufferFactory dataBufferFactory = response.bufferFactory();
+
             // 生成JWT token
-            Map<String, Object> map = new HashMap<>(2);
             SecurityUserDetails userDetails = (SecurityUserDetails) authentication.getPrincipal();
-            map.put("userId", userDetails.getUserId());
-            map.put("username", userDetails.getUsername());
-            map.put("roles",userDetails.getAuthorities());
-            String token = JwtTokenUtil.generateToken(map, userDetails.getUsername(), jwtTokenExpired, ChronoUnit.HOURS);
-            String refreshToken = JwtTokenUtil.generateToken(map, userDetails.getUsername(), jwtTokenRefreshExpired, ChronoUnit.HOURS);
+
+            Map<String, Object> claims = ImmutableMap.of(
+                    "realname", userDetails.getRealname(),
+                    "username", userDetails.getUsername(),
+                    "roles", userDetails.getAuthorities());
+
+            String token = JwtTokenUtil.generateToken(claims, userDetails.getUsername(), jwtTokenExpired, ChronoUnit.HOURS);
+
+            String refreshToken = JwtTokenUtil.generateToken(claims, userDetails.getUsername(), jwtTokenRefreshExpired, ChronoUnit.HOURS);
+
             Map<String, Object> tokenMap = ImmutableMap.of("token", token, "refreshToken", refreshToken);
+
             DataBuffer dataBuffer = dataBufferFactory.wrap(JacksonUtil.toJson(WrapMapper.success(tokenMap)).getBytes());
+
             return response.writeWith(Mono.just(dataBuffer));
         }));
     }
