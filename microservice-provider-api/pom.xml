@@ -13,6 +13,7 @@
     <artifactId>microservice-provider-api</artifactId>
 
     <modules>
+        <module>microservice-provider-cpc-api</module>
         <module>microservice-provider-oauth2-api</module>
     </modules>
 

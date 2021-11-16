@@ -28,7 +28,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-authorization-server</artifactId>
-            <version>0.2.0</version> <!--  截至现在版本  -->
+            <version>0.2.0</version>
         </dependency>
 
         <!--<dependency>

@@ -40,7 +40,7 @@ import java.util.UUID;
  * @author kevin.liu
  * @title: AuthorizationServerConfiguration
  * @projectName oauth2
- * @description: TODO
+ * @description: http://192.168.97.101:8002/oauth2/token?client_id=micro-client&client_secret=micro-secret&grant_type=client_credentials
  * @date 2021/11/16 13:55
  */
 @Configuration(proxyBeanMethods = false)
@@ -72,10 +72,10 @@ public class AuthorizationServerConfiguration {
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 /* 客户端ID和密码 */
-                .clientId("client")
-                .clientSecret("secret")
+                .clientId("micro-client")
+                .clientSecret("micro-secret")
                 /* 授权方法 */
-                .clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 /* 授权类型 */
                 .authorizationGrantTypes(authorizationGrantTypes ->
                         authorizationGrantTypes.addAll(Arrays.asList(
@@ -85,16 +85,16 @@ public class AuthorizationServerConfiguration {
                 /* 回调地址名单，不在此列将被拒绝 而且只能使用IP或者域名  不能使用 localhost */
                 .redirectUris(redirectUris ->
                         redirectUris.addAll(Collections.singletonList(
-                                "http://127.0.0.1:8002/authorized"
+                                "http://192.168.97.101:8002/authorized"
                         )))
                 .scopes(scopes -> scopes.addAll(Arrays.asList(OidcScopes.OPENID, "message.read", "message.write")))
                 /* JWT的配置项 包括 TTL  是否复用refreshToken等等 */
-                .tokenSettings(TokenSettings.builder().build())
+                .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofMinutes(60L)).build())
                 /* 配置客户端相关的配置项，包括验证密钥或者 是否需要授权页面 */
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
 
-                /* 每次都会初始化 生产的话 只初始化 JdbcRegisteredClientRepository */
+        /* 每次都会初始化 生产的话 只初始化 JdbcRegisteredClientRepository */
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
 
         registeredClientRepository.save(registeredClient);
@@ -134,12 +134,6 @@ public class AuthorizationServerConfiguration {
     public ProviderSettings providerSettings(@Value("${server.port}") Integer port) {
         return ProviderSettings.builder()
                 .issuer("http://localhost:" + port)
-                .build();
-    }
-    @Bean
-    public TokenSettings tokenSettings() {
-        return TokenSettings.builder()
-                .accessTokenTimeToLive(Duration.ofMinutes(30L))
                 .build();
     }
 

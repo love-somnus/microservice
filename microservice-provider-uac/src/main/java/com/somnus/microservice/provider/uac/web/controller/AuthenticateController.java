@@ -1,6 +1,6 @@
 package com.somnus.microservice.provider.uac.web.controller;
 
-import com.somnus.microservice.provider.oauth2.api.service.AuthenticateFeignApi;
+import com.somnus.microservice.provider.cpc.api.service.AuthenticateFeignApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
