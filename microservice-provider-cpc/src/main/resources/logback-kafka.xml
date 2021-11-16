@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- scan 配置文件如果发生改变，将会被重新加载  scanPeriod 检测间隔时间 【ColorConverter可以搜索定位base.xml】-->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty scope="context" name="kafkaTopic" source="logstash.kafka.topic"/>
+    <springProperty scope="context" name="bootstrapServers" source="logstash.kafka.bootstrap-servers"/>
+
+    <!-- This is the kafkaAppender -->
+    <appender name="kafkaAppender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{80} Line:%-3L - %msg%n</pattern>
+        </encoder>
+        <topic>${kafkaTopic}</topic>
+        <!-- we don't care how the log messages will be partitioned  -->
+        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy" />
+
+        <!-- use async delivery. the application threads are not blocked by logging -->
+        <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy" />
+
+        <!-- each <producerConfig> translates to regular kafka-client config (format: key=value) -->
+        <!-- producer configs are documented here: https://kafka.apache.org/documentation.html#newproducerconfigs -->
+        <!-- bootstrap.servers is the only mandatory producerConfig -->
+        <producerConfig>bootstrap.servers=${bootstrapServers}</producerConfig>
+        <!-- don't wait for a broker to ack the reception of a batch.  -->
+        <producerConfig>acks=0</producerConfig>
+        <!-- wait up to 1000ms and collect log messages before sending them as a batch -->
+        <producerConfig>linger.ms=1000</producerConfig>
+        <!-- even if the producer buffer runs full, do not block the application but start to drop messages -->
+        <producerConfig>max.block.ms=0</producerConfig>
+        <!-- define a client-id that you use to identify yourself against the kafka broker -->
+        <producerConfig>client.id=${HOSTNAME}-${CONTEXT_NAME}-logback-relaxed</producerConfig>
+    </appender>
+
+    <!-- 控制台 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 日志格式 -->
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf-8</charset>
+        </encoder>
+        <!--此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+
+    <!-- additivity 避免执行2次 -->
+    <logger name="com.somnus.microservice.provider.oauth2c.mapper"  level="DEBUG"  additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- additivity 避免执行2次 -->
+    <logger name="com.alibaba.nacos.client.naming"  level="ERROR"  additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- additivity 避免执行2次 -->
+    <logger name="com.zaxxer.hikari.HikariDataSource"  level="ERROR"  additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- additivity 避免执行2次 -->
+    <logger name="org.springframework.validation.DataBinder"  level="ERROR"  additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <springProfile name="dev,test">
+        <root level="INFO">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="kafkaAppender" />
+        </root>
+    </springProfile>
+
+    <springProfile name="pre,hk_pre,prod,hk_prod">
+        <root level="INFO">
+            <appender-ref ref="kafkaAppender" />
+        </root>
+    </springProfile>
+</configuration>
