@@ -1,6 +1,6 @@
 package com.somnus.microservice.gateway.config.manager;
 
-import com.somnus.microservice.commons.base.utils.JwtTokenUtil;
+import com.somnus.microservice.commons.base.utils.JwksUtil;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +23,7 @@ public class TokenAuthenticationManager implements ReactiveAuthenticationManager
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
         return Mono.just(authentication)
-                .map(auth -> JwtTokenUtil.parseJwtRsa256(auth.getPrincipal().toString()))
+                .map(auth -> JwksUtil.parseJwtRsa256(auth.getPrincipal().toString()))
                 .map(claims -> {
                     Collection<? extends GrantedAuthority> roles = (Collection<? extends GrantedAuthority>) claims.get("roles");
                     return new UsernamePasswordAuthenticationToken(

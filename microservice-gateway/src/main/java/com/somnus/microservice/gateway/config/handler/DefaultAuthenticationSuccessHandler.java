@@ -2,7 +2,7 @@ package com.somnus.microservice.gateway.config.handler;
 
 import com.google.common.collect.ImmutableMap;
 import com.somnus.microservice.commons.base.utils.JacksonUtil;
-import com.somnus.microservice.commons.base.utils.JwtTokenUtil;
+import com.somnus.microservice.commons.base.utils.JwksUtil;
 import com.somnus.microservice.commons.base.wrapper.WrapMapper;
 import com.somnus.microservice.gateway.config.service.SecurityUserDetails;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,9 +53,9 @@ public class DefaultAuthenticationSuccessHandler implements ServerAuthentication
                     "username", userDetails.getUsername(),
                     "roles", userDetails.getAuthorities());
 
-            String token = JwtTokenUtil.generateToken(claims, userDetails.getUsername(), jwtTokenExpired, ChronoUnit.HOURS);
+            String token = JwksUtil.generateToken(claims, userDetails.getUsername(), jwtTokenExpired, ChronoUnit.HOURS);
 
-            String refreshToken = JwtTokenUtil.generateToken(claims, userDetails.getUsername(), jwtTokenRefreshExpired, ChronoUnit.HOURS);
+            String refreshToken = JwksUtil.generateToken(claims, userDetails.getUsername(), jwtTokenRefreshExpired, ChronoUnit.HOURS);
 
             Map<String, Object> tokenMap = ImmutableMap.of("token", token, "refreshToken", refreshToken);
 

@@ -31,7 +31,7 @@ import java.util.LinkedList;
  * @author Kevin
  * @packageName com.somnus.microservice.gateway.config
  * @title: WebFluxSecurityConfig
- * @description: TODO
+ * @description: webflux security核心配置类
  * @date 2021/11/11 19:09
  */
 @RefreshScope
