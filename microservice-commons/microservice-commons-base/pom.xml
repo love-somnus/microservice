@@ -54,6 +54,17 @@
             <artifactId>jjwt-impl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>nimbus-jose-jwt</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-rsa</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- httpclient -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

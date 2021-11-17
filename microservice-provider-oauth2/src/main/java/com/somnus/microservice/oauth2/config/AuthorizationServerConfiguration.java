@@ -4,6 +4,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.somnus.microservice.commons.base.utils.JwksUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,7 +76,7 @@ public class AuthorizationServerConfiguration {
                 .clientId("micro-client")
                 .clientSecret("micro-secret")
                 /* 授权方法 */
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
                 /* 授权类型 */
                 .authorizationGrantTypes(authorizationGrantTypes ->
                         authorizationGrantTypes.addAll(Arrays.asList(
@@ -115,7 +116,7 @@ public class AuthorizationServerConfiguration {
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
-        RSAKey rsaKey = Jwks.generateRsa();
+        RSAKey rsaKey = JwksUtil.generateRsa();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
     }
