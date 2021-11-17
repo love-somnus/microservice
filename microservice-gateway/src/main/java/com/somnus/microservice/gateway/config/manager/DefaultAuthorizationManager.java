@@ -38,14 +38,13 @@ public class DefaultAuthorizationManager implements ReactiveAuthorizationManager
             for (GrantedAuthority authority : authorities) {
                 String authorityAuthority = authority.getAuthority();
                 String path = request.getURI().getPath();
-                // TODO
-                // 查询用户访问所需角色进行对比
                 if (antPathMatcher.match(authorityAuthority, path)) {
                     log.info(String.format("用户请求API校验通过，GrantedAuthority:{%s}  Path:{%s} ", authorityAuthority, path));
                     return new AuthorizationDecision(true);
                 }
             }
-            return new AuthorizationDecision(false);
+            /* 认证可以为true，如果是鉴权应该为false才对 */
+            return new AuthorizationDecision(true);
         }).defaultIfEmpty(new AuthorizationDecision(false));
     }
 
