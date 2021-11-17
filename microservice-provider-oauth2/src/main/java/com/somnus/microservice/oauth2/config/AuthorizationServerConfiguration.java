@@ -41,7 +41,6 @@ import java.util.UUID;
  * @author kevin.liu
  * @title: AuthorizationServerConfiguration
  * @projectName oauth2
- * @description: http://192.168.97.101:8002/oauth2/token?client_id=micro-client&client_secret=micro-secret&grant_type=client_credentials
  * @date 2021/11/16 13:55
  */
 @Configuration(proxyBeanMethods = false)
@@ -76,23 +75,42 @@ public class AuthorizationServerConfiguration {
                 .clientId("micro-client")
                 .clientSecret("micro-secret")
                 /* 授权方法 */
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 /* 授权类型 */
                 .authorizationGrantTypes(authorizationGrantTypes ->
                         authorizationGrantTypes.addAll(Arrays.asList(
+                                // 授权码
                                 AuthorizationGrantType.AUTHORIZATION_CODE,
+                                // 刷新token
                                 AuthorizationGrantType.REFRESH_TOKEN,
-                                AuthorizationGrantType.CLIENT_CREDENTIALS)))
-                /* 回调地址名单，不在此列将被拒绝 而且只能使用IP或者域名  不能使用 localhost */
+                                // 客户端模式
+                                AuthorizationGrantType.CLIENT_CREDENTIALS,
+                                // 密码模式
+                                AuthorizationGrantType.PASSWORD
+                                )
+                        )
+                )
+                // 重定向url
                 .redirectUris(redirectUris ->
-                        redirectUris.addAll(Collections.singletonList(
-                                "http://192.168.97.101:8002/authorized"
-                        )))
+                        redirectUris.addAll(Collections.singletonList("https://www.baidu.com"))
+                )
+                // 客户端申请的作用域，也可以理解这个客户端申请访问用户的哪些信息，比如：获取用户信息，获取用户照片等
                 .scopes(scopes -> scopes.addAll(Arrays.asList(OidcScopes.OPENID, "message.read", "message.write")))
-                /* JWT的配置项 包括 TTL  是否复用refreshToken等等 */
-                .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofMinutes(60L)).build())
-                /* 配置客户端相关的配置项，包括验证密钥或者 是否需要授权页面 */
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .tokenSettings(TokenSettings.builder()
+                        // accessToken 的有效期
+                        .accessTokenTimeToLive(Duration.ofHours(12L))
+                        // refreshToken 的有效期
+                        .refreshTokenTimeToLive(Duration.ofHours(12L))
+                        // 是否可重用刷新令牌
+                        .reuseRefreshTokens(true)
+                        .build()
+                )
+                // 是否需要用户确认一下客户端需要获取用户的哪些权限
+                // 比如：客户端需要获取用户的 用户信息、用户照片 但是此处用户可以控制只给客户端授权获取 用户信息。
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(true)
+                        .build()
+                )
                 .build();
 
         /* 每次都会初始化 生产的话 只初始化 JdbcRegisteredClientRepository */
@@ -134,6 +152,14 @@ public class AuthorizationServerConfiguration {
     @Bean
     public ProviderSettings providerSettings(@Value("${server.port}") Integer port) {
         return ProviderSettings.builder()
+                // 配置获取token的端点路径(当前是默认的，可以更改)
+                .tokenEndpoint("/oauth2/token")
+                // 配置获取code的端点路径(当前是默认的，可以更改)
+                .authorizationEndpoint("/oauth2/authorize")
+                // 配置查看code的端点路径(当前是默认的，可以更改)
+                .tokenIntrospectionEndpoint("/oauth2/introspect")
+                // 配置查看jwk的端点路径(当前是默认的，可以更改)
+                .jwkSetEndpoint("/oauth2/jwks")
                 .issuer("http://localhost:" + port)
                 .build();
     }

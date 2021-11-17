@@ -40,11 +40,6 @@ public class DefaultSecurityConfiguration {
         return new InMemoryUserDetailsManager(userDetails);
     }
 
-    /**
-     * Web security customizer web security customizer.
-     *
-     * @return the web security customizer
-     */
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().antMatchers("/actuator/health","/h2-console/**");
