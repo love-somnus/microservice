@@ -42,7 +42,6 @@
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -120,6 +119,16 @@
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
+        </dependency>
+
+        <!-- 云上传 -->
+        <dependency>
+            <groupId>com.netease.cloud</groupId>
+            <artifactId>nos-sdk-java-publiccloud</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
         </dependency>
     </dependencies>
 </project>
