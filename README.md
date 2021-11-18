@@ -54,7 +54,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.95.18:3306/wt_uac?setUnicode=true&characterEncoding=utf8&useSSL=false&&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.95.18:3306/oauth2?setUnicode=true&characterEncoding=utf8&useSSL=false&&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     hikari:
@@ -142,7 +142,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.95.18:3306/wt_uac?setUnicode=true&characterEncoding=utf8&useSSL=false&&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.95.18:3306/uac?setUnicode=true&characterEncoding=utf8&useSSL=false&&serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     hikari:
@@ -214,5 +214,104 @@ elastic:
       zk:
         namespace: elasticjob
         serverLists: 192.168.95.33:2181,192.168.95.33:2182,192.168.95.33:2183
+jwt:
+  token:
+    expired: 12
+    refresh:
+      expired: 12
+```
+> gateway-local.yaml
 
+```yaml
+server:
+  port: 8000
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt: #配置RSA的公钥访问地址
+          jwk-set-uri: http://localhost:8002/oauth2/jwks 
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.95.41:8848
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST      
+      discovery:
+        locator:
+          enabled: true
+      default-filters:
+        - StripPrefix=1
+      routes:
+        - id: uac
+          uri: lb://uac
+          filters:
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                key-resolver: "#{@ipKeyResolver}"
+          predicates:
+            - Method=GET,POST
+            - Path=/uac/**
+        - id: cpc
+          uri: lb://cpc
+          filters:
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                key-resolver: "#{@ipKeyResolver}"
+          predicates:
+            - Method=GET,POST
+            - Path=/cpc/**
+        - id: oauth2
+          uri: lb://oauth2
+          filters:
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10
+                redis-rate-limiter.burstCapacity: 20
+                key-resolver: "#{@ipKeyResolver}"
+          predicates:
+            - Method=GET,POST
+            - Path=/oauth2/**
+  redis:
+    timeout: 5000
+    cluster:
+      max-redirects: 5
+      nodes:
+      - 192.168.95.31:6379
+      - 192.168.95.32:6379
+      - 192.168.95.33:6379
+      - 192.168.95.36:6379
+      - 192.168.95.37:6379
+      - 192.168.95.38:6379
+    database: 0
+    jedis:
+      pool:
+        max-active: 8 #连接池最大连接数（使用负值表示没有限制） 默认 8
+        max-idle: 8 #连接池中的最大空闲连接 默认 8
+        max-wait: -1 #连接池最大阻塞等待时间（使用负值表示没有限制） 默认 -1
+        min-idle: 0 #连接池中的最小空闲连接 默认 0    
+  
 ```
