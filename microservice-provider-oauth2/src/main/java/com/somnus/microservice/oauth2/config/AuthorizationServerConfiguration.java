@@ -158,7 +158,7 @@ public class AuthorizationServerConfiguration {
                 .authorizationEndpoint("/oauth2/authorize")
                 // 配置查看code的端点路径(当前是默认的，可以更改)
                 .tokenIntrospectionEndpoint("/oauth2/introspect")
-                // 配置查看jwk的端点路径(当前是默认的，可以更改)
+                // 配置查看jwk(公钥)的端点路径(当前是默认的，可以更改)
                 .jwkSetEndpoint("/oauth2/jwks")
                 .issuer("http://localhost:" + port)
                 .build();
