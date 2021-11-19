@@ -36,6 +36,7 @@
         <elasticjob.version>3.0.1</elasticjob.version>
         <curator.version>5.2.0</curator.version>
         <springfox.version>3.0.0</springfox.version>
+        <springdoc.version>1.5.12</springdoc.version>
         <persistence-api.version>2.2</persistence-api.version>
 
         <repo.distribution.release.id>wt-releases</repo.distribution.release.id>
@@ -154,6 +155,11 @@
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-boot-starter</artifactId>
                 <version>${springfox.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-webflux-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
             <!-- for swagger -->
 

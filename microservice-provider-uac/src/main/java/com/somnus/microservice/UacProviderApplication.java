@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import reactivefeign.spring.config.EnableReactiveFeignClients;
+import springfox.documentation.oas.annotations.EnableOpenApi;
 
 /**
  * @author Kevin
@@ -14,6 +15,7 @@ import reactivefeign.spring.config.EnableReactiveFeignClients;
  * @description: 用户服务中心启动类
  * @date 2019/3/18 13:43
  */
+@EnableOpenApi
 @EnableDiscoveryClient
 @SpringBootApplication
 @MapperScan(basePackages = "com.somnus.microservice.provider.uac.mapper")

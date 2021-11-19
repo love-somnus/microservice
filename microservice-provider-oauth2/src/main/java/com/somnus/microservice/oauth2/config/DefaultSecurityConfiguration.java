@@ -42,7 +42,7 @@ public class DefaultSecurityConfiguration {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().antMatchers("/actuator/health","/h2-console/**");
+        return web -> web.ignoring().antMatchers("/auth/**", "/swagger-ui/**","/swagger-resources/**","/v2/api-docs","/v3/api-docs");
     }
 
 }

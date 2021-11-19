@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.DelegatingReactiveAuthenticationManager;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
@@ -40,9 +39,8 @@ import java.util.LinkedList;
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
-    private final String[] urls = {"/auth/**", "/swagger-ui/**","/swagger-resources/**","/v3/api-docs"};
+    private final String[] urls = {"/auth/**", "/swagger-ui/**","/swagger-resources/**","/v2/api-docs","/v3/api-docs"};
 
-    @Lazy
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
