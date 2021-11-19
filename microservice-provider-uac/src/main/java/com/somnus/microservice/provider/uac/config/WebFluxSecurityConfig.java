@@ -4,7 +4,7 @@ import com.somnus.microservice.provider.uac.config.handler.DefaultAccessDeniedHa
 import com.somnus.microservice.provider.uac.config.handler.DefaultAuthenticationEntryPoint;
 import com.somnus.microservice.provider.uac.config.handler.DefaultAuthenticationFailureHandler;
 import com.somnus.microservice.provider.uac.config.handler.DefaultAuthenticationSuccessHandler;
-import com.somnus.microservice.provider.uac.config.manager.DefaultAuthorizationManager;
+import com.somnus.microservice.provider.uac.config.manager.TokenAuthorizationManager;
 import com.somnus.microservice.gateway.config.manager.TokenAuthenticationManager;
 import com.somnus.microservice.provider.uac.config.repository.DefaultSecurityContextRepository;
 import com.somnus.microservice.provider.uac.config.service.UserDetailsServiceImpl;
@@ -40,7 +40,7 @@ import java.util.LinkedList;
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
-    private final String[] urls = {"/auth/**", "/swagger-ui/**","/swagger-resources/**"};
+    private final String[] urls = {"/auth/**", "/swagger-ui/**","/swagger-resources/**","/v3/api-docs"};
 
     @Lazy
     @Autowired
@@ -50,7 +50,7 @@ public class WebFluxSecurityConfig {
     private TokenAuthenticationManager tokenAuthenticationManager;
 
     @Autowired
-    private DefaultAuthorizationManager defaultAuthorizationManager;
+    private TokenAuthorizationManager tokenAuthorizationManager;
 
     @Autowired
     private DefaultSecurityContextRepository defaultSecurityContextRepository;
@@ -77,7 +77,8 @@ public class WebFluxSecurityConfig {
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(urls).permitAll()
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        .anyExchange().access(defaultAuthorizationManager)
+                        // 鉴权处理
+                        .anyExchange().access(tokenAuthorizationManager)
                 )
                 .formLogin()
                 .authenticationSuccessHandler(defaultAuthenticationSuccessHandler)

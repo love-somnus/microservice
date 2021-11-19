@@ -33,8 +33,6 @@ import reactor.core.publisher.Mono;
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
-    private final String[] urls = {"/health/**", "/swagger-ui/**","/swagger-resources/**","/uac/v3/api-docs"};
-
     @Autowired
     private DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
 
@@ -48,7 +46,6 @@ public class WebFluxSecurityConfig {
                 .and()
                 /* 请求拦截处理 */
                 .authorizeExchange(exchange -> exchange
-                        .pathMatchers(urls).permitAll()
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         .anyExchange().permitAll()
                 )

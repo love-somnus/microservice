@@ -26,7 +26,7 @@ import java.util.Collection;
  */
 @Slf4j
 @Component
-public class DefaultAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
+public class TokenAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
