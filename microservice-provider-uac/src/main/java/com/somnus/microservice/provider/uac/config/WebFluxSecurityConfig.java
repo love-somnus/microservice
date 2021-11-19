@@ -83,11 +83,12 @@ public class WebFluxSecurityConfig {
                 .authenticationSuccessHandler(defaultAuthenticationSuccessHandler)
                 .authenticationFailureHandler(defaultAuthenticationFailureHandler)
                 .and()
+                // 鉴权异常处理
                 .exceptionHandling()
-                .authenticationEntryPoint(defaultAuthenticationEntryPoint)
-                .and()
-                .exceptionHandling()
-                .accessDeniedHandler(defaultAccessDeniedHandler)
+                    //处理未认证
+                    .authenticationEntryPoint(defaultAuthenticationEntryPoint)
+                    // 处理未授权
+                    .accessDeniedHandler(defaultAccessDeniedHandler)
                 .and()
                 .csrf().disable()
         ;

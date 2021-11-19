@@ -14,6 +14,7 @@ import java.util.Collection;
  * @title: TokenAuthenticationManager
  * @projectName uac
  * @description: token 认证处理
+ *               ReactiveAuthenticationManager用于封装JWT为OAuth2Authentication并判断Token的有效性
  * @date 2021/11/15 15:26
  */
 @Primary

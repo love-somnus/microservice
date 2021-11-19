@@ -21,6 +21,7 @@ import java.util.Collection;
  * @title: DefaultAuthorizationManager
  * @projectName uac
  * @description: 用户权限鉴权处理
+ *               ReactiveAuthorizationManager用于基于URL的鉴权
  * @date 2021/11/15 15:27
  */
 @Slf4j

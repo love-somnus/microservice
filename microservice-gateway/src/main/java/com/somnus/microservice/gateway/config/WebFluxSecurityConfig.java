@@ -40,9 +40,12 @@ public class WebFluxSecurityConfig {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {
+        // JWT处理
         httpSecurity.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());
         httpSecurity
-                .oauth2ResourceServer().authenticationEntryPoint(defaultAuthenticationEntryPoint).and()
+                // 自定义处理JWT请求头过期或签名错误的结果
+                .oauth2ResourceServer().authenticationEntryPoint(defaultAuthenticationEntryPoint)
+                .and()
                 /* 请求拦截处理 */
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(urls).permitAll()
