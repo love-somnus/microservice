@@ -25,7 +25,6 @@ import java.util.Map;
 /**
  * @author kevin.liu
  * @title: Jwks
- * @projectName microservice-elastic-job-starter
  * @description: keytool -genkey -alias jwt -keyalg RSA -keystore jwt.jks
  * @date 2021/11/16 16:16
  */

@@ -11,10 +11,10 @@
 
 # starter模块
 
-- [x] 分布式定时任务 microservice-elastic-job-starter
 - [x] 分布式缓存 microservice-cache-starter
 - [x] 分布式限流 microservice-limit-starter
 - [x] 分布式锁 microservice-lock-starter
+- [x] 分布式定时任务 microservice-elastic-job-starter
 
 
 > oauth2-local.yaml
