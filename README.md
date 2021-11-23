@@ -6,16 +6,19 @@
 - [x] 本项目使用当前最新稳定版本的SpringCloud 2020.0.4 和适配最新的SpringBoot 2.4.6（当前日期2021-11-11）
 - [x] 本项目使用目前业界推崇的spring-cloud-alibaba 实现微服务，使用版本为当前最稳定的2021.1（当前日期2021-11-11）
 - [x] 本项目使nacos选择了最新的2.0.3，nacos中的配置文件，下面会粘贴出来（当前日期2021-11-11）
-- [x] 本项目因为是示例项目，所以只创建一个服务提供者oauth2，一个服务消费者uac（真实线上项目，没有严格意义的某个module是什么角色，它们可能互为提供者和消费者）
+- [x] 本项目因为是示例项目，所以只创建一个服务提供者cpc，一个服务消费者uac（真实线上项目，没有严格意义的某个module是什么角色，它们可能互为提供者和消费者）
+- [x] 本项目网关gateway服务已实现接口token认证(实现方式会在readme介绍)
+- [x] 本项目oauth2服务位资源授权服务(用于获取token，可使用三种授权模式)，
+      使用了最新的[spring-security-oauth2-authorization-server](https://github.com/spring-projects/spring-authorization-server)
+      具体如何使用会在oauth2中介绍
 - [x] 其它，由于时间仓促，更新会比较慢，请谅解
 
 # starter模块
 
 - [x] 分布式缓存 microservice-cache-starter
-- [x] 分布式限流 microservice-limit-starter
-- [x] 分布式锁 microservice-lock-starter
-- [x] 分布式定时任务 microservice-elastic-job-starter
-
+- [x] [分布式限流](https://github.com/love-somnus/microservice/blob/main/microservice-limit/README.md) microservice-limit-starter
+- [x] [分布式锁](https://github.com/love-somnus/microservice/blob/main/microservice-lock/README.md) microservice-lock-starter
+- [x] [分布式定时任务](https://github.com/love-somnus/microservice/tree/main/microservice-elastic-job-starter#readme) microservice-elastic-job-starter
 
 > oauth2-local.yaml
 
