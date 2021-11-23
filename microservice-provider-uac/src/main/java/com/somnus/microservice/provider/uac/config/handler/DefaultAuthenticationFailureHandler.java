@@ -4,6 +4,7 @@ import com.somnus.microservice.commons.base.enums.ErrorCodeEnum;
 import com.somnus.microservice.commons.base.utils.JacksonUtil;
 import com.somnus.microservice.commons.base.wrapper.WrapMapper;
 import com.somnus.microservice.commons.base.wrapper.Wrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.security.authentication.*;
@@ -21,6 +22,7 @@ import reactor.core.publisher.Mono;
  * @description: 自定义登录失败Handler
  * @date 2021/11/15 15:09
  */
+@Slf4j
 @Component
 public class DefaultAuthenticationFailureHandler implements ServerAuthenticationFailureHandler {
 

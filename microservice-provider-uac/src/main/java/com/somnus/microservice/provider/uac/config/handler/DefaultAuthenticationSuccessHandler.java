@@ -5,6 +5,7 @@ import com.somnus.microservice.commons.base.utils.JacksonUtil;
 import com.somnus.microservice.commons.base.utils.JwksUtil;
 import com.somnus.microservice.commons.base.wrapper.WrapMapper;
 import com.somnus.microservice.provider.uac.config.service.SecurityUserDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
@@ -24,6 +25,7 @@ import java.util.Map;
  * @description: 自定义登录成功Handler
  * @date 2021/11/15 15:06
  */
+@Slf4j
 @Component
 public class DefaultAuthenticationSuccessHandler implements ServerAuthenticationSuccessHandler {
 

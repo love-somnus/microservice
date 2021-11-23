@@ -3,6 +3,7 @@ package com.somnus.microservice.provider.uac.config.handler;
 import com.somnus.microservice.commons.base.enums.ErrorCodeEnum;
 import com.somnus.microservice.commons.base.utils.JacksonUtil;
 import com.somnus.microservice.commons.base.wrapper.WrapMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.nio.charset.Charset;
  * @description: 自定义鉴权失败Handler
  * @date 2021/11/15 15:11
  */
+@Slf4j
 @Component
 public class DefaultAccessDeniedHandler implements ServerAccessDeniedHandler {
 
@@ -32,6 +34,8 @@ public class DefaultAccessDeniedHandler implements ServerAccessDeniedHandler {
                     response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
                     DataBufferFactory dataBufferFactory = response.bufferFactory();
+
+                    log.error("DefaultAccessDeniedHandler:{}", ErrorCodeEnum.PERMISSION_DENIED);
 
                     String result = JacksonUtil.toJson(WrapMapper.fail(ErrorCodeEnum.PERMISSION_DENIED));
 

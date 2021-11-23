@@ -78,9 +78,9 @@ public class WebFluxSecurityConfig {
                         // 鉴权处理
                         .anyExchange().access(tokenAuthorizationManager)
                 )
-                .oauth2Login()
-                .authenticationSuccessHandler(defaultAuthenticationSuccessHandler)
-                .authenticationFailureHandler(defaultAuthenticationFailureHandler)
+                .formLogin()// 自定义处理
+                    .authenticationSuccessHandler(defaultAuthenticationSuccessHandler)
+                    .authenticationFailureHandler(defaultAuthenticationFailureHandler)
                 .and()
                 // 鉴权异常处理
                 .exceptionHandling()
