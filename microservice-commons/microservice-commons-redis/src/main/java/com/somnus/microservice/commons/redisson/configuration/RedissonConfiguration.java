@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * @author Kevin
  * @packageName com.somnus.microservice.commons.redisson.configuration
  * @title: RedissonConfiguration
- * @description: TODO
+ * @description: http://192.168.95.41:8848/nacos/v1/cs/configs?dataId=redisson.yaml&group=DEFAULT_GROUP
  * @date 2019/7/5 16:42
  */
 @Configuration
