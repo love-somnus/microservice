@@ -48,6 +48,20 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- 分布式锁依赖-->
+        <dependency>
+            <groupId>com.somnus</groupId>
+            <artifactId>microservice-lock-starter</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- 分布式限流依赖-->
+        <dependency>
+            <groupId>com.somnus</groupId>
+            <artifactId>microservice-limit-starter</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

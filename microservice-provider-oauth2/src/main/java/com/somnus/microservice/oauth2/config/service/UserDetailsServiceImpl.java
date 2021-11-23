@@ -1,6 +1,5 @@
 package com.somnus.microservice.oauth2.config.service;
 
-import com.google.common.collect.Lists;
 import com.somnus.microservice.oauth2.model.domain.RbacUser;
 import com.somnus.microservice.oauth2.service.RbacUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         optional.orElseThrow(() -> new UsernameNotFoundException("username: [" + username + "] do not exist!"));
 
         // 获取用户角色(暂时不获取)
-        List<GrantedAuthority> authorities = Lists.newArrayList(new SimpleGrantedAuthority("admin"));
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("admin"));
 
         return User.withUsername(optional.get().getUsername())
                 .password(optional.get().getPassword())
