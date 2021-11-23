@@ -72,7 +72,7 @@
     </appender>
 
     <!-- additivity 避免执行2次 -->
-    <logger name="com.somnus.microservice.provider.oauth2.mapper"  level="DEBUG"  additivity="false">
+    <logger name="com.somnus.microservice.oauth2.mapper"  level="DEBUG"  additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 

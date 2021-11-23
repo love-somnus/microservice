@@ -126,24 +126,4 @@ public interface IService<T> {
      */
     int updateByWrapper(@Param("record") T record,  Wrapper<T> wrapper);
 
-    /**
-     * 根据实体属性和RowBounds进行分页查询  @param record the record
-     *
-     * @param record    the record
-     * @param rowBounds the row bounds
-     *
-     * @return the list
-     */
-    List<T> selectByRowBounds(T record, RowBounds rowBounds);
-
-    /**
-     * 根据example条件和RowBounds进行分页查询  @param example the example
-     *
-     * @param example   the example
-     * @param rowBounds the row bounds
-     *
-     * @return the list
-     */
-    List<T> selectByExampleAndRowBounds(Object example, RowBounds rowBounds);
-
 }

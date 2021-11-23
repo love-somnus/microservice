@@ -67,15 +67,6 @@ public class BaseEntity implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
 
-    @Transient
-    private Integer pageNum;
-
-    @Transient
-    private Integer pageSize;
-
-    @Transient
-    private String orderBy;
-
     /**
      * Is new boolean.
      *
