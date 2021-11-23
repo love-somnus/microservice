@@ -1,0 +1,2 @@
+com.somnus.microservice.limit.starter.annotation.EnableLimit=\
+com.somnus.microservice.limit.starter.configuration.LimitConfiguration

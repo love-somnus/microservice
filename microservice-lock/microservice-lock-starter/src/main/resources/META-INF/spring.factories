@@ -1,0 +1,2 @@
+com.somnus.microservice.lock.starter.annotation.EnableLock=\
+com.somnus.microservice.lock.starter.configuration.LockConfiguration
