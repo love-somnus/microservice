@@ -34,13 +34,13 @@ public class LocalLockExecutorImpl implements LockExecutor<Lock> {
 
     private boolean lockCached = true;
 
-    private static ThreadLocal<Pair<Lock, String>> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Pair<String, Lock>> threadLocal = new ThreadLocal<>();
 
     /** 可重入锁可重复使用 */
     private volatile Map<String, Lock> lockMap = new ConcurrentHashMap<>();
 
     /** 读写锁 */
-    private volatile Map<String, ReadWriteLock> readWriteLockMap = new ConcurrentHashMap<>();
+    private final Map<String, ReadWriteLock> readWriteLockMap = new ConcurrentHashMap<>();
 
     @Override
     public boolean tryLock(LockType lockType, String name, String key, long leaseTime, long waitTime, boolean async, boolean fair){
@@ -123,12 +123,12 @@ public class LocalLockExecutorImpl implements LockExecutor<Lock> {
     @Override
     public void unlock(){
         // 当前线程中获取到pair   如果没有获取到锁 没有必要做释放
-        Pair<Lock, String> pair = threadLocal.get();
+        Pair<String, Lock> pair = threadLocal.get();
         if (pair == null) {
             return;
         }
-        Lock lock = pair.getKey();
-        String lockKey = pair.getValue();
+        String lockKey = pair.getKey();
+        Lock lock = pair.getValue();
         try{
             if (lock != null) {
                 if (lock instanceof ReentrantLock) {
@@ -156,7 +156,7 @@ public class LocalLockExecutorImpl implements LockExecutor<Lock> {
             lock = getNewLock(lockType, key, fair);
         }
 
-        threadLocal.set(new Pair<>(lock, key));
+        threadLocal.set(new Pair<>(key, lock));
 
         return lock;
     }

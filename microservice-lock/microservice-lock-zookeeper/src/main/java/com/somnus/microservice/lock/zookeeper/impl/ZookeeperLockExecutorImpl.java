@@ -40,13 +40,13 @@ public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex
     @Autowired
     private CuratorHandler curatorHandler;
 
-    private static ThreadLocal<Pair<InterProcessMutex, String>> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Pair<String, InterProcessMutex>> threadLocal = new ThreadLocal<>();
 
     /** 可重入锁可重复使用 */
-    private volatile Map<String, InterProcessMutex> lockMap = new ConcurrentHashMap<String, InterProcessMutex>();
+    private final Map<String, InterProcessMutex> lockMap = new ConcurrentHashMap<String, InterProcessMutex>();
 
     /** 读写锁 */
-    private volatile Map<String, InterProcessReadWriteLock> readWriteLockMap = new ConcurrentHashMap<>();
+    private final Map<String, InterProcessReadWriteLock> readWriteLockMap = new ConcurrentHashMap<>();
 
     @PreDestroy
     public void destroy() {
@@ -91,9 +91,7 @@ public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex
 
         InterProcessMutex interProcessMutex = getLock(lockType, compositeKey);
 
-        boolean acquired = interProcessMutex.acquire(waitTime, TimeUnit.MILLISECONDS);
-
-        return acquired;
+        return interProcessMutex.acquire(waitTime, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -149,12 +147,12 @@ public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex
             return;
         }
         // 当前线程中获取到pair   如果没有获取到锁 没有必要做释放
-        Pair<InterProcessMutex, String> pair = threadLocal.get();
+        Pair<String, InterProcessMutex> pair = threadLocal.get();
         if (pair == null) {
             return;
         }
-        InterProcessMutex lock = pair.getKey();
-        String lockKey = pair.getValue();
+        String lockKey = pair.getKey();
+        InterProcessMutex lock = pair.getValue();
         try{
             if (lock != null && lock.isAcquiredInThisProcess()) {
                 lock.release();
@@ -175,7 +173,7 @@ public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex
             lock = getNewLock(lockType, key);
         }
 
-        threadLocal.set(new Pair<>(lock, key));
+        threadLocal.set(new Pair<>(key, lock));
 
         return lock;
     }

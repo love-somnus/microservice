@@ -40,13 +40,13 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
     @Autowired
     private RedissonHandler redissonHandler;
 
-    private static ThreadLocal<Pair<RLock, String>> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Pair<String, RLock>> threadLocal = new ThreadLocal<>();
 
     /** 可重入锁可重复使用 */
-    private volatile Map<String, RLock> lockMap = new ConcurrentHashMap<>();
+    private final Map<String, RLock> lockMap = new ConcurrentHashMap<>();
 
     /** 读写锁 */
-    private volatile Map<String, RReadWriteLock> readWriteLockMap = new ConcurrentHashMap<>();
+    private final Map<String, RReadWriteLock> readWriteLockMap = new ConcurrentHashMap<>();
 
     @PreDestroy
     public void destroy() {
@@ -141,12 +141,12 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
             return;
         }
         // 当前线程中获取到pair   如果没有获取到锁 没有必要做释放
-        Pair<RLock, String> pair = threadLocal.get();
+        Pair<String, RLock> pair = threadLocal.get();
         if (pair == null) {
             return;
         }
-        RLock lock = pair.getKey();
-        String lockKey = pair.getValue();
+        String lockKey = pair.getKey();
+        RLock lock = pair.getValue();
         try{
             if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
                 lock.unlock();
@@ -162,18 +162,14 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
     private boolean invokeLock(LockType lockType, String key, long leaseTime, long waitTime, boolean fair){
         RLock lock = getLock(lockType, key, fair);
 
-        boolean acquired = lock.tryLock(waitTime, leaseTime, TimeUnit.MILLISECONDS);
-
-        return acquired;
+        return lock.tryLock(waitTime, leaseTime, TimeUnit.MILLISECONDS);
     }
 
     @SneakyThrows(Exception.class)
     private boolean invokeLockAsync(LockType lockType, String key, long leaseTime, long waitTime, boolean fair) {
         RLock lock = getLock(lockType, key, fair);
 
-        boolean acquired = lock.tryLockAsync(waitTime, leaseTime, TimeUnit.MILLISECONDS).get();
-
-        return acquired;
+        return lock.tryLockAsync(waitTime, leaseTime, TimeUnit.MILLISECONDS).get();
     }
 
     @SneakyThrows(Exception.class)
@@ -197,7 +193,7 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
             lock = getNewLock(lockType, key, fair);
         }
 
-        threadLocal.set(new Pair<>(lock, key));
+        threadLocal.set(new Pair<>(key, lock));
 
         return lock;
     }
