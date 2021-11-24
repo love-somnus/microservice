@@ -1,0 +1,2 @@
+com.somnus.microservice.cache.starter.annotation.EnableCache=\
+com.somnus.microservice.cache.starter.configuration.CacheConfiguration
