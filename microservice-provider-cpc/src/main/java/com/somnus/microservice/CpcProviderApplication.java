@@ -1,5 +1,6 @@
 package com.somnus.microservice;
 
+import com.somnus.microservice.cache.starter.annotation.EnableCache;
 import com.somnus.microservice.limit.starter.annotation.EnableLimit;
 import com.somnus.microservice.lock.starter.annotation.EnableLock;
 import org.mybatis.spring.annotation.MapperScan;
@@ -19,6 +20,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
  */
 @EnableLock
 @EnableLimit
+@EnableCache
 @EnableRetry
 @EnableOpenApi
 @EnableDiscoveryClient

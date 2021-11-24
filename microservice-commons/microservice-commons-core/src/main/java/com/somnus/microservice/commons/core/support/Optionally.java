@@ -120,10 +120,10 @@ public final class Optionally<T> {
      * @throws X
      */
     public <X extends Throwable> void trueThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        if(! Boolean.class.isInstance(value)){
+        if(!(value instanceof Boolean)){
             throw new IllegalArgumentException();
         }
-        if (value instanceof Boolean && ((Boolean) value == true)) {
+        if ((Boolean) value) {
             throw exceptionSupplier.get();
         }
     }
@@ -135,10 +135,10 @@ public final class Optionally<T> {
      * @throws X
      */
     public <X extends Throwable> void falseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        if(! Boolean.class.isInstance(value)){
+        if(!(value instanceof Boolean)){
             throw new IllegalArgumentException();
         }
-        if (value instanceof Boolean && ((Boolean) value == false)) {
+        if (!(Boolean) value) {
             throw exceptionSupplier.get();
         }
     }
