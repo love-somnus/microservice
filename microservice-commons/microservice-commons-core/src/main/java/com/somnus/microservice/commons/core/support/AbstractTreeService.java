@@ -2,7 +2,7 @@ package com.somnus.microservice.commons.core.support;
 
 import com.google.common.collect.Lists;
 import com.somnus.microservice.commons.base.dto.BaseTree;
-import com.somnus.microservice.commons.core.utils.PublicUtil;
+import com.somnus.microservice.commons.base.utils.PublicUtil;
 import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;

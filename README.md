@@ -20,6 +20,8 @@
 - [x] [分布式锁](https://github.com/love-somnus/microservice/blob/main/microservice-lock/README.md) microservice-lock-starter
 - [x] [分布式定时任务](https://github.com/love-somnus/microservice/tree/main/microservice-elastic-job-starter#readme) microservice-elastic-job-starter
 
+   starter效果演示demo，放在cpc服务中
+
 > oauth2-local.yaml
 
 ```yaml
