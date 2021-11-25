@@ -18,5 +18,12 @@ public interface PaymentService extends IService<PaymentOrder> {
      * @param id
      * @return
      */
-    PaymentOrderVo submit(String id);
+    PaymentOrderVo order(String id);
+
+    /**
+     * 支付订单
+     * @param orderId
+     * @return
+     */
+    String pay(String userId, String orderId);
 }
