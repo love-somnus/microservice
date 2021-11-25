@@ -29,7 +29,7 @@ public class EmailConfig {
     public EmailConfig(EmailProperties email){
         Optional.ofNullable(email.getConfigs()).ifPresent((po)->
             map = Optional.ofNullable(po)
-                    .orElseThrow(() -> new BusinessException(ErrorCodeEnum.CN10048)).stream()
+                    .orElseThrow(() -> new BusinessException(ErrorCodeEnum.EN10027)).stream()
                     .collect(Collectors.toMap(Properties::getOrg, v -> {
                         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
                         javaMailSender.setDefaultEncoding(v.getDefaultEncoding());
@@ -58,7 +58,7 @@ public class EmailConfig {
         );
         Optional.ofNullable(email.getConfigs()).ifPresent((po)->
                 map2 = Optional.ofNullable(po)
-                        .orElseThrow(() -> new BusinessException(ErrorCodeEnum.CN10048)).stream()
+                        .orElseThrow(() -> new BusinessException(ErrorCodeEnum.EN10027)).stream()
                         .collect(Collectors.toMap(Properties::getOrg, Properties::getUsername, (existing, replacement) -> existing))
         );
     }

@@ -4,6 +4,7 @@ import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.cache.constant.CacheConstant;
 import com.somnus.microservice.commons.base.enums.ErrorCodeEnum;
 import com.somnus.microservice.commons.base.exception.BusinessException;
+import com.somnus.microservice.commons.base.utils.PublicUtil;
 import com.somnus.microservice.commons.redis.handler.RedisHandler;
 import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
 import org.aopalliance.intercept.MethodInvocation;
@@ -16,6 +17,8 @@ import org.springframework.data.redis.core.ValueOperations;
 import com.somnus.microservice.cache.CacheDelegate;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -72,7 +75,14 @@ public class RedisCacheDelegateImpl implements CacheDelegate {
         }
 
         if (object != null) {
-            return object;
+            /* ***********************因为序列化去掉了类信息，反序列化的时候只能把map转换下**********************  */
+            Class<?> clazz = invocation.getMethod().getReturnType();
+            if(List.class.isAssignableFrom(clazz)){
+                return object;
+            }
+            Map<String, Object> map = (Map<String, Object>)object;
+            return PublicUtil.mapToBean(map, clazz);
+            /* ***********************end**********************  */
         }
 
         object = invocation.proceed();
@@ -113,6 +123,7 @@ public class RedisCacheDelegateImpl implements CacheDelegate {
             try {
                 if (expire == -1) {
                     /* 存入布隆过滤器 */
+                    log.info("key={}, bloomFilter={} in RBloomFilter", key, CacheConstant.BLOOM_FLITER);
                     bloomFilter.add(key);
                     /* 存入缓存 */
                     valueOperations.set(key, object);

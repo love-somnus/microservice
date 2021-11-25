@@ -4,12 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.somnus.microservice.commons.base.dto.LoginAuthDto;
 import com.somnus.microservice.commons.core.mybatis.BaseEntity;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.session.RowBounds;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
 import java.util.function.Function;
@@ -33,15 +27,6 @@ public interface IService<T> {
         entity.setUpdateInfo(getLoginAuth());
 
         return (R)entity;
-    }
-
-    /**
-     * Gets request.
-     *
-     * @return the request
-     */
-    default HttpServletRequest getRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
     }
 
     /**

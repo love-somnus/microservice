@@ -1,4 +1,4 @@
-package com.somnus.microservice.commons.core.utils;
+package com.somnus.microservice.commons.base.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -6,13 +6,16 @@ import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.cglib.beans.BeanMap;
 
-import java.beans.BeanInfo;
-import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
+
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.commons.utils
@@ -92,7 +95,15 @@ public class PublicUtil extends org.springframework.beans.BeanUtils{
                     writeMethod.setAccessible(true);
                 }
                 try {
-                    writeMethod.invoke(bean, value);
+                    if(Objects.nonNull(value) && propertyDescriptor.getPropertyType().isAssignableFrom(Date.class)){
+                        Date date = Date.from(LocalDateTime.parse(value.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).atZone(ZoneId.systemDefault()).toInstant());
+                        writeMethod.invoke(bean, date);
+                    } else if(propertyDescriptor.getPropertyType().isAssignableFrom(LocalDateTime.class)){
+                        LocalDateTime date = LocalDateTime.parse(value.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                        writeMethod.invoke(bean, date);
+                    } else{
+                        writeMethod.invoke(bean, value);
+                    }
                 } catch (Throwable throwable) {
                     throw new RuntimeException("Could not set property '" + properName + " ' to bean" + throwable);
                 }

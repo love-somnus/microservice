@@ -99,7 +99,7 @@
         </root>
     </springProfile>
 
-    <springProfile name="pre,hk_pre,prod,hk_prod">
+    <springProfile name="pre,prod">
         <root level="INFO">
             <appender-ref ref="INFO_FILE" />
             <appender-ref ref="ERROR_FILE" />

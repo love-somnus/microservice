@@ -25,8 +25,8 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @EnableOpenApi
 @EnableDiscoveryClient
 @SpringBootApplication
-@MapperScan(basePackages = "com.somnus.microservice.oauth2.mapper")
-@EnableReactiveFeignClients(basePackages = "com.somnus.microservice.oauth2.web.rpc")
+@MapperScan(basePackages = "com.somnus.microservice.provider.cpc.mapper")
+@EnableReactiveFeignClients(basePackages = "com.somnus.microservice.provider")
 public class CpcProviderApplication {
 
     public static void main(String[] args) {
