@@ -24,7 +24,7 @@ public class SmsServiceImpl extends BaseService<SmsRecord> implements SmsService
     public String sendSmsCode(String mobile, String validateCode) {
 
         try {
-            log.info("发送短信验证码 {}：{}", mobile ,mobile);
+            log.info("发送短信验证码 {}：{}", mobile ,validateCode);
             TimeUnit.MILLISECONDS.sleep(500L);
         } catch (Exception e) {
             e.printStackTrace();

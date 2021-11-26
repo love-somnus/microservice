@@ -10,12 +10,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -58,20 +56,20 @@ public class RedisLimitExecutorImpl implements LimitExecutor {
             throw new LimitException("Composite key is null or empty");
         }
 
-        List<String> keys = new ArrayList<>();
-        keys.add(compositeKey);
-
         String luaScript = buildLuaScript();
 
-        RedisScript<Number> redisScript = new DefaultRedisScript<>(luaScript, Number.class);
         RedisTemplate<String, Object> redisTemplate = redisHandler.getRedisTemplate();
-        Number count = Optional.ofNullable(redisTemplate.execute(redisScript, keys, limitCount, limitPeriod)).orElse(new BigDecimal(limitCount).add(BigDecimal.ONE));
+
+        Long count = redisTemplate.execute(RedisScript.of(luaScript, Long.class), Collections.singletonList(compositeKey), limitCount, limitPeriod);
+
+        /* 执行 limitCount + 1后count 开始变为null，需要处理下空指针（不想用if，变通处理下）*/
+        BigDecimal times = Optional.ofNullable(count) .map(BigDecimal::new).orElse(new BigDecimal(limitCount).add(BigDecimal.ONE));
 
         if (frequentLogPrint) {
             log.info("Access try count is {} for key={}", count, compositeKey);
         }
 
-        return count.intValue() <= limitCount;
+        return times.intValue() <= limitCount;
     }
 
     private String buildLuaScript() {

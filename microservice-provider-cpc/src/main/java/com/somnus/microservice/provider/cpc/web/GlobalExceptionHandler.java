@@ -1,8 +1,10 @@
 package com.somnus.microservice.provider.cpc.web;
 
+import com.somnus.microservice.commons.base.enums.ErrorCodeEnum;
 import com.somnus.microservice.commons.base.exception.BusinessException;
 import com.somnus.microservice.commons.base.wrapper.WrapMapper;
 import com.somnus.microservice.commons.base.wrapper.Wrapper;
+import com.somnus.microservice.limit.exception.LimitException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -89,20 +91,17 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 无权限访问.
-     *
+     * 业务异常(规定时间范围内超出调用频率).
      * @param e the e
-     *
      * @return the wrapper
      */
-    /*@ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(LimitException.class)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Wrapper<?> unAuthorizedException(AccessDeniedException e) {
+    public Wrapper<?> limitException(LimitException e) {
         log.error("业务异常={}", e.getMessage(), e);
-        return WrapMapper.wrap(ErrorCodeEnum.GL99990401.getCode(), ErrorCodeEnum.GL99990401.getMsg());
-    }*/
-
+        return WrapMapper.fail(ErrorCodeEnum.LIMIT);
+    }
 
     /**
      * 全局异常.

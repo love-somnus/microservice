@@ -37,6 +37,8 @@ public enum ErrorCodeEnum {
 
     TOKEN_EXPIRED(5009,"token 过期"),
 
+    LIMIT(10036, "limit"),
+
     //EN 10001 英文（需要前端翻译）
     //CN 10001 中文（后端日志，不需要翻译）
     /********************************** EN code 10001-19999 英文（需要前端翻译, 针对网站使用） start *********************************/
@@ -81,8 +83,6 @@ public enum ErrorCodeEnum {
     EN10031(10031, "delete"),//已删除
 
     EN10034(10034, "exist"),
-
-    EN10036(10036, "limit"),
 
     EN10039(10039, "timedOut"),//请求超时
 
