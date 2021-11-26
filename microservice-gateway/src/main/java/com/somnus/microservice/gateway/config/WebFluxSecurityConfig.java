@@ -47,7 +47,6 @@ public class WebFluxSecurityConfig {
                 /* 请求拦截处理 */
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        .anyExchange().permitAll()
                 )
                 .csrf().disable()
         ;
