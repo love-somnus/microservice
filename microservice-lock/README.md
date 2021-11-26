@@ -94,7 +94,7 @@ public class MyService2 {
 @EnableLock
 @ComponentScan(basePackages = { "com.xxx.service" })
 public class LockAopApplication {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(LockAopApplication.class, args);
 
         // 执行效果是doA和doC无序打印，即谁拿到锁谁先运行
@@ -131,7 +131,7 @@ public class LockApplication {
     private static final Logger LOG = LoggerFactory.getLogger(LockApplication.class);
 
     @SuppressWarnings("unchecked")
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(LockApplication.class, args);
 
         LockExecutor<Object> lockExecutor = applicationContext.getBean(LockExecutor.class);
@@ -139,10 +139,9 @@ public class LockApplication {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Object lock = null;
                     try {
-                        lock = lockExecutor.tryLock(LockType.LOCK, "lock", "X-Y", 5000L, 60000L, false, false);
-                        if (lock != null) {
+                        boolean lock = lockExecutor.tryLock(LockType.LOCK, "lock", "X-Y", 5000L, 60000L, false, false);
+                        if (lock) {
                             try {
                                 TimeUnit.MILLISECONDS.sleep(2000L);
                             } catch (InterruptedException e) {
@@ -155,7 +154,7 @@ public class LockApplication {
                         e.printStackTrace();
                     } finally {
                         try {
-                            lockExecutor.unlock(lock);
+                            lockExecutor.unlock();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -168,10 +167,9 @@ public class LockApplication {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Object lock = null;
                     try {
-                        lock = lockExecutor.tryLock(LockType.LOCK, "lock", "X-Y", 5000L, 60000L, false, false);
-                        if (lock != null) {
+                        boolean lock = lockExecutor.tryLock(LockType.LOCK, "lock", "X-Y", 5000L, 60000L, false, false);
+                        if (lock) {
                             try {
                                 TimeUnit.MILLISECONDS.sleep(2000L);
                             } catch (InterruptedException e) {
@@ -184,7 +182,7 @@ public class LockApplication {
                         e.printStackTrace();
                     } finally {
                         try {
-                            lockExecutor.unlock(lock);
+                            lockExecutor.unlock();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -291,7 +289,7 @@ public class ReadWriteLockApplication {
     private static final Logger LOG = LoggerFactory.getLogger(ReadWriteLockApplication.class);
 
     @SuppressWarnings("unchecked")
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(ReadWriteLockApplication.class, args);
 
         LockExecutor<Object> lockExecutor = applicationContext.getBean(LockExecutor.class);
@@ -300,10 +298,9 @@ public class ReadWriteLockApplication {
             public void run() {
                 LOG.info("Start to get write lock...");
                 // 写锁逻辑，最高持锁15秒，睡眠10秒，10秒后释放读锁
-                Object lock = null;
                 try {
-                    lock = lockExecutor.tryLock(LockType.WRITE_LOCK, "lock", "X-Y", 15000L, 60000L, false, false);
-                    if (lock != null) {
+                    boolean lock = lockExecutor.tryLock(LockType.WRITE_LOCK, "lock", "X-Y", 15000L, 60000L, false, false);
+                    if (lock) {
                         try {
                             TimeUnit.MILLISECONDS.sleep(10000L);
                         } catch (InterruptedException e) {
@@ -316,7 +313,7 @@ public class ReadWriteLockApplication {
                     e.printStackTrace();
                 } finally {
                     try {
-                        lockExecutor.unlock(lock);
+                        lockExecutor.unlock();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -333,10 +330,9 @@ public class ReadWriteLockApplication {
                         @Override
                         public void run() {
                             // 读锁逻辑，最高持锁5秒，睡眠2秒，2秒后释放读锁
-                            Object lock = null;
                             try {
-                                lock = lockExecutor.tryLock(LockType.READ_LOCK, "lock", "X-Y", 5000L, 60000L, false, false);
-                                if (lock != null) {
+                                boolean lock = lockExecutor.tryLock(LockType.READ_LOCK, "lock", "X-Y", 5000L, 60000L, false, false);
+                                if (lock) {
                                     try {
                                         TimeUnit.MILLISECONDS.sleep(2000L);
                                     } catch (InterruptedException e) {
@@ -349,7 +345,7 @@ public class ReadWriteLockApplication {
                                 e.printStackTrace();
                             } finally {
                                 try {
-                                    lockExecutor.unlock(lock);
+                                    lockExecutor.unlock();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
