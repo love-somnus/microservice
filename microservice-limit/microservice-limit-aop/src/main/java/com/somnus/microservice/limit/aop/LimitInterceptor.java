@@ -80,7 +80,7 @@ public class LimitInterceptor extends AbstractInterceptor {
         }
 
         if(restrictIp){
-            String ip = RequestUtil.getRemoteAddr();
+            String ip = RequestUtil.getWebfluxRemoteAddr();
             compositeKey = compositeKey + "#" + ip;
         }
 

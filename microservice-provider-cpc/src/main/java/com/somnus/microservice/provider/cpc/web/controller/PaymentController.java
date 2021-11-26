@@ -54,6 +54,11 @@ public class PaymentController {
         return Mono.just(WrapMapper.success(paymentOrder));
     }
 
+    /**
+     * @RequestParam只能接收get请求的参数，@RequestBody才能接收post请求的参数
+     * @param request
+     * @return
+     */
     @PostMapping(value = "order/pay", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "String", example = "1"),

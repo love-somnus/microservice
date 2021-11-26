@@ -92,9 +92,8 @@ public abstract class AbstractInterceptor implements MethodInterceptor {
 
     public String getMethodParameterTypesValue(MethodInvocation invocation) {
         Class<?>[] parameterTypes = getMethodParameterTypes(invocation);
-        String parameterTypesValue = ProxyUtil.toString(parameterTypes);
 
-        return parameterTypesValue;
+        return ProxyUtil.toString(parameterTypes);
     }
 
     // 获取变量名

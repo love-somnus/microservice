@@ -44,8 +44,15 @@ public class PaymentServiceImpl extends BaseService<PaymentOrder> implements Pay
         return new PaymentOrderVo(id, new BigDecimal("10.05"), new Date());
     }
 
+    /**
+     * key
+     * @param userId
+     * @param orderId
+     * 锁粒度可控，可以通过SPEL表达式设置
+     * @return
+     */
     @Override
-    @Lock(name = "lock", key = "order", leaseTime = 5000L, waitTime = 60000L, async = false, fair = false)
+    @Lock(name = "lock", key = "#userId", leaseTime = 5000L, waitTime = 60000L, async = false, fair = false)
     public String pay(String userId, String orderId) {
         try {
             log.info("支付订单 {}：{}", userId ,orderId);

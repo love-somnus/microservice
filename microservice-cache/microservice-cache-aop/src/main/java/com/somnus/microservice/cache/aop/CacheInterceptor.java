@@ -13,6 +13,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 
 import java.lang.reflect.Method;
 
@@ -36,7 +37,7 @@ public class CacheInterceptor extends AbstractInterceptor {
     private Boolean frequentLogPrint;
 
     @Override
-    public Object invoke(MethodInvocation invocation) throws Throwable {
+    public Object invoke(@NonNull MethodInvocation invocation) throws Throwable {
         Cacheable cacheableAnnotation = getCacheableAnnotation(invocation);
         if (cacheableAnnotation != null) {
             String name = cacheableAnnotation.name();
