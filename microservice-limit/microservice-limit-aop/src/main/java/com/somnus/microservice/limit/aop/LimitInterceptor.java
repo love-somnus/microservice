@@ -2,8 +2,7 @@ package com.somnus.microservice.limit.aop;
 
 import com.somnus.microservice.autoconfigure.proxy.aop.AbstractInterceptor;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
-import com.somnus.microservice.commons.core.utils.ReactiveRequestUtil;
-import com.somnus.microservice.commons.core.utils.RequestUtil;
+import com.somnus.microservice.commons.base.utils.ReactiveRequestUtil;
 import com.somnus.microservice.limit.LimitDelegate;
 import com.somnus.microservice.limit.annotation.Limit;
 import com.somnus.microservice.limit.constant.LimitConstant;

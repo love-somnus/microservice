@@ -1,4 +1,4 @@
-package com.somnus.microservice.commons.core.utils;
+package com.somnus.microservice.commons.base.utils;
 
 import com.somnus.microservice.commons.base.constant.GlobalConstant;
 import com.somnus.microservice.commons.base.holder.ReactiveRequestContextHolder;

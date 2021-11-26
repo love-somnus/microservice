@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>com.somnus</groupId>
-            <artifactId>microservice-commons-core</artifactId>
+            <artifactId>microservice-commons-base</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

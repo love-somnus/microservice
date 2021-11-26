@@ -41,7 +41,7 @@ public class SmsController {
             @ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String", example = "1"),
             @ApiImplicitParam(name = "validateCode", value = "校验码", required = true, dataType = "String", example = "1")})
     @ApiOperation(httpMethod = "POST", value = "发送短信验证码", notes = "1分钟最多允许发送3次【限流】")
-    @Limit(name = "limit", key = "#request.mobile", limitPeriod = 600, limitCount = 3)
+    @Limit(name = "limit", key = "#request.mobile", limitPeriod = 60, limitCount = 3)
     public Mono<?> sendSmsCode(@RequestBody SmsCodeRequest request){
 
         String smsCode = service.sendSmsCode(request.getMobile(), request.getValidateCode());
