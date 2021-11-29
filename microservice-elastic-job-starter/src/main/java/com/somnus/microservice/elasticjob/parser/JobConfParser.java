@@ -43,7 +43,7 @@ public class JobConfParser implements ApplicationContextAware {
     @Autowired
     private ZookeeperRegistryCenter zookeeperRegistryCenter;
 
-    private String prefix = "elastic.job.";
+    private final String prefix = "elastic.job.";
 
     private Environment environment;
 
@@ -205,7 +205,7 @@ public class JobConfParser implements ApplicationContextAware {
         String key = prefix + jobName + "." + fieldName;
         String value = environment.getProperty(key);
         if (StringUtils.hasText(value)) {
-            return Integer.valueOf(value);
+            return Integer.parseInt(value);
         }
         return defaultValue;
     }
@@ -214,7 +214,7 @@ public class JobConfParser implements ApplicationContextAware {
         String key = prefix + jobName + "." + fieldName;
         String value = environment.getProperty(key);
         if (StringUtils.hasText(value)) {
-            return Long.valueOf(value);
+            return Long.parseLong(value);
         }
         return defaultValue;
     }
@@ -223,7 +223,7 @@ public class JobConfParser implements ApplicationContextAware {
         String key = prefix + jobName + "." + fieldName;
         String value = environment.getProperty(key);
         if (StringUtils.hasText(value)) {
-            return Boolean.valueOf(value);
+            return Boolean.parseBoolean(value);
         }
         return defaultValue;
     }

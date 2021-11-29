@@ -51,7 +51,7 @@ public class JobService {
     private ApplicationContext ctx;
 
     // 记录任务添加次数
-    private Map<String, AtomicInteger> JOB_ADD_COUNT = new ConcurrentHashMap<>();
+    private final Map<String, AtomicInteger> JOB_ADD_COUNT = new ConcurrentHashMap<>();
 
     public void addJob(Job job) {
         // 核心配置

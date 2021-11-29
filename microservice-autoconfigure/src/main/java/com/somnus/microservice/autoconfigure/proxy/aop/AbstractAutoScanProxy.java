@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.apache.commons.lang3.ArrayUtils;
@@ -31,13 +32,13 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     private static final long serialVersionUID = 6827218905375993727L;
 
     // Bean名称和Bean对象关联
-    private final Map<String, Object> beanMap = new HashMap<String, Object>();
+    private final Map<String, Object> beanMap = new ConcurrentHashMap<>();
 
     // Spring容器中哪些接口或者类需要被代理
-    private final Map<String, Boolean> proxyMap = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> proxyMap = new ConcurrentHashMap<>();
 
     // Spring容器中哪些类是类代理，哪些类是通过它的接口做代理
-    private final Map<String, Boolean> proxyTargetClassMap = new HashMap<String, Boolean>();
+    private final Map<String, Boolean> proxyTargetClassMap = new ConcurrentHashMap<>();
 
     // 扫描目录，如果不指定，则扫描全局。两种方式运行结果没区别，只是指定扫描目录加快扫描速度，同时可以减少缓存量
     private String[] scanPackages;
@@ -155,12 +156,10 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
         // Spring容器扫描实现类
         if (!targetClass.isInterface()) {
             // 扫描接口（从实现类找到它的所有接口）
-            if (targetClass.getInterfaces() != null) {
-                for (Class<?> targetInterface : targetClass.getInterfaces()) {
-                    Object[] proxyInterceptors = scanAndProxyForTarget(targetInterface, beanName, false);
-                    if (proxyInterceptors != DO_NOT_PROXY) {
-                        return proxyInterceptors;
-                    }
+            for (Class<?> targetInterface : targetClass.getInterfaces()) {
+                Object[] proxyInterceptors = scanAndProxyForTarget(targetInterface, beanName, false);
+                if (proxyInterceptors != DO_NOT_PROXY) {
+                    return proxyInterceptors;
                 }
             }
 

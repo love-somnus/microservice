@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -191,7 +192,7 @@ public class RedisCacheDelegateImpl implements CacheDelegate {
     }
 
     private void clear(String key, String name, boolean allEntries) {
-        String compositeWildcardKey = null;
+        String compositeWildcardKey;
         if (allEntries) {
             compositeWildcardKey = KeyUtil.getCompositeWildcardKey(prefix, name);
         } else {
@@ -200,8 +201,6 @@ public class RedisCacheDelegateImpl implements CacheDelegate {
 
         RedisTemplate<String, Object> redisTemplate = redisHandler.getRedisTemplate();
         Set<String> keys = redisTemplate.keys(compositeWildcardKey);
-        for (String k : keys) {
-            redisTemplate.delete(k);
-        }
+        Optional.ofNullable(keys).ifPresent(set -> set.forEach(k -> redisTemplate.delete(k)));
     }
 }

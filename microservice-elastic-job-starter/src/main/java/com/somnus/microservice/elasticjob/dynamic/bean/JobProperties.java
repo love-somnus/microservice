@@ -18,13 +18,13 @@ public class JobProperties {
      * @return
      */
     @JsonProperty("job_exception_handler")
-    private String jobExceptionHandler = "com.dangdang.ddframe.job.executor.handler.impl.DefaultJobExceptionHandler";
+    private final String jobExceptionHandler = "com.dangdang.ddframe.job.executor.handler.impl.DefaultJobExceptionHandler";
 
     /**
      * 自定义业务处理线程池
      * @return
      */
     @JsonProperty("executor_service_handler")
-    private String executorServiceHandler = "com.dangdang.ddframe.job.executor.handler.impl.DefaultExecutorServiceHandler";
+    private final String executorServiceHandler = "com.dangdang.ddframe.job.executor.handler.impl.DefaultExecutorServiceHandler";
 
 }

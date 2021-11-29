@@ -16,9 +16,9 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 @AllArgsConstructor
 public class LimitCondition implements Condition {
 
-    private String key;
+    private final String key;
 
-    private String value;
+    private final String value;
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
