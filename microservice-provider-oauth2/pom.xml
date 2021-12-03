@@ -55,6 +55,11 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-webflux</artifactId>
                 </exclusion>
+                <!-- SpringCloud 2021， 不兼容 io.springfox.web， 故移除  -->
+                <exclusion>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-boot-starter</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 

@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
 
     <properties>
-        <spring-boot.version>2.5.6</spring-boot.version>
-        <spring-cloud.version>2020.0.4</spring-cloud.version>
+        <spring-boot.version>2.6.1</spring-boot.version>
+        <spring-cloud.version>2021.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
 
         <dubbo.version>2.7.8</dubbo.version>
@@ -29,6 +29,7 @@
         <modelmapper.version>2.3.3</modelmapper.version>
         <user-agent.version>1.21</user-agent.version>
         <jjwt.version>0.11.2</jjwt.version>
+        <nimbus-jose.version>9.15.2</nimbus-jose.version>
         <wechat.version>3.4.0</wechat.version>
         <logstash-logback.version>5.0</logstash-logback.version>
         <logback-kafka.version>0.2.0-RC2</logback-kafka.version>
@@ -47,7 +48,7 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Boot -->
+            <!-- Spring Boot Dependencies -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -65,7 +66,7 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Spring Cloud Alibaba-->
+            <!-- Spring Cloud Alibaba Dependencies-->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
@@ -129,6 +130,13 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-impl</artifactId>
                 <version>${jjwt.version}</version>
+            </dependency>
+
+            <!-- spring-boot-dependencies 2.6.1  已经移除了它，所以这里自己来 -->
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose.version}</version>
             </dependency>
 
             <!-- Mybatis -->
