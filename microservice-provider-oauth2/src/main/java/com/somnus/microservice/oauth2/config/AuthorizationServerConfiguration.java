@@ -72,28 +72,18 @@ public class AuthorizationServerConfiguration {
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 /* 客户端ID和密码 */
-                .clientId("micro-client")
-                .clientSecret("micro-secret")
+                .clientId("client")
+                .clientSecret("secret")
                 /* 授权方法 */
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
                 /* 授权类型 */
-                .authorizationGrantTypes(authorizationGrantTypes ->
-                        authorizationGrantTypes.addAll(Arrays.asList(
-                                // 授权码
-                                AuthorizationGrantType.AUTHORIZATION_CODE,
-                                // 刷新token
-                                AuthorizationGrantType.REFRESH_TOKEN,
-                                // 客户端模式
-                                AuthorizationGrantType.CLIENT_CREDENTIALS,
-                                // 密码模式
-                                AuthorizationGrantType.PASSWORD
-                                )
-                        )
-                )
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                 // 重定向url
-                .redirectUris(redirectUris ->
-                        redirectUris.addAll(Collections.singletonList("https://www.baidu.com"))
-                )
+                .redirectUris(redirectUris -> redirectUris.addAll(Collections.singletonList("https://www.baidu.com")))
                 // 客户端申请的作用域，也可以理解这个客户端申请访问用户的哪些信息，比如：获取用户信息，获取用户照片等
                 .scopes(scopes -> scopes.addAll(Arrays.asList(OidcScopes.OPENID, "message.read", "message.write")))
                 .tokenSettings(TokenSettings.builder()
