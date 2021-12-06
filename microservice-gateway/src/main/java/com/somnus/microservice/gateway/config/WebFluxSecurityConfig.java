@@ -33,6 +33,8 @@ import reactor.core.publisher.Mono;
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
+    private static final String[] URLS = {"/oauth2/**", "/swagger-ui/**","/swagger-resources/**","/v2/api-docs","/v3/api-docs"};
+
     @Autowired
     private DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
 
@@ -47,6 +49,7 @@ public class WebFluxSecurityConfig {
                 /* 请求拦截处理 */
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
+                        .pathMatchers(URLS).permitAll()
                         .anyExchange().authenticated()
                 )
                 .csrf().disable()

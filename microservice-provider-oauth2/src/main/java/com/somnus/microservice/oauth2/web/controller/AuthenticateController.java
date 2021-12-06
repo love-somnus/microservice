@@ -27,7 +27,7 @@ public class AuthenticateController {
         return "ok";
     }
 
-    @PostMapping(value = "save")
+    @PostMapping(value = "user/save")
     public Wrapper<String> save(String username, String password){
 
         userService.save(username, password);
