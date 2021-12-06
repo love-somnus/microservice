@@ -30,7 +30,7 @@
 http://ip:8848/nacos/v1/cs/configs?dataId=redisson.yaml&group=DEFAULT_GROUP
 ```
 
-## 3.1 redisson.yaml(单机)
+## 3.1 redisson.yaml(集群)
 
 ```yaml
 clusterServersConfig:
@@ -70,7 +70,7 @@ codec: !<org.redisson.codec.JsonJacksonCodec> {}
 transportMode: "NIO"
 ```
 
-## 3.2 redisson.yaml(集群)
+## 3.2 redisson.yaml(单机)
 
 ```yaml
 singleServerConfig:
@@ -114,7 +114,7 @@ http://192.168.97.101:8002/auth/user/save
 
 [![QQ-20211206104944.png](https://i.postimg.cc/BbQwBL24/QQ-20211206104944.png)](https://postimg.cc/jwmXsj8F)
 
-4.2 oauth2获取授权码
+## 4.2 oauth2获取授权码
 
 - ##### [授权码流程（Authorization Code）](https://github.com/love-somnus/microservice/wiki/Spring-Authorization-Server介绍和使用)
 
