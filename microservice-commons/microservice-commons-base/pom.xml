@@ -84,12 +84,6 @@
             <artifactId>httpmime</artifactId>
         </dependency>
 
-        <!-- excel -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>easyexcel</artifactId>
-        </dependency>
-
         <!-- UserAgent -->
         <dependency>
             <groupId>eu.bitwalker</groupId>
