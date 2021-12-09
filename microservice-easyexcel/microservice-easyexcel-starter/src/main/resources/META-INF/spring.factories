@@ -1,0 +1,2 @@
+com.somnus.microservice.easyexcel.starter.annotation.EnableEasyexcel=\
+com.somnus.microservice.easyexcel.starter.configuration.EasyexcelConfiguration
