@@ -83,4 +83,10 @@ public @interface ResponseExcel {
      * @return boolean
      */
     boolean i18nHeader() default false;
+
+    /**
+     * excel 多sheet
+     * @return boolean
+     */
+    boolean multi() default false;
 }

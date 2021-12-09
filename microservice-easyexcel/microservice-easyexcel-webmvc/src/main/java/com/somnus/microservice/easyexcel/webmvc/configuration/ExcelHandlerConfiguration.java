@@ -3,7 +3,7 @@ package com.somnus.microservice.easyexcel.webmvc.configuration;
 import com.alibaba.excel.converters.Converter;
 import com.somnus.microservice.easyexcel.webmvc.enhance.DefaultWriterBuilderEnhancer;
 import com.somnus.microservice.easyexcel.webmvc.enhance.WriterBuilderEnhancer;
-import com.somnus.microservice.easyexcel.webmvc.handler.ManySheetWriteHandler;
+import com.somnus.microservice.easyexcel.webmvc.handler.MultiSheetWriteHandler;
 import com.somnus.microservice.easyexcel.webmvc.handler.SheetWriteHandler;
 import com.somnus.microservice.easyexcel.webmvc.handler.SingleSheetWriteHandler;
 import com.somnus.microservice.easyexcel.head.I18nHeaderCellWriteHandler;
@@ -60,8 +60,8 @@ public class ExcelHandlerConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    public ManySheetWriteHandler manySheetWriteHandler() {
-        return new ManySheetWriteHandler(configProperties, converterProvider, writerBuilderEnhancer());
+    public MultiSheetWriteHandler manySheetWriteHandler() {
+        return new MultiSheetWriteHandler(configProperties, converterProvider, writerBuilderEnhancer());
     }
 
     /**

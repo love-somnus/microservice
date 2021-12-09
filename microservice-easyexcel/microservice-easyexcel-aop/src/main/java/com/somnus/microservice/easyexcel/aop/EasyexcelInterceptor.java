@@ -2,14 +2,13 @@ package com.somnus.microservice.easyexcel.aop;
 
 import com.somnus.microservice.autoconfigure.proxy.aop.AbstractInterceptor;
 import com.somnus.microservice.easyexcel.annotation.ResponseExcel;
+import com.somnus.microservice.easyexcel.context.ThreadLocalContext;
+import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 /**
  * @author kevin.liu
@@ -18,6 +17,7 @@ import java.util.Objects;
  * @description: TODO
  * @date 2021/12/9 13:19
  */
+@Slf4j
 public class EasyexcelInterceptor extends AbstractInterceptor {
 
     public static final String EXCEL_NAME_KEY = "__EXCEL_NAME_KEY__";
@@ -32,10 +32,13 @@ public class EasyexcelInterceptor extends AbstractInterceptor {
                 name = LocalDateTime.now().toString();
             }
             else {
-                name = getSpelKey(invocation, name);
+                try {
+                    name = getSpelKey(invocation, name);
+                } catch (Exception e) {
+                    log.warn("key: {} is not SPEL language", name);
+                }
             }
-            RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-            Objects.requireNonNull(requestAttributes).setAttribute(EXCEL_NAME_KEY, name, RequestAttributes.SCOPE_REQUEST);
+            ThreadLocalContext.set(EXCEL_NAME_KEY, name);
         }
         return invocation.proceed();
     }

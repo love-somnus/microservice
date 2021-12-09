@@ -39,6 +39,7 @@
         <springfox.version>3.0.0</springfox.version>
         <springdoc.version>1.5.12</springdoc.version>
         <persistence-api.version>2.2</persistence-api.version>
+        <ow2.asm.version>7.1</ow2.asm.version>
 
         <repo.distribution.release.id>wt-releases</repo.distribution.release.id>
         <repo.distribution.release.url>https://maven.aliyun.com/repository/releases</repo.distribution.release.url>
@@ -248,6 +249,12 @@
                 <groupId>javax.persistence</groupId>
                 <artifactId>javax.persistence-api</artifactId>
                 <version>${persistence-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>${ow2.asm.version}</version>
             </dependency>
 
         </dependencies>

@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ThreadLocalContext {
 
-    private static final ThreadLocal<Map<String, Object>> THREAD_CONTEXT = ThreadLocal.withInitial(() -> new ConcurrentHashMap<>());
+    private static final ThreadLocal<Map<String, Object>> THREAD_CONTEXT = ThreadLocal.withInitial(ConcurrentHashMap::new);
 
     /**
      * 取得thread context Map的实例。

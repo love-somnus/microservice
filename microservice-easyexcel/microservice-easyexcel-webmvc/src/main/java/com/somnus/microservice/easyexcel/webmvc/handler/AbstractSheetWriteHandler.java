@@ -9,6 +9,7 @@ import com.alibaba.excel.write.handler.WriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
 
 import com.somnus.microservice.easyexcel.aop.EasyexcelInterceptor;
+import com.somnus.microservice.easyexcel.context.ThreadLocalContext;
 import com.somnus.microservice.easyexcel.converter.LocalDateStringConverter;
 import com.somnus.microservice.easyexcel.converter.LocalDateTimeStringConverter;
 import com.somnus.microservice.easyexcel.exception.ExcelException;
@@ -35,8 +36,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -45,7 +44,6 @@ import java.lang.reflect.Modifier;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author kevin.liu
@@ -81,17 +79,15 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
     @SneakyThrows
     public void export(Object o, HttpServletResponse response, ResponseExcel responseExcel) {
         check(responseExcel);
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        String name = (String) Objects.requireNonNull(requestAttributes).getAttribute(EasyexcelInterceptor.EXCEL_NAME_KEY,
-                RequestAttributes.SCOPE_REQUEST);
+        String name = ThreadLocalContext.get(EasyexcelInterceptor.EXCEL_NAME_KEY);
         String fileName = String.format("%s%s", URLEncoder.encode(name, "UTF-8"), responseExcel.suffix().getValue());
         // 根据实际的文件类型找到对应的 contentType
-        String contentType = MediaTypeFactory.getMediaType(fileName).map(MediaType::toString)
-                .orElse("application/vnd.ms-excel");
+        String contentType = MediaTypeFactory.getMediaType(fileName).map(MediaType::toString).orElse("application/vnd.ms-excel");
         response.setContentType(contentType);
         response.setCharacterEncoding("utf-8");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
         write(o, response, responseExcel);
+        ThreadLocalContext.remove(EasyexcelInterceptor.EXCEL_NAME_KEY);
     }
 
     /**

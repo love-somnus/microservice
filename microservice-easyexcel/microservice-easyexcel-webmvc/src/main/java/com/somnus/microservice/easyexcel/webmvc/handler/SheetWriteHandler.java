@@ -18,7 +18,7 @@ public interface SheetWriteHandler {
      * @param obj
      * @return
      */
-    boolean support(Object obj);
+    boolean support(ResponseExcel obj);
 
     /**
      * 校验

@@ -21,12 +21,12 @@ public class EasyexcelAopConfiguration {
     private String scanPackages;
 
     @Bean
-    public EasyexcelAutoScanProxy limitAutoScanProxy() {
+    public EasyexcelAutoScanProxy easyexcelAutoScanProxy() {
         return new EasyexcelAutoScanProxy(scanPackages);
     }
 
     @Bean
-    public EasyexcelInterceptor limitInterceptor() {
+    public EasyexcelInterceptor easyexcelInterceptor() {
         return new EasyexcelInterceptor();
     }
 }

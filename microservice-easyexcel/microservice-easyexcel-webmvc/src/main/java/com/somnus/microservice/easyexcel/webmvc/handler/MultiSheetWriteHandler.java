@@ -4,7 +4,6 @@ import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.converters.Converter;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.somnus.microservice.easyexcel.webmvc.enhance.WriterBuilderEnhancer;
-import com.somnus.microservice.easyexcel.exception.ExcelException;
 import com.somnus.microservice.easyexcel.properties.ExcelConfigProperties;
 import com.somnus.microservice.easyexcel.annotation.ResponseExcel;
 import com.somnus.microservice.easyexcel.annotation.Sheet;
@@ -21,9 +20,9 @@ import java.util.List;
  * @description: TODO
  * @date 2021/12/9 11:38
  */
-public class ManySheetWriteHandler extends AbstractSheetWriteHandler {
+public class MultiSheetWriteHandler extends AbstractSheetWriteHandler {
 
-    public ManySheetWriteHandler(ExcelConfigProperties configProperties, ObjectProvider<List<Converter<?>>> converterProvider, WriterBuilderEnhancer enhance) {
+    public MultiSheetWriteHandler(ExcelConfigProperties configProperties, ObjectProvider<List<Converter<?>>> converterProvider, WriterBuilderEnhancer enhance) {
         super(configProperties, converterProvider, enhance);
     }
 
@@ -33,14 +32,8 @@ public class ManySheetWriteHandler extends AbstractSheetWriteHandler {
      * @return
      */
     @Override
-    public boolean support(Object obj) {
-        if (obj instanceof List) {
-            List objList = (List) obj;
-            return !objList.isEmpty() && objList.get(0) instanceof List;
-        }
-        else {
-            throw new ExcelException("@ResponseExcel 返回值必须为List类型");
-        }
+    public boolean support(ResponseExcel obj) {
+        return obj.multi();
     }
 
     @Override
