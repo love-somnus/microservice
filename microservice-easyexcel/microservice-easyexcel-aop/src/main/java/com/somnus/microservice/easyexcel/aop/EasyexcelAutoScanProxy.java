@@ -3,6 +3,7 @@ package com.somnus.microservice.easyexcel.aop;
 import com.somnus.microservice.autoconfigure.proxy.aop.DefaultAutoScanProxy;
 import com.somnus.microservice.autoconfigure.proxy.mode.ProxyMode;
 import com.somnus.microservice.autoconfigure.proxy.mode.ScanMode;
+import com.somnus.microservice.easyexcel.annotation.RequestExcel;
 import com.somnus.microservice.easyexcel.annotation.ResponseExcel;
 
 import java.lang.annotation.Annotation;
@@ -38,7 +39,7 @@ public class EasyexcelAutoScanProxy extends DefaultAutoScanProxy {
     @Override
     protected Class<? extends Annotation>[] getMethodAnnotations() {
         if (methodAnnotations == null) {
-            methodAnnotations = new Class[] { ResponseExcel.class };
+            methodAnnotations = new Class[] {  RequestExcel.class, ResponseExcel.class };
         }
 
         return methodAnnotations;
