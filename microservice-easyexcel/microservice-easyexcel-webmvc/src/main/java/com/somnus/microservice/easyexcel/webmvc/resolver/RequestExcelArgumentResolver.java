@@ -36,7 +36,7 @@ public class RequestExcelArgumentResolver implements HandlerMethodArgumentResolv
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(RequestExcel.class);
+        return parameter.getMethodAnnotation(RequestExcel.class) != null;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class RequestExcelArgumentResolver implements HandlerMethodArgumentResolv
         }
 
         // 处理自定义 readListener
-        RequestExcel requestExcel = parameter.getParameterAnnotation(RequestExcel.class);
+        RequestExcel requestExcel = parameter.getMethodAnnotation(RequestExcel.class);
         assert requestExcel != null;
         Class<? extends ListAnalysisEventListener<?>> readListenerClass = requestExcel.readListener();
         ListAnalysisEventListener<?> readListener = BeanUtils.instantiateClass(readListenerClass);
@@ -71,8 +71,10 @@ public class RequestExcelArgumentResolver implements HandlerMethodArgumentResolv
         Class<?> excelModelClass = ResolvableType.forMethodParameter(parameter).getGeneric(0).resolve();
 
         // 这里需要指定读用哪个 class 去读，然后读取第一个 sheet 文件流会自动关闭
-        EasyExcel.read(inputStream, excelModelClass, readListener).registerConverter(LocalDateStringConverter.INSTANCE)
-                .registerConverter(LocalDateTimeStringConverter.INSTANCE).ignoreEmptyRow(requestExcel.ignoreEmptyRow())
+        EasyExcel.read(inputStream, excelModelClass, readListener)
+                .registerConverter(LocalDateStringConverter.INSTANCE)
+                .registerConverter(LocalDateTimeStringConverter.INSTANCE)
+                .ignoreEmptyRow(requestExcel.ignoreEmptyRow())
                 .sheet().doRead();
 
         // 校验失败的数据处理 交给 BindResult

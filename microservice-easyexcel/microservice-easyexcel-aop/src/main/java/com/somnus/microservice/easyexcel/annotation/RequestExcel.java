@@ -6,7 +6,7 @@ import com.somnus.microservice.easyexcel.listener.ListAnalysisEventListener;
 import java.lang.annotation.*;
 
 @Documented
-@Target({ ElementType.PARAMETER })
+@Target({ ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequestExcel {
 
@@ -26,4 +26,5 @@ public @interface RequestExcel {
      * @return 默认跳过
      */
     boolean ignoreEmptyRow() default false;
+
 }

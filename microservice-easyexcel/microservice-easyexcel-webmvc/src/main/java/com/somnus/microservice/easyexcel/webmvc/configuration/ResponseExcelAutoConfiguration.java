@@ -35,6 +35,20 @@ public class ResponseExcelAutoConfiguration {
     private final ResponseExcelReturnValueHandler responseExcelReturnValueHandler;
 
     /**
+     * 追加 Excel 请求处理器 到 SpringMVC 中
+     */
+    @PostConstruct
+    public void setRequestExcelArgumentResolver() {
+        List<HandlerMethodArgumentResolver> argumentResolvers = requestMappingHandlerAdapter.getArgumentResolvers();
+
+        List<HandlerMethodArgumentResolver> resolverList = new ArrayList<>();
+        resolverList.add(new RequestExcelArgumentResolver());
+        assert argumentResolvers != null;
+        resolverList.addAll(argumentResolvers);
+        requestMappingHandlerAdapter.setArgumentResolvers(resolverList);
+    }
+
+    /**
      * 追加 Excel返回值处理器 到 SpringMVC 中
      */
     @PostConstruct
@@ -46,19 +60,6 @@ public class ResponseExcelAutoConfiguration {
         assert returnValueHandlers != null;
         newHandlers.addAll(returnValueHandlers);
         requestMappingHandlerAdapter.setReturnValueHandlers(newHandlers);
-    }
-
-    /**
-     * 追加 Excel 请求处理器 到 springmvc 中
-     */
-    @PostConstruct
-    public void setRequestExcelArgumentResolver() {
-        List<HandlerMethodArgumentResolver> argumentResolvers = requestMappingHandlerAdapter.getArgumentResolvers();
-        List<HandlerMethodArgumentResolver> resolverList = new ArrayList<>();
-        resolverList.add(new RequestExcelArgumentResolver());
-        assert argumentResolvers != null;
-        resolverList.addAll(argumentResolvers);
-        requestMappingHandlerAdapter.setArgumentResolvers(resolverList);
     }
 
 }

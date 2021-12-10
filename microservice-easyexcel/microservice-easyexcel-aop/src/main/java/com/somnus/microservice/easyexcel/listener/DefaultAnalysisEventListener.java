@@ -45,7 +45,7 @@ public class DefaultAnalysisEventListener extends ListAnalysisEventListener<Obje
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        log.debug("Excel read analysed");
+        log.info("Excel read analysed sheet: [{}]", analysisContext.readSheetHolder().getSheetName());
     }
 
     @Override
