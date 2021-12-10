@@ -74,12 +74,6 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.somnus</groupId>
-            <artifactId>microservice-easyexcel-starter</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
     </dependencies>
 
     <build>
