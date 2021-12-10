@@ -62,13 +62,16 @@ public class Demo {
 - PostMan 测试
 
 1. 添加Header
+
 ```
 Content-Type:multipart/form-data
 ```
 [![QQ-20211210163934.png](https://i.postimg.cc/mr1jmD21/QQ-20211210163934.png)](https://postimg.cc/Z9Z6RJNJ)
 
 2. 上传文件
+
 [![QQ-20211210164204.png](https://i.postimg.cc/jdXJrrkg/QQ-20211210164204.png)](https://postimg.cc/0bzNphvD)
+
 
 - 测试表格
 
