@@ -18,7 +18,22 @@ EasyExcel是一个基于Java的简单、省内存的读写Excel的开源项目�
     <version>${project.parent.version}</version>
 </dependency>
 ```
+## 开启注解
+```java
+@EnableEasyexcel
+@SpringBootApplication
+public class Application {
 
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+```
+
+## 配置文件
+```properties
+easyexcel.scan.packages=com.somnus.microservice.web.controller
+```
 ## 导入 Excel
 
 - 接口类定义List 接受表格对应的数据 使用 @RequestExcel 标记
@@ -231,7 +246,6 @@ public class ExportMultiSheetController {
     }
 }
 
-	// 实体对象
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
