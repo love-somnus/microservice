@@ -8,7 +8,6 @@ EasyExcel是一个基于Java的简单、省内存的读写Excel的开源项目�
 ![](http://pigx.vip/20200331165749_w0DXBK_Screenshot.jpeg)
 
 
-
 ## 依赖引用
 
 - 项目已上传至 maven 仓库，直接引入即可使用
@@ -31,7 +30,6 @@ public void upload(List<DemoData> dataList, BindingResult bindingResult) {
   // JSR 303 校验通用校验获取失败的数据
   List<ErrorMessage> errorMessageList = (List<ErrorMessage>) bindingResult.getTarget();
 }
-
 ```
 
 - 实体声明
@@ -50,8 +48,6 @@ public class Demo {
 - 测试表格
 
 ![](https://minio.pigx.vip/oss/1618560470.png)
-
-
 
 ##  导出 Excel
 
@@ -128,13 +124,14 @@ public class DemoData {
 @NoArgsConstructor
 @AllArgsConstructor
 public class DemoData {
+
     @ColumnWidth(50)  // 定义宽度
-	@ExcelProperty("用户名") // 定义列名称
+    @ExcelProperty("用户名") // 定义列名称
     @ContentStyle(fillPatternType = FillPatternTypeEnum.NO_FILL, fillForegroundColor = 40)
     private String username;
 
-	@ExcelProperty("密码")
-	private String password;
+    @ExcelProperty("密码")
+    private String password;
 }
 ```
 
@@ -148,12 +145,12 @@ public class DemoData {
 @AllArgsConstructor
 public class DemoData {
     @ColumnWidth(50)  // 定义宽度
-	@ExcelProperty("用户名") // 定义列名称
+    @ExcelProperty("用户名") // 定义列名称
     @ContentStyle(fillPatternType = FillPatternTypeEnum.NO_FILL, fillForegroundColor = 40)
-	private String username;
+    private String username;
 
-	@ExcelIgnore // 忽略这个字段
-	private String password;
+    @ExcelIgnore // 忽略这个字段
+    private String password;
 }
 ```
 ![](http://pigx.vip/20200331164144_l2gwfD_Screenshot.jpeg)
@@ -191,7 +188,6 @@ public List<List<DemoData>> download() {
 ![](http://pigx.vip/20200331164527_sbYDsC_Screenshot.jpeg)
 
 
-
 ### 导出不同的 Sheet
 
 这里两个 sheet 导出不同类型的对象，只导出 DemoData 中的 username 属性，且将 testData 中的 number 属性排除。
@@ -201,58 +197,57 @@ public List<List<DemoData>> download() {
 @RequestMapping("excel")
 public class ExportMultiSheetController {
 
-	@ResponseExcel(name = "不同Sheet的导出", sheets = {
-			@Sheet(sheetName = "demoData", includes = {"username"}),
-			@Sheet(sheetName = "testData", excludes = {"number"})
-	})
-	@GetMapping("different-sheet")
-	public List<List> multiDifferent() {
-		List<List> lists = new ArrayList<>();
-		lists.add(demoDatalist());
-		lists.add(testDatalist());
-		return lists;
-	}
+    @ResponseExcel(name = "不同Sheet的导出", sheets = {
+	@Sheet(sheetName = "demoData", includes = {"username"}),
+	@Sheet(sheetName = "testData", excludes = {"number"})
+    })
+    @GetMapping("different-sheet")
+    public List<List> multiDifferent() {
+        List<List> lists = new ArrayList<>();
+        lists.add(demoDatalist());
+        lists.add(testDatalist());
+        return lists;
+    }
 
-	private List<DemoData> demoDatalist(){
-		List<DemoData> dataList = new ArrayList<>();
-		for (int i = 0; i < 100; i++) {
-			DemoData data = new DemoData("tr1" + i, "tr2" + i);
-			dataList.add(data);
-		}
-		return dataList;
-	}
+    private List<DemoData> demoDatalist(){
+        List<DemoData> dataList = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            DemoData data = new DemoData("tr1" + i, "tr2" + i);
+            dataList.add(data);
+        }
+        return dataList;
+    }
 
-	private List<TestData> testDatalist(){
-		List<TestData> dataList = new ArrayList<>();
-		for (int i = 0; i < 100; i++) {
-			TestData data = new TestData();
-			data.setStr("str" + i);
-			data.setNumber(i);
-			data.setLocalDateTime(LocalDateTime.now());
-			dataList.add(data);
-		}
-		return dataList;
+    private List<TestData> testDatalist(){
+	List<TestData> dataList = new ArrayList<>();
+	for (int i = 0; i < 100; i++) {
+	    TestData data = new TestData();
+	    data.setStr("str" + i);
+	    data.setNumber(i);
+	    data.setLocalDateTime(LocalDateTime.now());
+	    dataList.add(data);
 	}
+	return dataList;
+    }
+}
 
 	// 实体对象
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-	public static class DemoData {
-		private String username;
-		private String password;
-	}
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public static class DemoData {
+    private String username;
+    private String password;
+}
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-	public static class TestData {
-		private String str;
-		private Integer number;
-		@ColumnWidth(50)  // 定义宽度
-		private LocalDateTime localDateTime;
-	}
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public static class TestData {
+    private String str;
+    private Integer number;
+    @ColumnWidth(50)  // 定义宽度
+    private LocalDateTime localDateTime;
 }
 ```
 
@@ -284,6 +279,7 @@ public class SimpleData {
 ```java
 @Component
 public class SimpleDataHeadGenerator implements HeadGenerator {
+
     @Override
     public HeadMeta head(Class<?> clazz) {
         HeadMeta headMeta = new HeadMeta();
@@ -316,7 +312,7 @@ public class SimpleDataHeadGenerator implements HeadGenerator {
 public class ExcelHeadTestController {
 
     @ResponseExcel(name = "customHead", headGenerator = SimpleDataHeadGenerator.class)
-    @GetMapping
+    @GetMapping("customHead")
     public List<SimpleData> multi() {
         List<SimpleData> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -338,7 +334,6 @@ public class ExcelHeadTestController {
 国际化配置基于 Spring 的 MessageSource，开启国际化时，spring 容器中必须有一个 MessageSource 的 Bean。
 
 > 具体 Spring 的国际化使用这里不再展开，想要了解的可以参看官方文档 [Spring MessageSource 使用](https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#context-functionality-messagesource) 以及 [SpringBoot 国际化配置 ](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.internationalization)
-
 
 
 **首先在 resource 下，新建国际化配置文件**
@@ -364,37 +359,35 @@ public class ExcelHeadTestController {
   DemoData.age=年龄
   ```
 
-
-
 **测试类的注解信息上，使用 `{}` 标记配置文件中的 key**
 
 ```java
 @Data
 public class DemoData {
-	@ExcelProperty(value = "{DemoData.username}", index = 0)
-	private String username;
-	@ExcelProperty(value = "{DemoData.age}", index = 1)
-	private Integer age;
+
+    @ExcelProperty(value = "{DemoData.username}", index = 0)
+    private String username;
+
+    @ExcelProperty(value = "{DemoData.age}", index = 1)
+    private Integer age;
 }
 ```
 
-
-
-**导出注解上设置 i18nHeader=true **
+**导出注解上设置 i18nHeader=true**
 
 ```java
-	@ResponseExcel(name = "i18nExport", i18nHeader = true)
-	@GetMapping("excelExport")
-	public List<DemoData> i18nExport() {
-		List<DemoData> list = new ArrayList<>();
-		for (int i = 0; i < 10; i++) {
-			DemoData demoData = new DemoData();
-			demoData.setUsername("username:" + i);
-			demoData.setAge(i);
-			list.add(demoData);
-		}
-		return list;
-	}
+@ResponseExcel(name = "i18nExport", i18nHeader = true)
+@GetMapping("excelExport")
+public List<DemoData> i18nExport() {
+    List<DemoData> list = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+        DemoData demoData = new DemoData();
+        demoData.setUsername("username:" + i);
+        demoData.setAge(i);
+        list.add(demoData);
+    }
+    return list;
+}
 ```
 
 **使用 Postman 测试导出**
@@ -410,7 +403,6 @@ public class DemoData {
 ![导出效果](https://hccake-img.oss-cn-shanghai.aliyuncs.com/ballcat/doc/excel-i18n-export2.png)
 
 
-
 **导入 controller**
 
 注意，这里导入接受的对象如果和导出是同一个的话，由于列名是国际化配置的占位符，无法和实际上传文件进行对应，所以需要给该对象的属性指定 index，导入文件根据 index 进行数据映射。
@@ -418,19 +410,17 @@ public class DemoData {
 当然，也可以使用额外的导入类来接收导入信息。
 
 ```java
-	@PostMapping("i18n")
-	@ResponseBody
-	public List<DemoData> importExcel(@RequestExcel List<DemoData> list) {
-		return list;
-	}
+@PostMapping("i18n")
+@ResponseBody
+@RequestExcel 
+public List<DemoData> importExcel(List<DemoData> list) {
+    return list;
+}
 ```
 
 **使用 Postman 测试导入**
 
 ![](https://hccake-img.oss-cn-shanghai.aliyuncs.com/ballcat/doc/excel-i18n-import.png)
-
-
-
 
 
 ## 添加全局自定义转换器（Converter）
@@ -441,8 +431,8 @@ public class DemoData {
 ```java
 @Data
 public class TestModel {
-	@ExcelProperty("名称集合")
-	private Set<String> nameSet;
+    @ExcelProperty("名称集合")
+    private Set<String> nameSet;
 }
 
 /**
@@ -452,32 +442,32 @@ public class TestModel {
  */
 @Component
 public class SetConverter implements Converter<Set<?>> {
-	private final ConversionService conversionService;
+    private final ConversionService conversionService;
 
-	SetConverter() {
-		this.conversionService = DefaultConversionService.getSharedInstance();
-	}
+    SetConverter() {
+        this.conversionService = DefaultConversionService.getSharedInstance();
+    }
 
-	@Override
-	public Class<?> supportJavaTypeKey() {
-		return Set.class;
-	}
+    @Override
+    public Class<?> supportJavaTypeKey() {
+        return Set.class;
+    }
 
-	@Override
-	public CellDataTypeEnum supportExcelTypeKey() {
-		return CellDataTypeEnum.STRING;
-	}
+    @Override
+    public CellDataTypeEnum supportExcelTypeKey() {
+        return CellDataTypeEnum.STRING;
+    }
 
-	@Override
-	public Set<?> convertToJavaData(CellData cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
-		String[] value = StringUtils.delimitedListToStringArray(cellData.getStringValue(), ",");
-		return (Set<?>) conversionService.convert(value, TypeDescriptor.valueOf(String[].class), new TypeDescriptor(contentProperty.getField()));
-	}
+    @Override
+    public Set<?> convertToJavaData(CellData cellData, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
+        String[] value = StringUtils.delimitedListToStringArray(cellData.getStringValue(), ",");
+        return (Set<?>) conversionService.convert(value, TypeDescriptor.valueOf(String[].class), new TypeDescriptor(contentProperty.getField()));
+    }
 
-	@Override
-	public CellData<String> convertToExcelData(Set<?> value, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
-		return new CellData<>(StringUtils.collectionToCommaDelimitedString(value));
-	}
+    @Override
+    public CellData<String> convertToExcelData(Set<?> value, ExcelContentProperty contentProperty, GlobalConfiguration globalConfiguration) {
+        return new CellData<>(StringUtils.collectionToCommaDelimitedString(value));
+    }
 
 }
 ```
@@ -491,8 +481,6 @@ public List<DemoData> e1() {
     return list();
 }
 ```
-
-
 
 ## 其他用法
 
