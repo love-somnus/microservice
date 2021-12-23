@@ -19,6 +19,7 @@
         <dubbo-serialization-kryo.version>2.7.14</dubbo-serialization-kryo.version>
         <reactivefeign.version>3.1.1</reactivefeign.version>
         <mybatis-plus.version>3.4.3</mybatis-plus.version>
+        <pagehelper.version>1.4.1</pagehelper.version>
         <alibaba-druid.version>1.1.14</alibaba-druid.version>
         <alibaba-easyexcel.version>3.0.5</alibaba-easyexcel.version>
         <redisson.version>3.11.3</redisson.version>
@@ -145,6 +146,11 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
 
             <!-- Redisson -->

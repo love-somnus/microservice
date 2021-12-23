@@ -1,5 +1,7 @@
 package com.somnus.microservice.commons.core.utils;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.github.pagehelper.PageInfo;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -78,6 +80,101 @@ public abstract class Objects {
         return list;
     }
 
+    /**
+     * 分页对象转换DOMAIN -> VO
+     * @param original
+     * @param <DOMAIN>
+     * @param <VO>
+     * @return
+     */
+    public static <DOMAIN, VO> IPage<VO> convert(IPage<DOMAIN> original, Class<VO> clazz){
+
+        ModelMapper mapper = new ModelMapper();
+
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        List<VO> list = original.getRecords().stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
+
+        IPage<VO> page = mapper.map(original, IPage.class);
+
+        page.setRecords(list);
+
+        return page;
+    }
+
+    /**
+     * 分页对象转换DOMAIN -> VO
+     * @param original
+     * @param <DOMAIN>
+     * @param <VO>
+     * @return
+     */
+    public static <DOMAIN, VO> IPage<VO> convertPage(IPage<DOMAIN> original, Class<VO> clazz, BiConsumer<DOMAIN, VO> consumer){
+
+        ModelMapper mapper = new ModelMapper();
+
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        List<VO> list = original.getRecords().stream().map(entity -> {
+            VO vo = mapper.map(entity, clazz);
+            consumer.accept(entity, vo);
+            return vo;
+        }).collect(Collectors.toList());
+
+        IPage<VO> page = mapper.map(original, IPage.class);
+
+        page.setRecords(list);
+
+        return page;
+    }
+
+    /**
+     * 分页对象转换DOMAIN -> VO
+     * @param original
+     * @param <DOMAIN>
+     * @param <VO>
+     * @return
+     */
+    public static <DOMAIN, VO> PageInfo<VO> convert(PageInfo<DOMAIN> original, Class<VO> clazz){
+
+        ModelMapper mapper = new ModelMapper();
+
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        List<VO> list = original.getList().stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
+
+        PageInfo<VO> pageInfo = mapper.map(original, PageInfo.class);
+
+        pageInfo.setList(list);
+
+        return pageInfo;
+    }
+
+    /**
+     * 分页对象转换DOMAIN -> VO
+     * @param original
+     * @param <DOMAIN>
+     * @param <VO>
+     * @return
+     */
+    public static <DOMAIN, VO> PageInfo<VO> convertPageInfo(PageInfo<DOMAIN> original, Class<VO> clazz, BiConsumer<DOMAIN, VO> consumer){
+
+        ModelMapper mapper = new ModelMapper();
+
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        List<VO> list = original.getList().stream().map(entity -> {
+            VO vo = mapper.map(entity, clazz);
+            consumer.accept(entity, vo);
+            return vo;
+        }).collect(Collectors.toList());
+
+        PageInfo<VO> pageInfo = mapper.map(original, PageInfo.class);
+
+        pageInfo.setList(list);
+
+        return pageInfo;
+    }
 
     /**
      * 判断对象是否为空，且对象的所有属性都为空
