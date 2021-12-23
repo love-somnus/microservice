@@ -148,6 +148,7 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
         String lockKey = pair.getKey();
         RLock lock = pair.getValue();
         try{
+            /* 判断要解锁的key是否被当前线程持有 */
             if (lock != null && lock.isLocked() && lock.isHeldByCurrentThread()) {
                 lock.unlock();
             }
