@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author kevin.liu
@@ -49,18 +50,15 @@ public class RequestExcelArgumentResolver implements HandlerMethodArgumentResolv
         }
 
         // 处理自定义 readListener
-        RequestExcel requestExcel = parameter.getMethodAnnotation(RequestExcel.class);
-        assert requestExcel != null;
+        RequestExcel requestExcel = Objects.requireNonNull(parameter.getMethodAnnotation(RequestExcel.class));
         Class<? extends ListAnalysisEventListener<?>> readListenerClass = requestExcel.readListener();
         ListAnalysisEventListener<?> readListener = BeanUtils.instantiateClass(readListenerClass);
 
         // 获取请求文件流
-        HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        assert request != null;
+        HttpServletRequest request = Objects.requireNonNull(webRequest.getNativeRequest(HttpServletRequest.class));
         InputStream inputStream;
         if (request instanceof MultipartRequest) {
-            MultipartFile file = ((MultipartRequest) request).getFile(requestExcel.fileName());
-            assert file != null;
+            MultipartFile file = Objects.requireNonNull(((MultipartRequest) request).getFile(requestExcel.fileName()));
             inputStream = file.getInputStream();
         }
         else {

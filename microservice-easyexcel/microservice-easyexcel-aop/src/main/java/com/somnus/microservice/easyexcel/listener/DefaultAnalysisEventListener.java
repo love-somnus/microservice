@@ -34,12 +34,12 @@ public class DefaultAnalysisEventListener extends ListAnalysisEventListener<Obje
 
         Set<ConstraintViolation<Object>> violations = validator.validate(object);
 
-        if (!violations.isEmpty()) {
+        if (violations.isEmpty()) {
+            list.add(object);
+        }
+        if (! violations.isEmpty()) {
             Set<String> messageSet = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet());
             errorMessageList.add(new ErrorMessage(lineNum, messageSet));
-        }
-        else {
-            list.add(object);
         }
     }
 

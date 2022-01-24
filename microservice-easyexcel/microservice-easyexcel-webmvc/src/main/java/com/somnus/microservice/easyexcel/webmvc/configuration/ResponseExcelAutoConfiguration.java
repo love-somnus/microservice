@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author kevin.liu
@@ -39,11 +40,10 @@ public class ResponseExcelAutoConfiguration {
      */
     @PostConstruct
     public void setRequestExcelArgumentResolver() {
-        List<HandlerMethodArgumentResolver> argumentResolvers = requestMappingHandlerAdapter.getArgumentResolvers();
+        List<HandlerMethodArgumentResolver> argumentResolvers = Objects.requireNonNull(requestMappingHandlerAdapter.getArgumentResolvers());
 
         List<HandlerMethodArgumentResolver> resolverList = new ArrayList<>();
         resolverList.add(new RequestExcelArgumentResolver());
-        assert argumentResolvers != null;
         resolverList.addAll(argumentResolvers);
         requestMappingHandlerAdapter.setArgumentResolvers(resolverList);
     }
@@ -53,11 +53,10 @@ public class ResponseExcelAutoConfiguration {
      */
     @PostConstruct
     public void setReturnValueHandlers() {
-        List<HandlerMethodReturnValueHandler> returnValueHandlers = requestMappingHandlerAdapter.getReturnValueHandlers();
+        List<HandlerMethodReturnValueHandler> returnValueHandlers = Objects.requireNonNull(requestMappingHandlerAdapter.getReturnValueHandlers());
 
         List<HandlerMethodReturnValueHandler> newHandlers = new ArrayList<>();
         newHandlers.add(responseExcelReturnValueHandler);
-        assert returnValueHandlers != null;
         newHandlers.addAll(returnValueHandlers);
         requestMappingHandlerAdapter.setReturnValueHandlers(newHandlers);
     }
