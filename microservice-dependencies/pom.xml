@@ -12,6 +12,7 @@
         <spring-boot.version>2.6.1</spring-boot.version>
         <spring-cloud.version>2021.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
+        <okhttp3.version>4.9.3</okhttp3.version>
 
         <dubbo.version>2.7.8</dubbo.version>
         <dubbo-spring-boot.version>2.7.8</dubbo-spring-boot.version>
@@ -82,6 +83,15 @@
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-dependencies-bom</artifactId>
                 <version>${dubbo.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Okhttp3  -->
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp-bom</artifactId>
+                <version>${okhttp3.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

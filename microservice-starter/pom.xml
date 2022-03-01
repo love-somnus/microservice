@@ -38,6 +38,11 @@
             <artifactId>spring-boot-starter-integration</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+
         <!-- for swagger -->
         <dependency>
             <groupId>io.springfox</groupId>
