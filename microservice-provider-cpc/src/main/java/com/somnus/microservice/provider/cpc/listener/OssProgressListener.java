@@ -4,7 +4,7 @@ import com.aliyun.oss.event.ProgressEvent;
 import com.aliyun.oss.event.ProgressEventType;
 import com.aliyun.oss.event.ProgressListener;
 import com.google.common.base.Stopwatch;
-import javafx.util.Pair;
+import com.somnus.microservice.autoconfigure.proxy.util.Pair;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;

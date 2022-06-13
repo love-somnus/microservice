@@ -8,13 +8,13 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Pair;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.lock.LockExecutor;
 import com.somnus.microservice.lock.constant.LockConstant;
 import com.somnus.microservice.lock.entity.LockType;
 import com.somnus.microservice.lock.local.exception.LocalLockException;
 
-import javafx.util.Pair;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

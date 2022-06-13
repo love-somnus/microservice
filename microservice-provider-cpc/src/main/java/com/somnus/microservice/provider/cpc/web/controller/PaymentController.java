@@ -8,8 +8,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +26,11 @@ import reactor.core.publisher.Mono;
 @RefreshScope
 @RestController
 @RequestMapping(value = "payment")
+@RequiredArgsConstructor
 @Api(value = "Web - PaymentController")
 public class PaymentController {
 
-    @Autowired
-    private PaymentService service;
+    private final PaymentService service;
 
     @GetMapping(value = "order/detail/{orderId}")
     @ApiImplicitParams({

@@ -9,14 +9,14 @@
     <packaging>pom</packaging>
 
     <properties>
-        <spring-boot.version>2.6.1</spring-boot.version>
-        <spring-cloud.version>2021.0.0</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
+        <spring-boot.version>2.6.3</spring-boot.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
         <okhttp3.version>4.9.3</okhttp3.version>
 
-        <dubbo.version>2.7.8</dubbo.version>
-        <dubbo-spring-boot.version>2.7.8</dubbo-spring-boot.version>
-        <dubbo-registry-nacos.version>2.7.8</dubbo-registry-nacos.version>
+        <dubbo.version>2.7.15</dubbo.version>
+        <dubbo-spring-boot.version>2.7.15</dubbo-spring-boot.version>
+        <dubbo-registry-nacos.version>2.7.15</dubbo-registry-nacos.version>
         <dubbo-serialization-kryo.version>2.7.14</dubbo-serialization-kryo.version>
         <reactivefeign.version>3.1.1</reactivefeign.version>
         <mybatis-plus.version>3.4.3</mybatis-plus.version>

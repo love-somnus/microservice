@@ -1,5 +1,6 @@
 package com.somnus.microservice.lock.redis.impl;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Pair;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
 import com.somnus.microservice.lock.LockExecutor;
@@ -7,7 +8,6 @@ import com.somnus.microservice.lock.constant.LockConstant;
 import com.somnus.microservice.lock.entity.LockType;
 import com.somnus.microservice.lock.redis.exception.RedisLockException;
 
-import javafx.util.Pair;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
