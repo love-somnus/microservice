@@ -1,7 +1,7 @@
 package com.somnus.microservice.gateway.config;
 
 import com.somnus.microservice.gateway.config.handler.DefaultAuthenticationEntryPoint;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,14 +29,14 @@ import reactor.core.publisher.Mono;
  */
 @RefreshScope
 @Configuration
+@RequiredArgsConstructor
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
     private static final String[] URLS = {"/oauth2/**", "/swagger-ui/**","/swagger-resources/**","/v2/api-docs","/v3/api-docs"};
 
-    @Autowired
-    private DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
+    private final DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {

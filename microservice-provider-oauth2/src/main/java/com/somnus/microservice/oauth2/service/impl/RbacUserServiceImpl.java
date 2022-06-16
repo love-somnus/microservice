@@ -7,10 +7,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.somnus.microservice.commons.core.support.BaseService;
 import com.somnus.microservice.commons.core.utils.Objects;
+import com.somnus.microservice.commons.security.core.principal.UserInfo;
 import com.somnus.microservice.oauth2.mapper.RbacUserMapper;
 import com.somnus.microservice.oauth2.model.domain.RbacUser;
 import com.somnus.microservice.oauth2.model.query.UserPageQuery;
-import com.somnus.microservice.oauth2.model.vo.RbacUserVo;
 import com.somnus.microservice.oauth2.service.RbacUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,26 +41,31 @@ public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUs
     }
 
     @Override
+    public Optional<RbacUser> getByMobile(String mobile) {
+        return Optional.ofNullable(rbacUserMapper.selectOne(new QueryWrapper<RbacUser>().eq("mobile", mobile)));
+    }
+
+    @Override
     public void save(String username, String password) {
         rbacUserMapper.insert(new RbacUser(username, passwordEncoder.encode(password)));
     }
 
     @Override
-    public IPage<RbacUserVo> selectByPage(UserPageQuery query) {
+    public IPage<UserInfo> selectByPage(UserPageQuery query) {
 
         Page<RbacUser> page = new Page<>(query.getPageNum(), query.getPageSize());
 
         page = rbacUserMapper.selectPage(page, new QueryWrapper<RbacUser>().eq("username", query.getUsername()));
 
-        return Objects.convert(page, RbacUserVo.class);
+        return Objects.convert(page, UserInfo.class);
     }
 
     @Override
-    public PageInfo<RbacUserVo> selectByPage2(UserPageQuery query) {
+    public PageInfo<UserInfo> selectByPage2(UserPageQuery query) {
 
         PageInfo<RbacUser> pageInfo = PageHelper.startPage(query.getPageNum(), query.getPageSize())
                 .doSelectPageInfo(() -> rbacUserMapper.selectList(new QueryWrapper<RbacUser>().eq("username", query.getUsername())));
 
-        return Objects.convert(pageInfo, RbacUserVo.class);
+        return Objects.convert(pageInfo, UserInfo.class);
     }
 }

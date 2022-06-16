@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Alias(value = "rbacUser")
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class RbacUser  extends BaseEntity {
+public class RbacUser extends BaseEntity {
 
     public RbacUser(String username, String password) {
         this.username = username;
@@ -46,6 +46,16 @@ public class RbacUser  extends BaseEntity {
     /**
      * 状态（0:启用 1:禁用）
      */
-    private Integer status;
+    private String status;
+
+    /**
+     * 手机号
+     */
+    private String mobile;
+
+    /**
+     * 头像地址
+     */
+    private String avatar;
 
 }

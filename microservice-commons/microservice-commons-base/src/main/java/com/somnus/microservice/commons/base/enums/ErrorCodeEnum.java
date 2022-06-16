@@ -107,6 +107,12 @@ public enum ErrorCodeEnum {
 
     CN10001(10001, "请求未鉴权"),
 
+    CN90001(90001, "请求头中client信息为空"),
+
+    CN90002(90002, "Failed to decode basic authentication token"),
+
+    CN90003(90003, "Invalid basic authentication token"),
+
     CN99999(99999, "message 第三方接口可以使用改错误码，返回错误信息"),
     ;
 

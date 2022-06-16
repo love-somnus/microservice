@@ -1,12 +1,11 @@
 package com.somnus.microservice.oauth2.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageInfo;
 import com.somnus.microservice.commons.core.support.IService;
+import com.somnus.microservice.commons.security.core.principal.UserInfo;
 import com.somnus.microservice.oauth2.model.domain.RbacUser;
 import com.somnus.microservice.oauth2.model.query.UserPageQuery;
-import com.somnus.microservice.oauth2.model.vo.RbacUserVo;
 
 import java.util.Optional;
 
@@ -21,9 +20,11 @@ public interface RbacUserService extends IService<RbacUser> {
 
     Optional<RbacUser> getByUsername(String username);
 
+    Optional<RbacUser> getByMobile(String mobile);
+
     void save(String username, String password);
 
-    IPage<RbacUserVo> selectByPage(UserPageQuery query);
+    IPage<UserInfo> selectByPage(UserPageQuery query);
 
-    PageInfo<RbacUserVo> selectByPage2(UserPageQuery query);
+    PageInfo<UserInfo> selectByPage2(UserPageQuery query);
 }
