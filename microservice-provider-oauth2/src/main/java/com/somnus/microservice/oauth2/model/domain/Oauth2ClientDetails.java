@@ -93,6 +93,6 @@ public class Oauth2ClientDetails extends BaseEntity {
     /**
      * 是否自动放行
      */
-    @TableField("autoapprove")
-    private String autoapprove;
+    @TableField("auto_approve")
+    private String autoApprove;
 }

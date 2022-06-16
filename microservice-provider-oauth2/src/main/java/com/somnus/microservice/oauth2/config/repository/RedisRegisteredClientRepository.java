@@ -99,7 +99,7 @@ public class RedisRegisteredClientRepository implements RegisteredClientReposito
                         // 是否可重用刷新令牌
                         .reuseRefreshTokens(true)
                         .build())
-                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(!BooleanUtil.toBoolean(clientDetails.getAutoapprove())).build())
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(!BooleanUtil.toBoolean(clientDetails.getAutoApprove())).build())
                 .build();
 
     }
