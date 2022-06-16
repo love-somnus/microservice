@@ -1,6 +1,5 @@
 package com.somnus.microservice;
 
-import com.somnus.microservice.cache.starter.annotation.EnableCache;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +13,6 @@ import reactivefeign.spring.config.EnableReactiveFeignClients;
  * @description: 鉴权服务中心启动类
  * @date 2022/3/18 13:43
  */
-@EnableCache
 @EnableDiscoveryClient
 @SpringBootApplication
 @MapperScan(basePackages = "com.somnus.microservice.oauth2.mapper")

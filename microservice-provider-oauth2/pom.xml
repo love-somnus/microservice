@@ -70,10 +70,10 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-        <!-- 分布式缓存依赖-->
+        <!-- redis 引入 -->
         <dependency>
             <groupId>com.somnus</groupId>
-            <artifactId>microservice-cache-starter</artifactId>
+            <artifactId>microservice-commons-redis</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
