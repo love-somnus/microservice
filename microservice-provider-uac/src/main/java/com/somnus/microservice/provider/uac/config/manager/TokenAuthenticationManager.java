@@ -1,4 +1,4 @@
-package com.somnus.microservice.gateway.config.manager;
+package com.somnus.microservice.provider.uac.config.manager;
 
 import com.somnus.microservice.commons.base.utils.JwksUtil;
 import org.springframework.context.annotation.Primary;

@@ -1,6 +1,6 @@
 package com.somnus.microservice.provider.uac.config.repository;
 
-import com.somnus.microservice.gateway.config.manager.TokenAuthenticationManager;
+import com.somnus.microservice.provider.uac.config.manager.TokenAuthenticationManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;

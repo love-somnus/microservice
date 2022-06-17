@@ -5,7 +5,7 @@ import com.somnus.microservice.provider.uac.config.handler.DefaultAuthentication
 import com.somnus.microservice.provider.uac.config.handler.DefaultAuthenticationFailureHandler;
 import com.somnus.microservice.provider.uac.config.handler.DefaultAuthenticationSuccessHandler;
 import com.somnus.microservice.provider.uac.config.manager.TokenAuthorizationManager;
-import com.somnus.microservice.gateway.config.manager.TokenAuthenticationManager;
+import com.somnus.microservice.provider.uac.config.manager.TokenAuthenticationManager;
 import com.somnus.microservice.provider.uac.config.repository.DefaultSecurityContextRepository;
 import com.somnus.microservice.provider.uac.config.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
