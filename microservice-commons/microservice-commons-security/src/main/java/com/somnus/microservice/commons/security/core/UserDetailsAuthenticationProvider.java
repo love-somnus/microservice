@@ -47,8 +47,6 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
      */
     private static final String USER_NOT_FOUND_PASSWORD = "userNotFoundPassword";
 
-    private static final String DEFAULT_ID_SUFFIX = "}";
-
     private final static BasicAuthenticationConverter basicConvert = new BasicAuthenticationConverter();
 
     @Getter
@@ -99,7 +97,6 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 
     @SneakyThrows
     @Override
-
     protected final UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) {
         prepareTimingAttackProtection();
         HttpServletRequest request = WebUtils.getRequest().orElseThrow(
@@ -179,7 +176,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
     }
 
     private String extractEncodedPassword(String prefixEncodedPassword) {
-        int start = prefixEncodedPassword.indexOf(DEFAULT_ID_SUFFIX);
-        return prefixEncodedPassword.substring(start + DEFAULT_ID_SUFFIX.length());
+        int start = prefixEncodedPassword.indexOf(SecurityConstants.DEFAULT_ID_SUFFIX);
+        return prefixEncodedPassword.substring(start + SecurityConstants.DEFAULT_ID_SUFFIX.length());
     }
 }

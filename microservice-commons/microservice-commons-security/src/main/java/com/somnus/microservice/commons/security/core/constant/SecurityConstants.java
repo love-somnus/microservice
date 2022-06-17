@@ -124,4 +124,6 @@ public interface SecurityConstants {
      */
     String STATUS_LOCK = "9";
 
+    String DEFAULT_ID_SUFFIX = "}";
+
 }
