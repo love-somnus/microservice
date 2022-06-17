@@ -5,7 +5,6 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.somnus.microservice.commons.security.core.customizer.CustomeOAuth2JwtTokenCustomizer;
-import com.somnus.microservice.commons.security.core.customizer.CustomeOAuth2TokenCustomizer;
 import lombok.RequiredArgsConstructor;
 import com.somnus.microservice.commons.base.utils.JwksUtil;
 import com.somnus.microservice.commons.security.converter.OAuth2ResourceOwnerPasswordAuthenticationConverter;
@@ -60,12 +59,18 @@ public class AuthorizationServerConfiguration {
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfigurer<HttpSecurity> authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer<>();
 
-        http.apply(authorizationServerConfigurer.tokenEndpoint((tokenEndpoint) -> {// 个性化认证授权端点
-            tokenEndpoint.accessTokenRequestConverter(accessTokenRequestConverter()) // 注入自定义的授权认证Converter
-                    .accessTokenResponseHandler(new AuthenticationSuccessEventHandler()) // 登录成功处理器
-                    .errorResponseHandler(new AuthenticationFailureEventHandler());// 登录失败处理器
-        })// 授权码端点个性化confirm页面
-        .authorizationEndpoint( authorizationEndpoint -> authorizationEndpoint.consentPage(SecurityConstants.CUSTOM_CONSENT_PAGE_URI)));
+        OAuth2AuthorizationServerConfigurer<HttpSecurity> configurer = authorizationServerConfigurer.tokenEndpoint(
+            // 个性化认证授权端点
+            (tokenEndpoint) -> {
+                tokenEndpoint.accessTokenRequestConverter(accessTokenRequestConverter()) // 注入自定义的授权认证Converter
+                .accessTokenResponseHandler(new AuthenticationSuccessEventHandler()) // 登录成功处理器
+                .errorResponseHandler(new AuthenticationFailureEventHandler());// 登录失败处理器
+            }
+        )
+         // 授权码端点个性化confirm页面
+        .authorizationEndpoint(authorizationEndpoint -> authorizationEndpoint.consentPage(SecurityConstants.CUSTOM_CONSENT_PAGE_URI));
+
+        http.apply(configurer);
 
         // TODO 你可以根据需求对authorizationServerConfigurer进行一些个性化配置
         RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
@@ -74,7 +79,7 @@ public class AuthorizationServerConfiguration {
         DefaultSecurityFilterChain securityFilterChain = http.requestMatcher(endpointsMatcher)
                 .authorizeRequests(authorizeRequests -> authorizeRequests.anyRequest().authenticated())
                 /* redis存储token的实现 */
-                .apply(authorizationServerConfigurer.authorizationService(authorizationService).providerSettings(ProviderSettings.builder().issuer(SecurityConstants.PROJECT_LICENSE).build()))
+                .apply(configurer.authorizationService(authorizationService))
                 /* 授权码登录的登录页个性化 */
                 .and().apply(new FormIdentityLoginConfigurer()).and().build();
         // @formatter:on
