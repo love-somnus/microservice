@@ -4,6 +4,8 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.somnus.microservice.commons.security.core.customizer.CustomeOAuth2JwtTokenCustomizer;
+import com.somnus.microservice.commons.security.core.customizer.CustomeOAuth2TokenCustomizer;
 import lombok.RequiredArgsConstructor;
 import com.somnus.microservice.commons.base.utils.JwksUtil;
 import com.somnus.microservice.commons.security.converter.OAuth2ResourceOwnerPasswordAuthenticationConverter;
@@ -31,10 +33,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
-import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
-import org.springframework.security.oauth2.server.authorization.token.JwtGenerator;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2RefreshTokenGenerator;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
+import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.security.oauth2.server.authorization.web.authentication.*;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
@@ -226,13 +225,13 @@ public class AuthorizationServerConfiguration {
     public OAuth2TokenGenerator oAuth2TokenGenerator(JwtEncoder jwtEncoder) {
 
         /*CustomeOAuth2AccessTokenGenerator accessTokenGenerator = new CustomeOAuth2AccessTokenGenerator();*/
-
-        /*OAuth2AccessTokenGenerator accessTokenGenerator = new OAuth2AccessTokenGenerator();*/
-
-        /* 注入Token 增加关联用户信息 */
         /*accessTokenGenerator.setAccessTokenCustomizer(new CustomeOAuth2TokenCustomizer());*/
 
-        return new DelegatingOAuth2TokenGenerator(new JwtGenerator(jwtEncoder), new OAuth2RefreshTokenGenerator());
+        JwtGenerator JwtGenerator = new JwtGenerator(jwtEncoder);
+        /* 注入Token 增加关联用户信息 */
+        JwtGenerator.setJwtCustomizer(new CustomeOAuth2JwtTokenCustomizer());
+
+        return new DelegatingOAuth2TokenGenerator(JwtGenerator, new OAuth2RefreshTokenGenerator());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.somnus.microservice.commons.security.core;
+package com.somnus.microservice.commons.security.core.customizer;
 
 import com.somnus.microservice.commons.security.core.constant.SecurityConstants;
 import com.somnus.microservice.commons.security.core.principal.Oauth2User;
@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 
 /**
+ * <p>token 输出增强</p>
  * @author kevin.liu
  * @title: CustomeOAuth2TokenCustomizer
  * @projectName microservice
@@ -23,8 +24,10 @@ public class CustomeOAuth2TokenCustomizer implements OAuth2TokenCustomizer<OAuth
     public void customize(OAuth2TokenClaimsContext context) {
         OAuth2TokenClaimsSet.Builder claims = context.getClaims();
         claims.claim(SecurityConstants.DETAILS_LICENSE, SecurityConstants.PROJECT_LICENSE);
+
         String clientId = context.getAuthorizationGrant().getName();
         claims.claim(SecurityConstants.CLIENT_ID, clientId);
+
         // 客户端模式不返回具体用户信息
         if (SecurityConstants.CLIENT_CREDENTIALS.equals(context.getAuthorizationGrantType().getValue())) {
             return;
