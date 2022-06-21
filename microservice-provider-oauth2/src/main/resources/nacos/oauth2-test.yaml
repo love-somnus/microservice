@@ -49,6 +49,19 @@ spring:
       connection-timeout: 300000
       connection-test-query: SELECT 1
 
+  redis:
+    timeout: 5000
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+
 mybatis:
   type-aliases-package: com.somnus.microservice.oauth2.model.domain
   mapper-locations: classpath:mapper/*.xml

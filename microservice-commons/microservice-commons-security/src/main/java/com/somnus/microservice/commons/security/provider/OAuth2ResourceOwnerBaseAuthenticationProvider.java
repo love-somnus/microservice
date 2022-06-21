@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.function.Supplier;
 /**
+ * <p>处理自定义授权</p>
  * @author kevin.liu
  * @title: OAuth2ResourceOwnerBaseAuthenticationProvider
  * @projectName microservice
@@ -48,7 +49,6 @@ public abstract class OAuth2ResourceOwnerBaseAuthenticationProvider<T extends OA
 
     private final MessageSourceAccessor messages;
 
-    @Deprecated
     private Supplier<String> refreshTokenGenerator;
 
     /**
