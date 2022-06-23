@@ -60,7 +60,7 @@ public class DefaultAutoScanProxy extends AbstractAutoScanProxy {
 
     @Override
     protected String[] getCommonInterceptorNames() {
-        return null;
+        throw new UnsupportedOperationException("Unable to resolve interceptor names");
     }
 
     @Override
@@ -70,12 +70,12 @@ public class DefaultAutoScanProxy extends AbstractAutoScanProxy {
 
     @Override
     protected Class<? extends Annotation>[] getClassAnnotations() {
-        return null;
+        throw new UnsupportedOperationException("Unable to resolve class annotations");
     }
 
     @Override
     protected Class<? extends Annotation>[] getMethodAnnotations() {
-        return null;
+        throw new UnsupportedOperationException("Unable to resolve method annotations");
     }
 
     @Override

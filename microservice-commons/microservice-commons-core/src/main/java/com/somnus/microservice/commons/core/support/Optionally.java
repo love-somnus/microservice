@@ -1,5 +1,7 @@
 package com.somnus.microservice.commons.core.support;
 
+import lombok.NonNull;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -80,8 +82,7 @@ public final class Optionally<T> {
      * @param consumer1
      * @param consumer2
      */
-    public void ifElse(Predicate<? super T> predicate, Consumer<? super T> consumer1, Consumer<? super T> consumer2) {
-        Objects.requireNonNull(predicate);
+    public void ifElse(@NonNull Predicate<? super T> predicate, Consumer<? super T> consumer1, Consumer<? super T> consumer2) {
         if (value != null && predicate.test(value)){
             consumer1.accept(value);
         } else if (value != null && predicate.negate().test(value)){
@@ -94,8 +95,7 @@ public final class Optionally<T> {
      * @param predicate
      * @param consumer
      */
-    public void ifTrue(Predicate<? super T> predicate, Consumer<? super T> consumer) {
-        Objects.requireNonNull(predicate);
+    public void ifTrue(@NonNull Predicate<? super T> predicate, Consumer<? super T> consumer) {
         if (value != null && predicate.test(value)){
             consumer.accept(value);
         }
@@ -106,8 +106,7 @@ public final class Optionally<T> {
      * @param predicate
      * @param consumer
      */
-    public void ifFalse(Predicate<? super T> predicate, Consumer<? super T> consumer) {
-        Objects.requireNonNull(predicate);
+    public void ifFalse(@NonNull Predicate<? super T> predicate, Consumer<? super T> consumer) {
         if (value != null && predicate.negate().test(value)){
             consumer.accept(value);
         }
@@ -143,15 +142,13 @@ public final class Optionally<T> {
         }
     }
 
-    public <X extends Throwable> void trueThrow(Predicate<? super T> predicate, Supplier<? extends X> exceptionSupplier) throws X {
-        Objects.requireNonNull(predicate);
+    public <X extends Throwable> void trueThrow(@NonNull Predicate<? super T> predicate, Supplier<? extends X> exceptionSupplier) throws X {
         if (value != null && predicate.test(value)) {
             throw exceptionSupplier.get();
         }
     }
 
-    public <X extends Throwable> void falseThrow(Predicate<? super T> predicate, Supplier<? extends X> exceptionSupplier) throws X {
-        Objects.requireNonNull(predicate);
+    public <X extends Throwable> void falseThrow(@NonNull Predicate<? super T> predicate, Supplier<? extends X> exceptionSupplier) throws X {
         if (value != null && predicate.negate().test(value)) {
             throw exceptionSupplier.get();
         }
@@ -223,8 +220,7 @@ public final class Optionally<T> {
         }
     }
 
-    public Optionally<T> emptyMap(UnaryOperator<T> mapper) {
-        Objects.requireNonNull(mapper);
+    public Optionally<T> emptyMap(@NonNull UnaryOperator<T> mapper) {
         if(value == null){
             return Optionally.ofNullable(mapper.apply(value));
         } else if (value instanceof String && ((String) value).length() == 0) {
@@ -244,8 +240,7 @@ public final class Optionally<T> {
         }
     }
 
-    public <X extends Throwable> Optionally<T> existThrow(Predicate<? super T> predicate, Supplier<? extends X> exceptionSupplier) throws X {
-        Objects.requireNonNull(predicate);
+    public <X extends Throwable> Optionally<T> existThrow(@NonNull Predicate<? super T> predicate, Supplier<? extends X> exceptionSupplier) throws X {
         if (value != null && predicate.negate().test(value)) {
             throw exceptionSupplier.get();
         }else{
