@@ -7,15 +7,15 @@ import com.nimbusds.jose.proc.SecurityContext;
 import com.somnus.microservice.commons.security.core.customizer.CustomeOAuth2JwtTokenCustomizer;
 import lombok.RequiredArgsConstructor;
 import com.somnus.microservice.commons.base.utils.JwksUtil;
-import com.somnus.microservice.commons.security.converter.OAuth2ResourceOwnerPasswordAuthenticationConverter;
-import com.somnus.microservice.commons.security.converter.OAuth2ResourceOwnerSmsAuthenticationConverter;
+import com.somnus.microservice.commons.security.converter.OAuth2PasswordAuthenticationConverter;
+import com.somnus.microservice.commons.security.converter.OAuth2SmsAuthenticationConverter;
 import com.somnus.microservice.commons.security.core.FormIdentityLoginConfigurer;
 import com.somnus.microservice.commons.security.core.UserDetailsAuthenticationProvider;
 import com.somnus.microservice.commons.security.core.constant.SecurityConstants;
 import com.somnus.microservice.commons.security.handler.AuthenticationFailureEventHandler;
 import com.somnus.microservice.commons.security.handler.AuthenticationSuccessEventHandler;
-import com.somnus.microservice.commons.security.provider.OAuth2ResourceOwnerPasswordAuthenticationProvider;
-import com.somnus.microservice.commons.security.provider.OAuth2ResourceOwnerSmsAuthenticationProvider;
+import com.somnus.microservice.commons.security.provider.OAuth2PasswordAuthenticationProvider;
+import com.somnus.microservice.commons.security.provider.OAuth2SmsAuthenticationProvider;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -190,8 +190,9 @@ public class AuthorizationServerConfiguration {
     private AuthenticationConverter accessTokenRequestConverter() {
         return new DelegatingAuthenticationConverter(Arrays.asList(
                 new OAuth2ClientCredentialsAuthenticationConverter(),//client_credentials
-                new OAuth2ResourceOwnerPasswordAuthenticationConverter(),//password
-                new OAuth2ResourceOwnerSmsAuthenticationConverter()//sms
+                new OAuth2AuthorizationCodeAuthenticationConverter(),
+                new OAuth2PasswordAuthenticationConverter(),//password
+                new OAuth2SmsAuthenticationConverter()//sms
                 ));
     }
 
@@ -209,10 +210,10 @@ public class AuthorizationServerConfiguration {
 
         OAuth2AuthorizationService authorizationService = http.getSharedObject(OAuth2AuthorizationService.class);
 
-        OAuth2ResourceOwnerPasswordAuthenticationProvider resourceOwnerPasswordAuthenticationProvider = new OAuth2ResourceOwnerPasswordAuthenticationProvider(
+        OAuth2PasswordAuthenticationProvider resourceOwnerPasswordAuthenticationProvider = new OAuth2PasswordAuthenticationProvider(
                 authenticationManager, authorizationService, tokenGenerator);
 
-        OAuth2ResourceOwnerSmsAuthenticationProvider resourceOwnerSmsAuthenticationProvider = new OAuth2ResourceOwnerSmsAuthenticationProvider(
+        OAuth2SmsAuthenticationProvider resourceOwnerSmsAuthenticationProvider = new OAuth2SmsAuthenticationProvider(
                 authenticationManager, authorizationService, tokenGenerator);
 
         // 处理 UsernamePasswordAuthenticationToken

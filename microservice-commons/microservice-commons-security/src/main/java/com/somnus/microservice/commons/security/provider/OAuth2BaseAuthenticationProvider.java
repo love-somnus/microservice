@@ -3,7 +3,7 @@ package com.somnus.microservice.commons.security.provider;
 import cn.hutool.extra.spring.SpringUtil;
 import com.somnus.microservice.commons.security.core.exception.ScopeException;
 import com.somnus.microservice.commons.security.util.OAuth2ErrorCodesExpand;
-import com.somnus.microservice.commons.security.token.OAuth2ResourceOwnerBaseAuthenticationToken;
+import com.somnus.microservice.commons.security.token.OAuth2BaseAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.*;
@@ -30,14 +30,13 @@ import java.util.function.Supplier;
 /**
  * <p>处理自定义授权</p>
  * @author kevin.liu
- * @title: OAuth2ResourceOwnerBaseAuthenticationProvider
+ * @title: OAuth2BaseAuthenticationProvider
  * @projectName microservice
  * @description: TODO
  * @date 2022/6/14 14:43
  */
 @Slf4j
-public abstract class OAuth2ResourceOwnerBaseAuthenticationProvider<T extends OAuth2ResourceOwnerBaseAuthenticationToken> implements AuthenticationProvider {
-
+public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthenticationToken> implements AuthenticationProvider {
 
     private static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1";
 
@@ -58,9 +57,9 @@ public abstract class OAuth2ResourceOwnerBaseAuthenticationProvider<T extends OA
      * @param tokenGenerator the token generator
      * @since 0.2.3
      */
-    public OAuth2ResourceOwnerBaseAuthenticationProvider(AuthenticationManager authenticationManager,
-                                                         OAuth2AuthorizationService authorizationService,
-                                                         OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
+    public OAuth2BaseAuthenticationProvider(AuthenticationManager authenticationManager,
+                                            OAuth2AuthorizationService authorizationService,
+                                            OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator) {
         Assert.notNull(authorizationService, "authorizationService cannot be null");
         Assert.notNull(tokenGenerator, "tokenGenerator cannot be null");
         this.authenticationManager = authenticationManager;
@@ -107,9 +106,9 @@ public abstract class OAuth2ResourceOwnerBaseAuthenticationProvider<T extends OA
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        T resouceOwnerBaseAuthentication = (T) authentication;
+        T baseAuthentication = (T) authentication;
 
-        OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(resouceOwnerBaseAuthentication);
+        OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(baseAuthentication);
 
         RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
 
@@ -117,19 +116,19 @@ public abstract class OAuth2ResourceOwnerBaseAuthenticationProvider<T extends OA
 
         Set<String> authorizedScopes;
         // Default to configured scopes
-        if (!CollectionUtils.isEmpty(resouceOwnerBaseAuthentication.getScopes())) {
-            for (String requestedScope : resouceOwnerBaseAuthentication.getScopes()) {
+        if (!CollectionUtils.isEmpty(baseAuthentication.getScopes())) {
+            for (String requestedScope : baseAuthentication.getScopes()) {
                 if (!registeredClient.getScopes().contains(requestedScope)) {
                     throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_SCOPE);
                 }
             }
-            authorizedScopes = new LinkedHashSet<>(resouceOwnerBaseAuthentication.getScopes());
+            authorizedScopes = new LinkedHashSet<>(baseAuthentication.getScopes());
         }
         else {
             throw new ScopeException(OAuth2ErrorCodesExpand.SCOPE_IS_EMPTY);
         }
 
-        Map<String, Object> reqParameters = resouceOwnerBaseAuthentication.getAdditionalParameters();
+        Map<String, Object> reqParameters = baseAuthentication.getAdditionalParameters();
         try {
 
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = buildToken(reqParameters);
@@ -145,7 +144,7 @@ public abstract class OAuth2ResourceOwnerBaseAuthenticationProvider<T extends OA
                     .providerContext(ProviderContextHolder.getProviderContext())
                     .authorizedScopes(authorizedScopes)
                     .authorizationGrantType(AuthorizationGrantType.PASSWORD)
-                    .authorizationGrant(resouceOwnerBaseAuthentication);
+                    .authorizationGrant(baseAuthentication);
             // @formatter:on
 
             OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization

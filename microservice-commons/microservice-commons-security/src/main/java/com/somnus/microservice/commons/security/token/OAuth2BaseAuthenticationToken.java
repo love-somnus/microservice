@@ -11,12 +11,12 @@ import java.util.*;
 /**
  * <p>自定义授权模式抽象</p>
  * @author kevin.liu
- * @title: OAuth2ResourceOwnerBaseAuthenticationToken
+ * @title: OAuth2BaseAuthenticationToken
  * @projectName microservice
  * @description: TODO
  * @date 2022/6/14 14:49
  */
-public abstract class OAuth2ResourceOwnerBaseAuthenticationToken extends AbstractAuthenticationToken {
+public abstract class OAuth2BaseAuthenticationToken extends AbstractAuthenticationToken {
 
     @Getter
     private final AuthorizationGrantType authorizationGrantType;
@@ -30,9 +30,9 @@ public abstract class OAuth2ResourceOwnerBaseAuthenticationToken extends Abstrac
     @Getter
     private final Map<String, Object> additionalParameters;
 
-    public OAuth2ResourceOwnerBaseAuthenticationToken(AuthorizationGrantType authorizationGrantType,
-                                                      Authentication clientPrincipal, @Nullable Set<String> scopes,
-                                                      @Nullable Map<String, Object> additionalParameters) {
+    public OAuth2BaseAuthenticationToken(AuthorizationGrantType authorizationGrantType,
+                                         Authentication clientPrincipal, @Nullable Set<String> scopes,
+                                         @Nullable Map<String, Object> additionalParameters) {
         super(Collections.emptyList());
         Assert.notNull(authorizationGrantType, "authorizationGrantType cannot be null");
         Assert.notNull(clientPrincipal, "clientPrincipal cannot be null");

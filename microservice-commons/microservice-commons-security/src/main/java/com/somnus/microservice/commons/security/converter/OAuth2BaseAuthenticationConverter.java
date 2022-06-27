@@ -1,7 +1,7 @@
 package com.somnus.microservice.commons.security.converter;
 
 import com.somnus.microservice.commons.security.util.OAuth2EndpointUtils;
-import com.somnus.microservice.commons.security.token.OAuth2ResourceOwnerBaseAuthenticationToken;
+import com.somnus.microservice.commons.security.token.OAuth2BaseAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 /**
  * <p>自定义模式认证转换器</p>
  * @author kevin.liu
- * @title: OAuth2ResourceOwnerBaseAuthenticationConverter
+ * @title: OAuth2BaseAuthenticationConverter
  * @projectName microservice
  * @description: TODO
  * @date 2022/6/14 14:40
  */
-public abstract class OAuth2ResourceOwnerBaseAuthenticationConverter<T extends OAuth2ResourceOwnerBaseAuthenticationToken> implements AuthenticationConverter {
+public abstract class OAuth2BaseAuthenticationConverter<T extends OAuth2BaseAuthenticationToken> implements AuthenticationConverter {
 
     /**
      * 是否支持此convert

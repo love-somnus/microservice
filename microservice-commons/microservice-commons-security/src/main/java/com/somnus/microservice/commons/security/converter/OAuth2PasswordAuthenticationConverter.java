@@ -1,7 +1,7 @@
 package com.somnus.microservice.commons.security.converter;
 
 import com.somnus.microservice.commons.security.util.OAuth2EndpointUtils;
-import com.somnus.microservice.commons.security.token.OAuth2ResourceOwnerPasswordAuthenticationToken;
+import com.somnus.microservice.commons.security.token.OAuth2PasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
@@ -15,12 +15,12 @@ import java.util.Set;
 /**
  * <p>密码认证转换器</p>
  * @author kevin.liu
- * @title: OAuth2ResourceOwnerPasswordAuthenticationConverter
+ * @title: OAuth2PasswordAuthenticationConverter
  * @projectName microservice
  * @description: TODO
  * @date 2022/6/14 13:48
  */
-public class OAuth2ResourceOwnerPasswordAuthenticationConverter extends OAuth2ResourceOwnerBaseAuthenticationConverter<OAuth2ResourceOwnerPasswordAuthenticationToken> {
+public class OAuth2PasswordAuthenticationConverter extends OAuth2BaseAuthenticationConverter<OAuth2PasswordAuthenticationToken> {
 
     /**
      * 支持密码模式
@@ -32,8 +32,8 @@ public class OAuth2ResourceOwnerPasswordAuthenticationConverter extends OAuth2Re
     }
 
     @Override
-    public OAuth2ResourceOwnerPasswordAuthenticationToken buildToken(Authentication clientPrincipal, Set requestedScopes, Map additionalParameters) {
-        return new OAuth2ResourceOwnerPasswordAuthenticationToken(AuthorizationGrantType.PASSWORD, clientPrincipal, requestedScopes, additionalParameters);
+    public OAuth2PasswordAuthenticationToken buildToken(Authentication clientPrincipal, Set requestedScopes, Map additionalParameters) {
+        return new OAuth2PasswordAuthenticationToken(AuthorizationGrantType.PASSWORD, clientPrincipal, requestedScopes, additionalParameters);
     }
 
     /**

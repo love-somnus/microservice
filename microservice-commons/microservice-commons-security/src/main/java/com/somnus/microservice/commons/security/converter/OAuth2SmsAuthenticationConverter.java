@@ -2,7 +2,7 @@ package com.somnus.microservice.commons.security.converter;
 
 import com.somnus.microservice.commons.security.core.constant.SecurityConstants;
 import com.somnus.microservice.commons.security.util.OAuth2EndpointUtils;
-import com.somnus.microservice.commons.security.token.OAuth2ResourceOwnerSmsAuthenticationToken;
+import com.somnus.microservice.commons.security.token.OAuth2SmsAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
@@ -15,12 +15,12 @@ import java.util.Set;
 /**
  * <p>短信登录转换器</p>
  * @author kevin
- * @title: OAuth2ResourceOwnerSmsAuthenticationConverter
+ * @title: OAuth2SmsAuthenticationConverter
  * @projectName microservice
  * @description: TODO
  * @date 2022/6/14 13:50
  */
-public class OAuth2ResourceOwnerSmsAuthenticationConverter extends OAuth2ResourceOwnerBaseAuthenticationConverter<OAuth2ResourceOwnerSmsAuthenticationToken> {
+public class OAuth2SmsAuthenticationConverter extends OAuth2BaseAuthenticationConverter<OAuth2SmsAuthenticationToken> {
 
     /**
      * 是否支持此convert
@@ -33,8 +33,8 @@ public class OAuth2ResourceOwnerSmsAuthenticationConverter extends OAuth2Resourc
     }
 
     @Override
-    public OAuth2ResourceOwnerSmsAuthenticationToken buildToken(Authentication clientPrincipal, Set requestedScopes, Map additionalParameters) {
-        return new OAuth2ResourceOwnerSmsAuthenticationToken(new AuthorizationGrantType(SecurityConstants.SMS), clientPrincipal, requestedScopes, additionalParameters);
+    public OAuth2SmsAuthenticationToken buildToken(Authentication clientPrincipal, Set requestedScopes, Map additionalParameters) {
+        return new OAuth2SmsAuthenticationToken(new AuthorizationGrantType(SecurityConstants.SMS), clientPrincipal, requestedScopes, additionalParameters);
     }
 
     /**
