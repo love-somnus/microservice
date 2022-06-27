@@ -97,7 +97,6 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
     }
 
     @Override
-    @Nullable
     public OAuth2Authorization findById(String id) {
         throw new UnsupportedOperationException();
     }

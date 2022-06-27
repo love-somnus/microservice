@@ -183,6 +183,8 @@ public class AuthorizationServerConfiguration {
 
     /**
      * request -> xToken 注入请求转换器
+     * webflux
+     * @see org.springframework.security.web.server.authentication.ServerAuthenticationConverter
      * @return DelegatingAuthenticationConverter
      */
     private AuthenticationConverter accessTokenRequestConverter() {
