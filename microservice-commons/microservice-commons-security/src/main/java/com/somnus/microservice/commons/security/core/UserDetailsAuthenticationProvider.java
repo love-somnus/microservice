@@ -31,7 +31,6 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -77,7 +76,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-        // app 模式不用校验密码
+
         String grantType = WebUtils.getRequest().get().getParameter(OAuth2ParameterNames.GRANT_TYPE);
 
         if (authentication.getCredentials() == null) {

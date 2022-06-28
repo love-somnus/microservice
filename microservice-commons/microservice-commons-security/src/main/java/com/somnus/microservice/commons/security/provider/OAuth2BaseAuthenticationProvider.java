@@ -124,7 +124,6 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 
         Map<String, Object> reqParameters = baseAuthentication.getAdditionalParameters();
         try {
-
             /* 自行构造UsernamePasswordAuthenticationToken，用来去数据库进行校验 */
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = buildToken(reqParameters);
 
@@ -212,7 +211,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
     }
 
     /**
-     * 登录异常转换为oauth2异常
+     * 登录异常转换为OAuth2AuthenticationException异常，才能被AuthenticationFailureEventHandler处理
      * @param authentication 身份验证
      * @param authenticationException 身份验证异常
      * @return {@link OAuth2AuthenticationException}

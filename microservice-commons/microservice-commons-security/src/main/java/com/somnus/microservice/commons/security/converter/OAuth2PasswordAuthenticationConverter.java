@@ -34,7 +34,7 @@ public class OAuth2PasswordAuthenticationConverter extends OAuth2BaseAuthenticat
     }
 
     @Override
-    public OAuth2PasswordAuthenticationToken buildToken(Authentication clientPrincipal, Set requestedScopes, Map additionalParameters) {
+    public OAuth2PasswordAuthenticationToken buildToken(Authentication clientPrincipal, Set<String> requestedScopes, Map<String, Object> additionalParameters) {
         return new OAuth2PasswordAuthenticationToken(AuthorizationGrantType.PASSWORD, clientPrincipal, requestedScopes, additionalParameters);
     }
 

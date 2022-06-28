@@ -36,7 +36,7 @@ public class OAuth2SmsAuthenticationConverter extends OAuth2BaseAuthenticationCo
     }
 
     @Override
-    public OAuth2SmsAuthenticationToken buildToken(Authentication clientPrincipal, Set requestedScopes, Map additionalParameters) {
+    public OAuth2SmsAuthenticationToken buildToken(Authentication clientPrincipal, Set<String> requestedScopes, Map<String, Object> additionalParameters) {
         return new OAuth2SmsAuthenticationToken(new AuthorizationGrantType(SecurityConstants.SMS), clientPrincipal, requestedScopes, additionalParameters);
     }
 
