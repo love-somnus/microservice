@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;
 import org.springframework.util.Assert;
@@ -29,6 +30,7 @@ import org.springframework.util.Assert;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -77,22 +79,31 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
         // app 模式不用校验密码
         String grantType = WebUtils.getRequest().get().getParameter(OAuth2ParameterNames.GRANT_TYPE);
 
-        if (StrUtil.equals(SecurityConstants.SMS, grantType)) {
-            return;
-        }
-
         if (authentication.getCredentials() == null) {
             this.logger.debug("Failed to authenticate since no credentials provided");
             throw new BadCredentialsException(this.messages
                     .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
         }
-        String presentedPassword = authentication.getCredentials().toString();
-        String encodedPassword = extractEncodedPassword(userDetails.getPassword());
-        if (!this.passwordEncoder.matches(presentedPassword, encodedPassword)) {
-            this.logger.debug("Failed to authenticate since password does not match stored value");
-            throw new BadCredentialsException(this.messages
-                    .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+
+        if (StrUtil.equals(SecurityConstants.SMS, grantType)) {
+            String code = authentication.getCredentials().toString();
+            if(!StrUtil.equals(code, "123456")){
+                this.logger.debug("Failed to authenticate since code does not match stored value");
+                throw new BadCredentialsException(this.messages
+                        .getMessage("AbstractUserDetailsAuthenticationProvider.badCaptcha", "Bad captcha"));
+            }
         }
+
+        if (StrUtil.equals(AuthorizationGrantType.PASSWORD.getValue(), grantType)) {
+            String presentedPassword = authentication.getCredentials().toString();
+            String encodedPassword = extractEncodedPassword(userDetails.getPassword());
+            if (!this.passwordEncoder.matches(presentedPassword, encodedPassword)) {
+                this.logger.debug("Failed to authenticate since password does not match stored value");
+                throw new BadCredentialsException(this.messages
+                        .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+            }
+        }
+
     }
 
     @SneakyThrows

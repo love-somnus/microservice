@@ -117,10 +117,8 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
         Set<String> authorizedScopes;
         // Default to configured scopes
         if (!CollectionUtils.isEmpty(baseAuthentication.getScopes())) {
-            for (String requestedScope : baseAuthentication.getScopes()) {
-                if (!registeredClient.getScopes().contains(requestedScope)) {
-                    throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_SCOPE);
-                }
+            if(baseAuthentication.getScopes().stream().noneMatch(scope -> registeredClient.getScopes().contains(scope))){
+                throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_SCOPE);
             }
             authorizedScopes = new LinkedHashSet<>(baseAuthentication.getScopes());
         }
@@ -131,16 +129,17 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
         Map<String, Object> reqParameters = baseAuthentication.getAdditionalParameters();
         try {
 
+            /* 自行构造UsernamePasswordAuthenticationToken，用来去数据库进行校验 */
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = buildToken(reqParameters);
 
             log.debug("got usernamePasswordAuthenticationToken=" + usernamePasswordAuthenticationToken);
 
-            Authentication usernamePasswordAuthentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+            Authentication principal = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
             // @formatter:off
             DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
                     .registeredClient(registeredClient)
-                    .principal(usernamePasswordAuthentication)
+                    .principal(principal)
                     .providerContext(ProviderContextHolder.getProviderContext())
                     .authorizedScopes(authorizedScopes)
                     .authorizationGrantType(AuthorizationGrantType.PASSWORD)
@@ -148,7 +147,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
             // @formatter:on
 
             OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization
-                    .withRegisteredClient(registeredClient).principalName(usernamePasswordAuthentication.getName())
+                    .withRegisteredClient(registeredClient).principalName(principal.getName())
                     .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                     .attribute(OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME, authorizedScopes);
 
@@ -165,11 +164,9 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
                     generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
             if (generatedAccessToken instanceof ClaimAccessor) {
                 authorizationBuilder.id(accessToken.getTokenValue())
-                        .token(accessToken,
-                                (metadata) -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME,
-                                        ((ClaimAccessor) generatedAccessToken).getClaims()))
+                        .token(accessToken, (metadata) -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME, ((ClaimAccessor) generatedAccessToken).getClaims()))
                         .attribute(OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME, authorizedScopes)
-                        .attribute(Principal.class.getName(), usernamePasswordAuthentication);
+                        .attribute(Principal.class.getName(), principal);
             }
             else {
                 authorizationBuilder.id(accessToken.getTokenValue()).accessToken(accessToken);

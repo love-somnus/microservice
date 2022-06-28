@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.OAuth2Token;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
@@ -57,7 +58,8 @@ public class OAuth2SmsAuthenticationProvider extends OAuth2BaseAuthenticationPro
     @Override
     public UsernamePasswordAuthenticationToken buildToken(Map<String, Object> reqParameters) {
         String mobile = (String) reqParameters.get(SecurityConstants.SMS_PARAMETER_NAME);
-        return new UsernamePasswordAuthenticationToken(mobile, null);
+        String code = (String) reqParameters.get(OAuth2ParameterNames.CODE);
+        return new UsernamePasswordAuthenticationToken(mobile, code);
     }
 
 }

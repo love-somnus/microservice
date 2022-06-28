@@ -6,6 +6,7 @@ import com.somnus.microservice.commons.security.token.OAuth2SmsAuthenticationTok
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
+import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
@@ -44,10 +45,16 @@ public class OAuth2SmsAuthenticationConverter extends OAuth2BaseAuthenticationCo
     @Override
     public void checkParams(HttpServletRequest request) {
         MultiValueMap<String, String> parameters = OAuth2EndpointUtils.getParameters(request);
-        // PHONE (REQUIRED)
+        // mobile (REQUIRED)
         String mobile = parameters.getFirst(SecurityConstants.SMS_PARAMETER_NAME);
         if (!StringUtils.hasText(mobile) || parameters.get(SecurityConstants.SMS_PARAMETER_NAME).size() != 1) {
             OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, SecurityConstants.SMS_PARAMETER_NAME, OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI);
+        }
+
+        // code (REQUIRED)
+        String code = parameters.getFirst(OAuth2ParameterNames.CODE);
+        if (!StringUtils.hasText(code) || parameters.get(OAuth2ParameterNames.CODE).size() != 1) {
+            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.CODE, OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI);
         }
     }
 
