@@ -4,6 +4,8 @@ import com.somnus.microservice.commons.security.util.OAuth2EndpointUtils;
 import com.somnus.microservice.commons.security.token.OAuth2BaseAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.web.authentication.AuthenticationConverter;
@@ -11,10 +13,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 /**
  * <p>自定义模式认证转换器</p>
@@ -25,6 +24,8 @@ import java.util.stream.Collectors;
  * @date 2022/6/14 14:40
  */
 public abstract class OAuth2BaseAuthenticationConverter<T extends OAuth2BaseAuthenticationToken> implements AuthenticationConverter {
+
+    public final String ACCESS_TOKEN_REQUEST_ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-5.2";
 
     /**
      * 是否支持此convert
@@ -61,10 +62,10 @@ public abstract class OAuth2BaseAuthenticationConverter<T extends OAuth2BaseAuth
         // scope (OPTIONAL)
         String scope = parameters.getFirst(OAuth2ParameterNames.SCOPE);
         if (StringUtils.hasText(scope) && parameters.get(OAuth2ParameterNames.SCOPE).size() != 1) {
-            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.SCOPE, OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI);
+            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.SCOPE, ACCESS_TOKEN_REQUEST_ERROR_URI));
         }
 
-        Set<String> requestedScopes = null;
+        Set<String> requestedScopes = Collections.emptySet();
         if (StringUtils.hasText(scope)) {
             requestedScopes = new HashSet<>(Arrays.asList(StringUtils.delimitedListToStringArray(scope, " ")));
         }
@@ -74,9 +75,8 @@ public abstract class OAuth2BaseAuthenticationConverter<T extends OAuth2BaseAuth
 
         // 获取当前已经认证的客户端信息
         Authentication clientPrincipal = SecurityContextHolder.getContext().getAuthentication();
-        if (clientPrincipal == null) {
-            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ErrorCodes.INVALID_CLIENT, OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI);
-        }
+        Optional.ofNullable(clientPrincipal).orElseThrow(() ->
+                new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ErrorCodes.INVALID_CLIENT, ACCESS_TOKEN_REQUEST_ERROR_URI)));
 
         // 扩展信息
         Map<String, Object> additionalParameters = parameters.entrySet().stream()

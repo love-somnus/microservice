@@ -80,7 +80,7 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
 
         if (isCode(authorization)) {
             OAuth2Authorization.Token<OAuth2AuthorizationCode> authorizationCode = authorization.getToken(OAuth2AuthorizationCode.class);
-            OAuth2AuthorizationCode authorizationCodeToken = authorizationCode.getToken();
+            OAuth2AuthorizationCode authorizationCodeToken = Objects.requireNonNull(authorizationCode).getToken();
             keys.add(buildKey(OAuth2ParameterNames.CODE, authorizationCodeToken.getTokenValue()));
         }
 

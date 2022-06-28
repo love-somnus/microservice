@@ -1,6 +1,7 @@
 package com.somnus.microservice.commons.security.handler;
 
 import com.somnus.microservice.commons.base.wrapper.WrapMapper;
+import com.somnus.microservice.commons.security.core.constant.SecurityConstants;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
@@ -40,7 +42,13 @@ public class AuthenticationFailureEventHandler implements AuthenticationFailureH
     @SneakyThrows
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
 
-        String username = request.getParameter(OAuth2ParameterNames.USERNAME);
+        String grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
+
+        String username = request.getParameter(SecurityConstants.SMS_PARAMETER_NAME);
+
+        if(AuthorizationGrantType.PASSWORD.getValue().equals(grantType)){
+            username = request.getParameter(OAuth2ParameterNames.USERNAME);
+        }
 
         log.info("用户：{} 登录失败，异常：{}", username, exception.getLocalizedMessage());
 

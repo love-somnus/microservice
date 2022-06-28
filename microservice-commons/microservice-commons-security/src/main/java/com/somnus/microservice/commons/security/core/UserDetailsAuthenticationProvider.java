@@ -5,6 +5,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.somnus.microservice.commons.base.utils.WebUtils;
 import com.somnus.microservice.commons.security.core.constant.SecurityConstants;
+import com.somnus.microservice.commons.security.core.exception.BadCaptchaException;
 import com.somnus.microservice.commons.security.service.Oauth2UserDetailsService;
 import lombok.Getter;
 import lombok.Setter;
@@ -89,7 +90,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
             String code = authentication.getCredentials().toString();
             if(!StrUtil.equals(code, "123456")){
                 this.logger.debug("Failed to authenticate since code does not match stored value");
-                throw new BadCredentialsException(this.messages
+                throw new BadCaptchaException(this.messages
                         .getMessage("AbstractUserDetailsAuthenticationProvider.badCaptcha", "Bad captcha"));
             }
         }

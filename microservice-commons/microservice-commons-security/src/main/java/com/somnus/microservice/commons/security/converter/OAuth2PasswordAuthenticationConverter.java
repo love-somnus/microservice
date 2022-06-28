@@ -4,6 +4,8 @@ import com.somnus.microservice.commons.security.util.OAuth2EndpointUtils;
 import com.somnus.microservice.commons.security.token.OAuth2PasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.util.MultiValueMap;
@@ -46,13 +48,13 @@ public class OAuth2PasswordAuthenticationConverter extends OAuth2BaseAuthenticat
         // username (REQUIRED)
         String username = parameters.getFirst(OAuth2ParameterNames.USERNAME);
         if (!StringUtils.hasText(username) || parameters.get(OAuth2ParameterNames.USERNAME).size() != 1) {
-            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.USERNAME, OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI);
+            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.USERNAME, ACCESS_TOKEN_REQUEST_ERROR_URI));
         }
 
         // password (REQUIRED)
         String password = parameters.getFirst(OAuth2ParameterNames.PASSWORD);
         if (!StringUtils.hasText(password) || parameters.get(OAuth2ParameterNames.PASSWORD).size() != 1) {
-            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.PASSWORD, OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI);
+            throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterNames.PASSWORD, ACCESS_TOKEN_REQUEST_ERROR_URI));
         }
     }
 

@@ -1,6 +1,7 @@
 package com.somnus.microservice.commons.security.provider;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.somnus.microservice.commons.security.core.exception.BadCaptchaException;
 import com.somnus.microservice.commons.security.core.exception.ScopeException;
 import com.somnus.microservice.commons.security.util.OAuth2ErrorCodesExpand;
 import com.somnus.microservice.commons.security.token.OAuth2BaseAuthenticationToken;
@@ -20,6 +21,7 @@ import org.springframework.security.oauth2.server.authorization.context.Provider
 import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
+import static com.somnus.microservice.commons.security.util.OAuth2AuthenticationProviderUtils.getAuthenticatedClientElseThrowInvalidClient;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -94,13 +96,10 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 
     /**
      * Performs authentication with the same contract as
+     * @see org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationCodeAuthenticationProvider#authenticate(Authentication)
+     * @see org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientCredentialsAuthenticationProvider#authenticate(Authentication)
      * {@link AuthenticationManager#authenticate(Authentication)} .
      * @param authentication the authentication request object.
-     * @return a fully authenticated object including credentials. May return
-     * <code>null</code> if the <code>AuthenticationProvider</code> is unable to support
-     * authentication of the passed <code>Authentication</code> object. In such a case,
-     * the next <code>AuthenticationProvider</code> that supports the presented
-     * <code>Authentication</code> class will be tried.
      * @throws AuthenticationException if authentication fails.
      */
     @Override
@@ -114,16 +113,13 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 
         checkClient(registeredClient);
 
-        Set<String> authorizedScopes;
         // Default to configured scopes
+        Set<String> authorizedScopes = Objects.requireNonNull(registeredClient).getScopes();
         if (!CollectionUtils.isEmpty(baseAuthentication.getScopes())) {
             if(baseAuthentication.getScopes().stream().noneMatch(scope -> registeredClient.getScopes().contains(scope))){
                 throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_SCOPE);
             }
             authorizedScopes = new LinkedHashSet<>(baseAuthentication.getScopes());
-        }
-        else {
-            throw new ScopeException(OAuth2ErrorCodesExpand.SCOPE_IS_EMPTY);
         }
 
         Map<String, Object> reqParameters = baseAuthentication.getAdditionalParameters();
@@ -142,6 +138,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
                     .principal(principal)
                     .providerContext(ProviderContextHolder.getProviderContext())
                     .authorizedScopes(authorizedScopes)
+                    .tokenType(OAuth2TokenType.ACCESS_TOKEN)
                     .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                     .authorizationGrant(baseAuthentication);
             // @formatter:on
@@ -154,16 +151,17 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
             // ----- Access token -----
             OAuth2TokenContext tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.ACCESS_TOKEN).build();
             OAuth2Token generatedAccessToken = this.tokenGenerator.generate(tokenContext);
-            if (generatedAccessToken == null) {
-                OAuth2Error error = new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR,
-                        "The token generator failed to generate the access token.", ERROR_URI);
-                throw new OAuth2AuthenticationException(error);
-            }
+
+            Optional.ofNullable(generatedAccessToken).orElseThrow(() ->
+                    new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR, "The token generator failed to generate the access token.", ERROR_URI)));
+
             OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER,
                     generatedAccessToken.getTokenValue(), generatedAccessToken.getIssuedAt(),
                     generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
+
             if (generatedAccessToken instanceof ClaimAccessor) {
-                authorizationBuilder.id(accessToken.getTokenValue())
+                authorizationBuilder
+                        .id(accessToken.getTokenValue())
                         .token(accessToken, (metadata) -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME, ((ClaimAccessor) generatedAccessToken).getClaims()))
                         .attribute(OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME, authorizedScopes)
                         .attribute(Principal.class.getName(), principal);
@@ -223,9 +221,12 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
                                                                         AuthenticationException authenticationException) {
         if (authenticationException instanceof UsernameNotFoundException) {
             return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USERNAME_NOT_FOUND,
-                    this.messages.getMessage("JdbcDaoImpl.notFound", new Object[] { authentication.getName() },
-                            "Username {0} not found"),
-                    ""));
+                    this.messages.getMessage("JdbcDaoImpl.notFound", new Object[] { authentication.getName() }, "Username {0} not found"), ""));
+        }
+        if (authenticationException instanceof BadCaptchaException) {
+            return new OAuth2AuthenticationException(
+                    new OAuth2Error(OAuth2ErrorCodesExpand.BAD_CAPTCHA, this.messages.getMessage(
+                            "AbstractUserDetailsAuthenticationProvider.badCaptcha", "Bad captcha"), ""));
         }
         if (authenticationException instanceof BadCredentialsException) {
             return new OAuth2AuthenticationException(
@@ -256,21 +257,6 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
                     this.messages.getMessage("AbstractAccessDecisionManager.accessDenied", "invalid_scope"), ""));
         }
         return new OAuth2AuthenticationException(OAuth2ErrorCodesExpand.UN_KNOW_LOGIN_ERROR);
-    }
-
-    private OAuth2ClientAuthenticationToken getAuthenticatedClientElseThrowInvalidClient(Authentication authentication) {
-
-        OAuth2ClientAuthenticationToken clientPrincipal = null;
-
-        if (OAuth2ClientAuthenticationToken.class.isAssignableFrom(authentication.getPrincipal().getClass())) {
-            clientPrincipal = (OAuth2ClientAuthenticationToken) authentication.getPrincipal();
-        }
-
-        if (clientPrincipal != null && clientPrincipal.isAuthenticated()) {
-            return clientPrincipal;
-        }
-
-        throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_CLIENT);
     }
 
 }

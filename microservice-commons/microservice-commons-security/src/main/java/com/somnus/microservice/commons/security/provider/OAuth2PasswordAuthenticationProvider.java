@@ -45,9 +45,7 @@ public class OAuth2PasswordAuthenticationProvider extends OAuth2BaseAuthenticati
 
     @Override
     public boolean supports(Class<?> authentication) {
-        boolean supports = OAuth2PasswordAuthenticationToken.class.isAssignableFrom(authentication);
-        log.info("supports authentication=" + authentication + " returning " + supports);
-        return supports;
+        return OAuth2PasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
     @Override

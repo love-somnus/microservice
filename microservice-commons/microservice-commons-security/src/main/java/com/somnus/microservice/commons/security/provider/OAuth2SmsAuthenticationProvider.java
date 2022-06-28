@@ -43,9 +43,7 @@ public class OAuth2SmsAuthenticationProvider extends OAuth2BaseAuthenticationPro
 
     @Override
     public boolean supports(Class<?> authentication) {
-        boolean supports = OAuth2SmsAuthenticationToken.class.isAssignableFrom(authentication);
-        log.info("supports authentication=" + authentication + " returning " + supports);
-        return supports;
+        return OAuth2SmsAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
     @Override

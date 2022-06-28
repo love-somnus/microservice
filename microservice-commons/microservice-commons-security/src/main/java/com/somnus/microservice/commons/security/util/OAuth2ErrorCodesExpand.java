@@ -13,6 +13,9 @@ public interface OAuth2ErrorCodesExpand {
     String USERNAME_NOT_FOUND = "username_not_found";
 
     /** 错误凭证 */
+    String BAD_CAPTCHA= "bad_captcha";
+
+    /** 错误凭证 */
     String BAD_CREDENTIALS = "bad_credentials";
 
     /** 用户被锁 */

@@ -15,7 +15,9 @@ import java.util.Set;
 public class OAuth2SmsAuthenticationToken extends OAuth2BaseAuthenticationToken {
 
     public OAuth2SmsAuthenticationToken(AuthorizationGrantType authorizationGrantType,
-                                        Authentication clientPrincipal, Set<String> scopes, Map<String, Object> additionalParameters) {
+                                        Authentication clientPrincipal,
+                                        Set<String> scopes,
+                                        Map<String, Object> additionalParameters) {
         super(authorizationGrantType, clientPrincipal, scopes, additionalParameters);
     }
 

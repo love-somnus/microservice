@@ -15,7 +15,10 @@ import java.util.Set;
  */
 public class OAuth2PasswordAuthenticationToken extends OAuth2BaseAuthenticationToken {
 
-    public OAuth2PasswordAuthenticationToken(AuthorizationGrantType authorizationGrantType, Authentication clientPrincipal, Set<String> scopes, Map<String, Object> additionalParameters) {
+    public OAuth2PasswordAuthenticationToken(AuthorizationGrantType authorizationGrantType,
+                                             Authentication clientPrincipal,
+                                             Set<String> scopes,
+                                             Map<String, Object> additionalParameters) {
         super(authorizationGrantType, clientPrincipal, scopes, additionalParameters);
     }
 

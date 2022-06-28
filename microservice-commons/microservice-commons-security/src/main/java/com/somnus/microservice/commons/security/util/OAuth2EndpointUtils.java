@@ -24,8 +24,6 @@ import java.util.Map;
 @UtilityClass
 public class OAuth2EndpointUtils {
 
-    public final String ACCESS_TOKEN_REQUEST_ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-5.2";
-
     public MultiValueMap<String, String> getParameters(HttpServletRequest request) {
         Map<String, String[]> parameterMap = request.getParameterMap();
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>(parameterMap.size());
@@ -44,11 +42,6 @@ public class OAuth2EndpointUtils {
                 .equals(request.getParameter(OAuth2ParameterNames.GRANT_TYPE))
                 && request.getParameter(OAuth2ParameterNames.CODE) != null
                 && request.getParameter(PkceParameterNames.CODE_VERIFIER) != null;
-    }
-
-    public void throwError(String errorCode, String parameterName, String errorUri) {
-        OAuth2Error error = new OAuth2Error(errorCode, "OAuth 2.0 Parameter: " + parameterName, errorUri);
-        throw new OAuth2AuthenticationException(error);
     }
 
     /**
