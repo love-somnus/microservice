@@ -2,7 +2,6 @@ package com.somnus.microservice.commons.security.provider;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.somnus.microservice.commons.security.core.exception.BadCaptchaException;
-import com.somnus.microservice.commons.security.core.exception.ScopeException;
 import com.somnus.microservice.commons.security.util.OAuth2ErrorCodesExpand;
 import com.somnus.microservice.commons.security.token.OAuth2BaseAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
@@ -179,7 +178,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
             /**
              * 如果Generator有扩展信息输出增强
              * @see com.somnus.microservice.commons.security.core.customizer.CustomeOAuth2JwtTokenCustomizer#customize(JwtEncodingContext)
-             * @see org.springframework.security.oauth2.server.authorization.OAuth2Authorization.Builder#token(OAuth2Token) 
+             * @see org.springframework.security.oauth2.server.authorization.OAuth2Authorization.Builder#token(OAuth2Token)
              */
             if (generatedAccessToken instanceof ClaimAccessor) {
                 authorizationBuilder.token(accessToken, (metadata) -> {
@@ -271,10 +270,6 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
                     this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired",
                             "User credentials have expired"),
                     ""));
-        }
-        if (authenticationException instanceof ScopeException) {
-            return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_SCOPE,
-                    this.messages.getMessage("AbstractAccessDecisionManager.accessDenied", "invalid_scope"), ""));
         }
         return new OAuth2AuthenticationException(OAuth2ErrorCodesExpand.UN_KNOW_LOGIN_ERROR);
     }
