@@ -80,8 +80,7 @@ public abstract class OAuth2BaseAuthenticationConverter<T extends OAuth2BaseAuth
 
         // 扩展信息
         Map<String, Object> additionalParameters = parameters.entrySet().stream()
-                .filter(e -> !e.getKey().equals(OAuth2ParameterNames.GRANT_TYPE)
-                        && !e.getKey().equals(OAuth2ParameterNames.SCOPE))
+                .filter(e -> !e.getKey().equals(OAuth2ParameterNames.GRANT_TYPE) && !e.getKey().equals(OAuth2ParameterNames.SCOPE) )
                 .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().get(0)));
 
         // 创建token

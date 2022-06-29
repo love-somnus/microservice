@@ -56,7 +56,7 @@ public class OAuth2PasswordAuthenticationProvider extends OAuth2BaseAuthenticati
     }
 
     @Override
-    public UsernamePasswordAuthenticationToken buildToken(Map<String, Object> reqParameters) {
+    public UsernamePasswordAuthenticationToken assemble(Map<String, Object> reqParameters) {
         String username = (String) reqParameters.get(OAuth2ParameterNames.USERNAME);
         String password = (String) reqParameters.get(OAuth2ParameterNames.PASSWORD);
         return new UsernamePasswordAuthenticationToken(username, password);

@@ -41,7 +41,7 @@ public class OAuth2SmsAuthenticationConverter extends OAuth2BaseAuthenticationCo
     }
 
     /**
-     * 校验扩展参数 密码模式密码必须不为空
+     * 校验扩展参数 验证码模式手机号必须不为空
      * @param request 参数列表
      */
     @Override
