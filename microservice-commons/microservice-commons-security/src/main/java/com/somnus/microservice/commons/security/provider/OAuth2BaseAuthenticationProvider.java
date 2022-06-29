@@ -165,24 +165,31 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
                     generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
             // -------------------- Access token end --------------------
 
-            /* 封装OAuth2Authorization，给OAuth2AuthorizationService保存信息  */
+            /**
+             * 封装OAuth2Authorization，给OAuth2AuthorizationService保存信息
+             * @see org.springframework.security.oauth2.server.authorization.authentication.OAuth2RefreshTokenAuthenticationProvider#authenticate(Authentication)
+             * 两个attribute属性放在这是因为OAuth2RefreshTokenAuthenticationProvider调用authorizationService.findByToken读取用
+             */
             OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization
                     .withRegisteredClient(registeredClient).principalName(principal.getName())
                     .authorizationGrantType(baseAuthentication.getAuthorizationGrantType())
-                    /*.attribute(Principal.class.getName(), principal)*/
+                    .attribute(Principal.class.getName(), principal)
                     .attribute(OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME, authorizedScopes);
 
             /**
              * 如果Generator有扩展信息输出增强
              * @see com.somnus.microservice.commons.security.core.customizer.CustomeOAuth2JwtTokenCustomizer#customize(JwtEncodingContext)
+             * @see org.springframework.security.oauth2.server.authorization.OAuth2Authorization.Builder#token(OAuth2Token) 
              */
             if (generatedAccessToken instanceof ClaimAccessor) {
-                authorizationBuilder
-                        .id(accessToken.getTokenValue())
-                        .token(accessToken, (metadata) -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME, ((ClaimAccessor) generatedAccessToken).getClaims()));
+                authorizationBuilder.token(accessToken, (metadata) -> {
+                    metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME, ((ClaimAccessor) generatedAccessToken).getClaims());
+                    //这个其实可要可不要，底层默认会添加，并就是false
+                    metadata.put(OAuth2Authorization.Token.INVALIDATED_METADATA_NAME, false);
+                });
             }
             else {
-                authorizationBuilder.id(accessToken.getTokenValue()).accessToken(accessToken);
+                authorizationBuilder.accessToken(accessToken);
             }
 
             // ----- Refresh token -----

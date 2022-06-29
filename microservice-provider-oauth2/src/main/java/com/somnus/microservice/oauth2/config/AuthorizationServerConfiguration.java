@@ -190,6 +190,7 @@ public class AuthorizationServerConfiguration {
     private AuthenticationConverter accessTokenRequestConverter() {
         return new DelegatingAuthenticationConverter(Arrays.asList(
                 new OAuth2ClientCredentialsAuthenticationConverter(),//client_credentials
+                new OAuth2RefreshTokenAuthenticationConverter(),//refresh_token
                 new OAuth2PasswordAuthenticationConverter(),//password
                 new OAuth2SmsAuthenticationConverter()//sms
                 ));

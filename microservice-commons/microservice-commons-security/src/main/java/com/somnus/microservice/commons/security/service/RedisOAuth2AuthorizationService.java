@@ -32,8 +32,6 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
 
     private final static Long TIMEOUT = 10L;
 
-    private static final String AUTHORIZATION = "token";
-
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
@@ -47,7 +45,7 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
 
         if (isCode(authorization)) {
             OAuth2Authorization.Token<OAuth2AuthorizationCode> authorizationCode = authorization.getToken(OAuth2AuthorizationCode.class);
-            OAuth2AuthorizationCode authorizationCodeToken = authorizationCode.getToken();
+            OAuth2AuthorizationCode authorizationCodeToken = Objects.requireNonNull(authorizationCode).getToken();
             long between = ChronoUnit.MINUTES.between(Objects.requireNonNull(authorizationCodeToken.getIssuedAt()), authorizationCodeToken.getExpiresAt());
             String key = buildKey(OAuth2ParameterNames.CODE, authorizationCodeToken.getTokenValue());
             redisTemplate.opsForValue().set(key, authorization, between, TimeUnit.MINUTES);
@@ -110,7 +108,7 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
     }
 
     private String buildKey(String type, String id) {
-        return String.format("%s:%s:%s", AUTHORIZATION, type, id);
+        return String.format("%s:%s:%s", OAuth2ParameterNames.TOKEN, type, id);
     }
 
     private static boolean isState(OAuth2Authorization authorization) {
