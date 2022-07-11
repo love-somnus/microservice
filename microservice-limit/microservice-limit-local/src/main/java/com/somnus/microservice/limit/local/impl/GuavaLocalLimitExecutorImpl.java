@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kevin
@@ -25,10 +26,10 @@ public class GuavaLocalLimitExecutorImpl implements LimitExecutor {
     @Value("${" + LimitConstant.FREQUENT_LOG_PRINT + ":true}")
     private Boolean frequentLogPrint;
 
-    private volatile Map<String, RateLimiterEntity> rateLimiterEntityMap = new ConcurrentHashMap<String, RateLimiterEntity>();
+    private final Map<String, RateLimiterEntity> rateLimiterEntityMap = new ConcurrentHashMap<String, RateLimiterEntity>();
 
     @Override
-    public boolean tryAccess(String name, String key, int limitPeriod, int limitCount) {
+    public boolean tryAccess(String name, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
         if (StringUtils.isEmpty(name)) {
             throw new LimitException("Name is null or empty");
         }
@@ -39,29 +40,29 @@ public class GuavaLocalLimitExecutorImpl implements LimitExecutor {
 
         String compositeKey = KeyUtil.getCompositeKey(prefix, name, key);
 
-        return tryAccess(compositeKey, limitPeriod, limitCount);
+        return tryAccess(compositeKey, rate, rateInterval, rateIntervalUnit);
     }
 
     @Override
-    public boolean tryAccess(String compositeKey, int limitPeriod, int limitCount) {
+    public boolean tryAccess(String compositeKey, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
         if (StringUtils.isEmpty(compositeKey)) {
             throw new LimitException("Composite key is null or empty");
         }
 
-        if (limitPeriod != 1) {
+        if (rateInterval != 1) {
             throw new LimitException("Limit period must be 1 second for Guava rate limiter");
         }
 
-        RateLimiterEntity rateLimiterEntity = getRateLimiterEntity(compositeKey, limitCount);
+        RateLimiterEntity rateLimiterEntity = getRateLimiterEntity(compositeKey, rate, rateInterval, rateIntervalUnit);
         RateLimiter rateLimiter = rateLimiterEntity.getRateLimiter();
 
         return rateLimiter.tryAcquire();
     }
 
-    private RateLimiterEntity getRateLimiterEntity(String compositeKey, double rate) {
+    private RateLimiterEntity getRateLimiterEntity(String compositeKey, double rate, int rateInterval, TimeUnit rateIntervalUnit) {
         RateLimiterEntity rateLimiterEntity = rateLimiterEntityMap.get(compositeKey);
         if (rateLimiterEntity == null) {
-            RateLimiter newRateLimiter = RateLimiter.create(rate);
+            RateLimiter newRateLimiter = RateLimiter.create(rate, rateInterval, rateIntervalUnit);
 
             RateLimiterEntity newRateLimiterEntity = new RateLimiterEntity();
             newRateLimiterEntity.setRateLimiter(newRateLimiter);
@@ -82,7 +83,7 @@ public class GuavaLocalLimitExecutorImpl implements LimitExecutor {
     }
 
     // 因为 rateLimiter.setRate(permitsPerSecond)会执行一次synchronized，为避免不必要的同步，故通过RateLimiterEntity去封装，做一定的冗余设计
-    private class RateLimiterEntity {
+    private static class RateLimiterEntity {
         private RateLimiter rateLimiter;
         private double rate;
 

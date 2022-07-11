@@ -6,6 +6,8 @@ import com.somnus.microservice.limit.exception.LimitException;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.limit.local.impl
@@ -19,12 +21,12 @@ public class LocalLimitDelegateImpl implements LimitDelegate {
     private LimitExecutor limitExecutor;
 
     @Override
-    public Object invoke(MethodInvocation invocation, String key, int limitPeriod, int limitCount) throws Throwable {
-        boolean status = limitExecutor.tryAccess(key, limitPeriod, limitCount);
+    public Object invoke(MethodInvocation invocation, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit) throws Throwable {
+        boolean status = limitExecutor.tryAccess(key, rate, rateInterval, rateIntervalUnit);
         if (status) {
             return invocation.proceed();
         } else {
-            throw new LimitException("Reach max limited access count=" + limitCount + " within period=" + limitPeriod + " seconds");
+            throw new LimitException("Reach max limited access rate=" + rate + " within rateInterval=" + rateInterval + " " + rateIntervalUnit.name());
         }
     }
 }

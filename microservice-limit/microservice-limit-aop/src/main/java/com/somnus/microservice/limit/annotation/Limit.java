@@ -6,6 +6,8 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.limit.annotation
@@ -31,21 +33,26 @@ public @interface Limit {
     String key() default "";
 
     /**
-     * 给定的时间段
-     * 单位秒
+     * 单位时间
      * @return int
      */
-    int limitPeriod();
+    int rateInterval();
 
     /**
-     * 最多的访问限制次数
+     * 单位(默认秒)
+     * @return
+     */
+    TimeUnit rateIntervalUnit() default TimeUnit.SECONDS;
+
+    /**
+     * 单位时间产生的令牌个数
      * @return int
      */
-    int limitCount();
+    int rate();
 
     /**
      * 是否限制IP
      * @return boolean
      */
-    boolean restrictIp() default true;
+    boolean restrictIp() default false;
 }

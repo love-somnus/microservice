@@ -2,6 +2,8 @@ package com.somnus.microservice.limit;
 
 import org.aopalliance.intercept.MethodInvocation;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.limit
@@ -11,6 +13,6 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public interface LimitDelegate {
 
-    Object invoke(MethodInvocation invocation, String key, int limitPeriod, int limitCount) throws Throwable;
+    Object invoke(MethodInvocation invocation, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit) throws Throwable;
 
 }

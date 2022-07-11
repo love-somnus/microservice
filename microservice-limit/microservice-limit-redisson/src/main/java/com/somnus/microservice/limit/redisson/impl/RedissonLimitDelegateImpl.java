@@ -1,4 +1,4 @@
-package com.somnus.microservice.limit.redis.impl;
+package com.somnus.microservice.limit.redisson.impl;
 
 import com.somnus.microservice.limit.LimitDelegate;
 import com.somnus.microservice.limit.LimitExecutor;
@@ -11,11 +11,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.limit.redis.impl
- * @title: RedisLimitDelegateImpl
+ * @title: RedissonLimitDelegateImpl
  * @description: TODO
  * @date 2019/7/10 17:07
  */
-public class RedisLimitDelegateImpl implements LimitDelegate {
+public class RedissonLimitDelegateImpl implements LimitDelegate {
 
     @Autowired
     private LimitExecutor limitExecutor;

@@ -9,12 +9,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Instant;
 import java.util.Collections;
-import java.util.Optional;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kevin
@@ -35,8 +40,17 @@ public class RedisLimitExecutorImpl implements LimitExecutor {
     @Value("${" + LimitConstant.FREQUENT_LOG_PRINT + ":false}")
     private Boolean frequentLogPrint;
 
+    private static final DefaultRedisScript<List> SCRIPT;
+
+    static {
+        SCRIPT = new DefaultRedisScript<>();
+        /*SCRIPT.setLocation(new ClassPathResource("fixed_window_limiter.lua"));*/
+        SCRIPT.setLocation(new ClassPathResource("token_bucket_limter.lua"));
+        SCRIPT.setResultType(List.class);
+    }
+
     @Override
-    public boolean tryAccess(String name, String key, int limitPeriod, int limitCount) {
+    public boolean tryAccess(String name, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
         if (StringUtils.isEmpty(name)) {
             throw new LimitException("Name is null or empty");
         }
@@ -47,44 +61,50 @@ public class RedisLimitExecutorImpl implements LimitExecutor {
 
         String compositeKey = KeyUtil.getCompositeKey(prefix, name, key);
 
-        return tryAccess(compositeKey, limitPeriod, limitCount);
+        return tryAccess(compositeKey, rate, rateInterval, rateIntervalUnit);
     }
 
     @Override
-    public boolean tryAccess(String compositeKey, int limitPeriod, int limitCount) {
+    public boolean tryAccess(String compositeKey, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
         if (StringUtils.isEmpty(compositeKey)) {
             throw new LimitException("Composite key is null or empty");
         }
 
-        String luaScript = buildLuaScript();
+        RedisTemplate<String, Object> redisTemplate = redisHandler.getRedisTemplate();
+
+        /**
+         * ARGV[1]：令牌桶最大长度
+         * ARGV[2]：当前时间戳
+         * ARGV[3]：重置桶内令牌的时间间隔(毫秒)
+         * ARGV[4]：单位时间应该放入的令牌数
+         * ARGV[5]：本次申请的令牌数量
+         */
+        List<Long> result = redisTemplate.execute(SCRIPT, Collections.singletonList(compositeKey),
+                rate,
+                Instant.now().toEpochMilli(),
+                rateIntervalUnit.toMillis(rateInterval),
+                rate,
+                1);
+
+        return Objects.requireNonNull(result).get(0) >= result.get(1);
+    }
+
+    /*@Override
+    public boolean tryAccess(String compositeKey, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
+        if (StringUtils.isEmpty(compositeKey)) {
+            throw new LimitException("Composite key is null or empty");
+        }
 
         RedisTemplate<String, Object> redisTemplate = redisHandler.getRedisTemplate();
 
-        Long count = redisTemplate.execute(RedisScript.of(luaScript, Long.class), Collections.singletonList(compositeKey), limitCount, limitPeriod);
-
-        /* 执行 limitCount + 1后count 开始变为null，需要处理下空指针（不想用if，变通处理下）*/
-        BigDecimal times = Optional.ofNullable(count) .map(BigDecimal::new).orElse(new BigDecimal(limitCount).add(BigDecimal.ONE));
+        //List<Long> result = redisTemplate.execute(RedisScript.of(luaScript, Long.class), Collections.singletonList(compositeKey), rate, rateIntervalUnit.toSeconds(rateInterval));
+        List<Long> result = redisTemplate.execute(SCRIPT, Collections.singletonList(compositeKey), rate, rateIntervalUnit.toSeconds(rateInterval));
 
         if (frequentLogPrint) {
-            log.info("Access try count is {} for key={}", count, compositeKey);
+            log.info("Access try count is {} for key={}", result.get(1), compositeKey);
         }
 
-        return times.intValue() <= limitCount;
-    }
+        return Objects.requireNonNull(result).get(0) >= result.get(1);
+    }*/
 
-    private String buildLuaScript() {
-        StringBuilder lua = new StringBuilder();
-        lua.append("local c");
-        lua.append("\nc = redis.call('get',KEYS[1])");
-        lua.append("\nif c and tonumber(c) > tonumber(ARGV[1]) then"); // 调用不超过最大值，则直接返回
-        lua.append("\nreturn c;");
-        lua.append("\nend");
-        lua.append("\nc = redis.call('incr',KEYS[1])"); // 执行计算器自加
-        lua.append("\nif tonumber(c) == 1 then");
-        lua.append("\nredis.call('expire',KEYS[1],ARGV[2])"); // 从第一次调用开始限流，设置对应键值的过期
-        lua.append("\nend");
-        lua.append("\nreturn c;");
-
-        return lua.toString();
-    }
 }

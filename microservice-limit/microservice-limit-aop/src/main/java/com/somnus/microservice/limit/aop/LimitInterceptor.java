@@ -13,8 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.lang.annotation.Annotation;
+import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kevin
@@ -36,16 +37,17 @@ public class LimitInterceptor extends AbstractInterceptor {
     private Boolean frequentLogPrint;
 
     @Override
-    public Object invoke(MethodInvocation invocation) throws Throwable {
+    public Object invoke(@Nonnull MethodInvocation invocation) throws Throwable {
         Limit limitAnnotation = getLimitAnnotation(invocation);
         if (limitAnnotation != null) {
             String name = limitAnnotation.name();
             String key = limitAnnotation.key();
-            int limitPeriod = limitAnnotation.limitPeriod();
-            int limitCount = limitAnnotation.limitCount();
+            int rate = limitAnnotation.rate();
+            int rateInterval = limitAnnotation.rateInterval();
+            TimeUnit rateIntervalUnit = limitAnnotation.rateIntervalUnit();
             boolean restrictIp = limitAnnotation.restrictIp();
 
-            return invoke(invocation, limitAnnotation, name, key, limitPeriod, limitCount, restrictIp);
+            return invoke(invocation, name, key, rate, rateInterval, rateIntervalUnit, restrictIp);
         }
 
         return invocation.proceed();
@@ -60,7 +62,7 @@ public class LimitInterceptor extends AbstractInterceptor {
         return null;
     }
 
-    private Object invoke(MethodInvocation invocation, Annotation annotation, String name, String key, int limitPeriod, int limitCount, boolean restrictIp) throws Throwable {
+    private Object invoke(MethodInvocation invocation, String name, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit, boolean restrictIp) throws Throwable {
         if (StringUtils.isEmpty(name)) {
             throw new LimitException("Annotation [Limit]'s name is null or empty");
         }
@@ -76,7 +78,7 @@ public class LimitInterceptor extends AbstractInterceptor {
         String methodName = getMethodName(invocation);
 
         if (frequentLogPrint) {
-            log.info("Intercepted for annotation - Limit [key={}, limitPeriod={}, limitCount={}, proxyType={}, proxiedClass={}, method={}]", compositeKey, limitPeriod, limitCount, proxyType, proxiedClassName, methodName);
+            log.info("Intercepted for annotation - Limit [key={}, rate={}, rateInterval={}, proxyType={}, proxiedClass={}, method={}]", compositeKey, rate, rateInterval, proxyType, proxiedClassName, methodName);
         }
 
         if(restrictIp){
@@ -84,6 +86,6 @@ public class LimitInterceptor extends AbstractInterceptor {
             compositeKey = compositeKey + "#" + ip;
         }
 
-        return limitDelegate.invoke(invocation, compositeKey, limitPeriod, limitCount);
+        return limitDelegate.invoke(invocation, compositeKey, rate, rateInterval, rateIntervalUnit);
     }
 }

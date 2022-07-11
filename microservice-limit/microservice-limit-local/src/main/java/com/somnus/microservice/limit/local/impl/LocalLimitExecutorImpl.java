@@ -40,7 +40,7 @@ public class LocalLimitExecutorImpl implements LimitExecutor {
     private volatile Map<String, Timer> timerMap = new ConcurrentHashMap<String, Timer>();
 
     @Override
-    public boolean tryAccess(String name, String key, int limitPeriod, int limitCount) {
+    public boolean tryAccess(String name, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
         if (StringUtils.isEmpty(name)) {
             throw new LimitException("Name is null or empty");
         }
@@ -51,11 +51,11 @@ public class LocalLimitExecutorImpl implements LimitExecutor {
 
         String compositeKey = KeyUtil.getCompositeKey(prefix, name, key);
 
-        return tryAccess(compositeKey, limitPeriod, limitCount);
+        return tryAccess(compositeKey, rate, rateInterval, rateIntervalUnit);
     }
 
     @Override
-    public boolean tryAccess(String compositeKey, int limitPeriod, int limitCount) {
+    public boolean tryAccess(String compositeKey, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
         if (StringUtils.isEmpty(compositeKey)) {
             throw new LimitException("Composite key is null or empty");
         }
@@ -70,7 +70,7 @@ public class LocalLimitExecutorImpl implements LimitExecutor {
             Timer timer = getTimer(compositeKey);
 
             if (!status.get()) {
-                startTimer(counter, status, timer, limitPeriod);
+                startTimer(counter, status, timer, rateInterval);
                 while (!status.get()) {
                     try {
                         TimeUnit.MILLISECONDS.sleep(5);
@@ -81,7 +81,7 @@ public class LocalLimitExecutorImpl implements LimitExecutor {
             }
 
             int count = counter.get();
-            if (count <= limitCount) {
+            if (count <= rate) {
                 count = counter.incrementAndGet();
             }
 
@@ -89,7 +89,7 @@ public class LocalLimitExecutorImpl implements LimitExecutor {
                 log.info("Access try count is {} for key={}", count, compositeKey);
             }
 
-            return count <= limitCount;
+            return count <= rate;
         } finally {
             lock.unlock();
         }
