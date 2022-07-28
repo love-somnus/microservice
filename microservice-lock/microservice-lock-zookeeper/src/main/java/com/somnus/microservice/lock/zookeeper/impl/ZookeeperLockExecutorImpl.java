@@ -1,5 +1,6 @@
 package com.somnus.microservice.lock.zookeeper.impl;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Pair;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.commons.base.constant.GlobalConstant;
 import com.somnus.microservice.commons.zookeeper.handler.CuratorHandler;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PreDestroy;
-import javafx.util.Pair;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;

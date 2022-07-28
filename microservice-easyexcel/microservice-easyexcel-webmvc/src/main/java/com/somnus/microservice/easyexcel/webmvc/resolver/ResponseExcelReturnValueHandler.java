@@ -5,6 +5,7 @@ import com.somnus.microservice.easyexcel.webmvc.handler.SheetWriteHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
@@ -38,19 +39,19 @@ public class ResponseExcelReturnValueHandler implements HandlerMethodReturnValue
 
     /**
      * 处理逻辑
-     * @param o 返回参数
-     * @param parameter 方法签名
+     * @param returnValue 返回参数
+     * @param returnType 方法签名
      * @param mavContainer 上下文容器
      * @param nativeWebRequest 上下文
      */
     @Override
-    public void handleReturnValue(Object o, MethodParameter parameter, ModelAndViewContainer mavContainer,
+    public void handleReturnValue(@Nullable Object returnValue, MethodParameter returnType, ModelAndViewContainer mavContainer,
                                   NativeWebRequest nativeWebRequest) {
 
         HttpServletResponse response = nativeWebRequest.getNativeResponse(HttpServletResponse.class);
         Assert.state(response != null, "No HttpServletResponse");
 
-        ResponseExcel responseExcel = parameter.getMethodAnnotation(ResponseExcel.class);
+        ResponseExcel responseExcel = returnType.getMethodAnnotation(ResponseExcel.class);
         Assert.state(responseExcel != null, "No @ResponseExcel");
 
         mavContainer.setRequestHandled(true);
@@ -58,7 +59,7 @@ public class ResponseExcelReturnValueHandler implements HandlerMethodReturnValue
         sheetWriteHandlerList.stream()
                 .filter(handler -> handler.support(responseExcel))
                 .findFirst()
-                .ifPresent(handler -> handler.export(o, response, responseExcel));
+                .ifPresent(handler -> handler.export(returnValue, response, responseExcel));
     }
 
 }

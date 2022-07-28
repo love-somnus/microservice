@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -42,8 +44,8 @@ public class RequestExcelArgumentResolver implements HandlerMethodArgumentResolv
 
     @Override
     @SneakyThrows
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer modelAndViewContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory webDataBinderFactory) {
+    public Object resolveArgument(MethodParameter parameter, @Nullable ModelAndViewContainer modelAndViewContainer,
+                                  @NonNull NativeWebRequest webRequest, @Nullable WebDataBinderFactory webDataBinderFactory) {
         Class<?> parameterType = parameter.getParameterType();
         if (!parameterType.isAssignableFrom(List.class)) {
             throw new IllegalArgumentException("Excel upload request resolver error, @RequestExcel parameter is not List " + parameterType);
