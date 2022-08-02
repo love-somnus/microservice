@@ -9,15 +9,15 @@
     <packaging>pom</packaging>
 
     <properties>
-        <spring-boot.version>2.7.0</spring-boot.version>
+        <spring-boot.version>2.7.2</spring-boot.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
-        <oauth2-authorization-server.version>0.3.0</oauth2-authorization-server.version>
+        <oauth2-authorization-server.version>0.3.1</oauth2-authorization-server.version>
 
-        <dubbo.version>2.7.15</dubbo.version>
-        <dubbo-spring-boot.version>2.7.15</dubbo-spring-boot.version>
-        <dubbo-registry-nacos.version>2.7.15</dubbo-registry-nacos.version>
-        <dubbo-serialization-kryo.version>2.7.14</dubbo-serialization-kryo.version>
+        <dubbo.version>3.0.10</dubbo.version>
+        <dubbo-spring-boot.version>3.0.10</dubbo-spring-boot.version>
+        <dubbo-registry-nacos.version>3.0.10</dubbo-registry-nacos.version>
+        <dubbo-serialization-kryo.version>2.7.16</dubbo-serialization-kryo.version>
         <reactivefeign.version>3.1.1</reactivefeign.version>
         <mybatis-plus.version>3.4.3</mybatis-plus.version>
         <pagehelper.version>1.4.1</pagehelper.version>
