@@ -50,13 +50,6 @@
         </dependency>
         <!-- for swagger -->
 
-        <!-- dubbo -->
-        <dependency>
-            <groupId>com.somnus</groupId>
-            <artifactId>microservice-commons-dubbo-core</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
         <!-- nacos -->
         <dependency>
             <groupId>com.somnus</groupId>

@@ -34,12 +34,8 @@
             <version>${project.parent.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.somnus</groupId>
-                    <artifactId>microservice-commons-dubbo-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.dubbo</groupId>
-                    <artifactId>dubbo-spring-boot-starter</artifactId>
+                    <groupId>com.alibaba.cloud</groupId>
+                    <artifactId>spring-cloud-starter-dubbo</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

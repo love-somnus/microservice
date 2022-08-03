@@ -16,7 +16,6 @@
         <module>microservice-commons-base</module>
         <module>microservice-commons-core</module>
         <module>microservice-commons-security</module>
-        <module>microservice-commons-dubbo-core</module>
         <module>microservice-commons-redis</module>
         <module>microservice-commons-zookeeper</module>
     </modules>
