@@ -1,7 +1,6 @@
 package com.somnus.microservice.commons.base.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,18 +13,18 @@ import java.io.Serializable;
  * @date 2019/4/16 17:39
  */
 @Data
-@ApiModel(value = "更改状态")
+@Schema(title = "更改状态")
 public class UpdateStatusDto implements Serializable {
     private static final long serialVersionUID = 1494899235149813850L;
     /**
      * 角色ID
      */
-    @ApiModelProperty(value = "角色ID", required = true, example = "1")
+    @Schema(title = "角色ID", required = true, example = "1")
     private Long id;
 
     /**
      * 状态
      */
-    @ApiModelProperty(value = "状态", required = true, example = "1")
+    @Schema(title = "状态", required = true, example = "1")
     private Integer status;
 }

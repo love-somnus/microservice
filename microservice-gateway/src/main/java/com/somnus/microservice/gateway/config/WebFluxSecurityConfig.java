@@ -34,7 +34,7 @@ import reactor.core.publisher.Mono;
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
-    private static final String[] URLS = {"/oauth2/**", "/swagger-ui/**","/swagger-resources/**","/v2/api-docs","/v3/api-docs"};
+    private static final String[] URLS = {"/oauth2/**", "/uac/v3/api-docs/**", "/cpc/v3/api-docs/**", "/swagger-ui.html","/webjars/**","/v3/api-docs/**"};
 
     private final DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
 

@@ -1,6 +1,6 @@
 package com.somnus.microservice.gateway.config;
 
-import org.springframework.cloud.gateway.config.GatewayProperties;
+/*import org.springframework.cloud.gateway.config.GatewayProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.support.NameUtils;
 import org.springframework.context.annotation.Primary;
@@ -9,7 +9,7 @@ import springfox.documentation.swagger.web.SwaggerResource;
 import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;*/
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.gateway.config
@@ -17,6 +17,7 @@ import java.util.List;
  * @description: Swagger3聚合配置
  * @date 2019/3/29 10:33
  */
+/*
 @Primary
 @Component
 public class SwaggerProvider implements SwaggerResourcesProvider {
@@ -54,4 +55,4 @@ public class SwaggerProvider implements SwaggerResourcesProvider {
         return resources;
     }
 
-}
+}*/

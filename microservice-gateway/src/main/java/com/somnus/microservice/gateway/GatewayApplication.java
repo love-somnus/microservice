@@ -21,7 +21,6 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
-import springfox.documentation.oas.annotations.EnableOpenApi;
 
 /**
  * @author Kevin
@@ -30,7 +29,6 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
  * @description: TODO
  * @date 2019/3/25 11:55
  */
-@EnableOpenApi
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication

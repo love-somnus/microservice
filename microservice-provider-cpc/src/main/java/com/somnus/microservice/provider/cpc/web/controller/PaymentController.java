@@ -3,10 +3,12 @@ package com.somnus.microservice.provider.cpc.web.controller;
 import com.somnus.microservice.commons.base.wrapper.WrapMapper;
 import com.somnus.microservice.provider.cpc.model.vo.PaymentOrderVo;
 import com.somnus.microservice.provider.cpc.service.PaymentService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,15 +29,15 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping(value = "payment")
 @RequiredArgsConstructor
-@Api(value = "Web - PaymentController")
+@Tag(name = "PaymentController", description = "支付相关接口")
 public class PaymentController {
 
     private final PaymentService service;
 
     @GetMapping(value = "order/detail/{orderId}")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "orderId", value = "订单ID", required = true, dataType = "String", example = "1", paramType = "path")})
-    @ApiOperation(httpMethod = "GET", value = "订单详情", notes = "订单详情")
+    @Parameters({
+            @Parameter(name = "orderId", description = "订单ID", required = true, example = "1", in = ParameterIn.PATH)})
+    @Operation(method = "GET", summary = "订单详情", description  = "订单详情")
     public Mono<?> detail(@PathVariable("orderId")String orderId){
 
         PaymentOrderVo paymentOrder = service.detail(orderId);
@@ -44,9 +46,9 @@ public class PaymentController {
     }
 
     @PostMapping(value = "order/{orderId}")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "orderId", value = "订单ID", required = true, dataType = "String", example = "1", paramType = "path")})
-    @ApiOperation(httpMethod = "POST", value = "下单", notes = "下单")
+    @Parameters({
+            @Parameter(name = "orderId", description = "订单ID", required = true, example = "1", in = ParameterIn.PATH)})
+    @Operation(method = "POST", summary = "下单", description = "下单")
     public Mono<?> order(@PathVariable("orderId")String orderId){
 
         PaymentOrderVo paymentOrder = service.order(orderId);
@@ -60,10 +62,10 @@ public class PaymentController {
      * @return
      */
     @PostMapping(value = "order/pay", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true, dataType = "String", example = "1"),
-            @ApiImplicitParam(name = "orderId", value = "订单ID", required = true, dataType = "String", example = "1")})
-    @ApiOperation(httpMethod = "POST", value = "支付订单", notes = "支付订单")
+    @Parameters({
+            @Parameter(name = "userId", description = "用户ID", required = true, example = "1"),
+            @Parameter(name = "orderId", description = "订单ID", required = true, example = "1")})
+    @Operation(method = "POST", summary = "支付订单", description = "支付订单")
     public Mono<?> pay(@RequestBody PayOrderRequest request){
 
         String url = service.pay(request.getUserId(), request.getOrderId());

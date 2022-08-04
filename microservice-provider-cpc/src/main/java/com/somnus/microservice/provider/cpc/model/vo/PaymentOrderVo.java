@@ -1,7 +1,7 @@
 package com.somnus.microservice.provider.cpc.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,7 +18,7 @@ import java.util.Date;
  * @date 2021/1/27 17:45
  */
 @Data
-@ApiModel("订单")
+@Schema
 @NoArgsConstructor
 public class PaymentOrderVo implements Serializable {
 

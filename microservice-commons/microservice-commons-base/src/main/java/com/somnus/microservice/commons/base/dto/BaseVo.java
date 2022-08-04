@@ -16,7 +16,7 @@
 package com.somnus.microservice.commons.base.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -30,7 +30,7 @@ import java.util.Date;
  * @description: TODO
  * @date 2019/3/28 15:27
  */
-@ApiModel
+@Schema
 @Data
 public class BaseVo implements Serializable {
 	

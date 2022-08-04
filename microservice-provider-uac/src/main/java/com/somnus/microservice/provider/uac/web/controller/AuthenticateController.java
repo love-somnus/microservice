@@ -1,6 +1,7 @@
 package com.somnus.microservice.provider.uac.web.controller;
 
 import com.somnus.microservice.provider.cpc.api.service.AuthenticateFeignApi;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
  */
 @RestController
 @RequestMapping("auth")
+@Tag(name = "AuthenticateController", description = "测试相关接口")
 public class AuthenticateController {
 
     @Autowired

@@ -4,10 +4,12 @@ import com.somnus.microservice.commons.base.wrapper.WrapMapper;
 import com.somnus.microservice.limit.annotation.Limit;
 import com.somnus.microservice.provider.cpc.model.body.SmsCodeRequest;
 import com.somnus.microservice.provider.cpc.service.SmsService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -28,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @RefreshScope
 @RestController
 @RequestMapping(value = "sms")
-@Api(value = "Web - SmsController")
+@Tag(name = "SmsController", description = "短信相关接口")
 public class SmsController {
 
     @Autowired
@@ -39,10 +41,11 @@ public class SmsController {
      * @return
      */
     @PostMapping(value = "send-sms-code", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "mobile", value = "手机号", required = true, dataType = "String", example = "1"),
-            @ApiImplicitParam(name = "validateCode", value = "校验码", required = true, dataType = "String", example = "1")})
-    @ApiOperation(httpMethod = "POST", value = "发送短信验证码", notes = "60秒最多允许发送3次【限流】")
+    @Parameters({
+            @Parameter(name = "mobile", description = "手机号", required = true, example = "1"),
+            @Parameter(name = "validateCode", description = "校验码", required = true, example = "1")})
+    @Operation(method = "POST", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE)),
+            summary = "发送短信验证码", description = "60秒最多允许发送3次【限流】")
     @Limit(name = "limit", key = "#request.mobile", rate = 3, rateInterval = 60, rateIntervalUnit = TimeUnit.SECONDS)
     public Mono<?> sendSmsCode(SmsCodeRequest request){
 
