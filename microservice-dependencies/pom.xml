@@ -17,7 +17,7 @@
         <dubbo-bom.version>2.7.15</dubbo-bom.version>
         <dubbo-registry-nacos.version>2.7.15</dubbo-registry-nacos.version>
         <dubbo-serialization-kryo.version>2.7.16</dubbo-serialization-kryo.version>
-        <reactivefeign.version>3.1.1</reactivefeign.version>
+        <reactivefeign.version>3.2.3</reactivefeign.version>
         <mybatis-plus.version>3.4.3</mybatis-plus.version>
         <pagehelper.version>1.4.1</pagehelper.version>
         <alibaba-druid.version>1.1.14</alibaba-druid.version>
@@ -210,6 +210,12 @@
                 <groupId>eu.bitwalker</groupId>
                 <artifactId>UserAgentUtils</artifactId>
                 <version>${user-agent.version}</version>
+            </dependency>
+            <!-- ip -->
+            <dependency>
+                <groupId>org.lionsoul</groupId>
+                <artifactId>ip2region</artifactId>
+                <version>2.6.5</version>
             </dependency>
 
             <dependency>

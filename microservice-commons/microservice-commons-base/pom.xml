@@ -90,6 +90,12 @@
             <artifactId>UserAgentUtils</artifactId>
         </dependency>
 
+        <!-- ip -->
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+        </dependency>
+
         <!-- logging -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
