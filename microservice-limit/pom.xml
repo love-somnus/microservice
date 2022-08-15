@@ -16,6 +16,7 @@
         <module>microservice-limit-aop</module>
         <module>microservice-limit-local</module>
         <module>microservice-limit-redis</module>
+        <module>microservice-limit-redisson</module>
         <module>microservice-limit-starter</module>
     </modules>
 

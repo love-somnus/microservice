@@ -30,4 +30,6 @@ public class PaymentHandlerAdapter {
 
         return (AbstractPaymentHandler) SpringContextHolder.getBean(clazz);
     }
+
+
 }

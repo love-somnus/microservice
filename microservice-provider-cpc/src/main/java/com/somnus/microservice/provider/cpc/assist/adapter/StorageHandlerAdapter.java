@@ -15,7 +15,7 @@ import java.util.Optional;
  */
 public class StorageHandlerAdapter {
 
-    private Map<String, Class<?>> handlerMap;
+    private final Map<String, Class<?>> handlerMap;
 
     public StorageHandlerAdapter(Map<String, Class<?>> handlerMap) {
         this.handlerMap = handlerMap;

@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -80,11 +81,11 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
     public void export(Object o, HttpServletResponse response, ResponseExcel responseExcel) {
         check(responseExcel);
         String name = ThreadLocalContext.get(EasyexcelInterceptor.EXCEL_NAME_KEY);
-        String fileName = String.format("%s%s", URLEncoder.encode(name, "UTF-8"), responseExcel.suffix().getValue());
+        String fileName = String.format("%s%s", URLEncoder.encode(name, StandardCharsets.UTF_8.name()), responseExcel.suffix().getValue());
         // 根据实际的文件类型找到对应的 contentType
         String contentType = MediaTypeFactory.getMediaType(fileName).map(MediaType::toString).orElse("application/vnd.ms-excel");
         response.setContentType(contentType);
-        response.setCharacterEncoding("utf-8");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
         write(o, response, responseExcel);
         ThreadLocalContext.remove(EasyexcelInterceptor.EXCEL_NAME_KEY);

@@ -11,6 +11,8 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
+
 /**
  * <p></p>
  * @author kevin.liu
@@ -33,7 +35,7 @@ public class FormAuthenticationFailureHandler implements AuthenticationFailureHa
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                         AuthenticationException exception) {
         log.debug("表单登录失败:{}", exception.getLocalizedMessage());
-        String url = HttpUtil.encodeParams(String.format("/token/login?error=%s", exception.getMessage()), CharsetUtil.CHARSET_UTF_8);
+        String url = HttpUtil.encodeParams(String.format("/token/login?error=%s", exception.getMessage()), StandardCharsets.UTF_8);
         WebUtils.getResponse().sendRedirect(url);
     }
 

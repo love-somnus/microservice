@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.lionsoul.ip2region.xdb.Searcher;
 import org.springframework.http.HttpHeaders;
@@ -15,8 +16,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +38,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RequestUtil {
 
-    private static final String GEOPATH = Thread.currentThread().getContextClassLoader().getResource("ip2region.xdb").getPath();
+    private static String tmpPath = null;
 
     private static byte[] vectorIndexBuff;
 
@@ -41,10 +46,15 @@ public class RequestUtil {
 
     static {
         try {
+            Path path = Files.createTempFile("ip2region", ".xdb");
+            InputStream is = new URL("https://web-static.baochuangames.com/nos/geo/ip2region.xdb").openStream();
+            Files.write(path, IOUtils.toByteArray(is));
+            tmpPath = path.toString();
+            log.info("临时文件目录:{}", tmpPath);
             // 缓存 VectorIndex 索引
-            vectorIndexBuff = Searcher.loadVectorIndexFromFile(GEOPATH);
+            vectorIndexBuff = Searcher.loadVectorIndexFromFile(tmpPath);
             // 缓存整个 xdb 数据
-            contentBuff = Searcher.loadContentFromFile(GEOPATH);
+            contentBuff = Searcher.loadContentFromFile(tmpPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,7 +182,7 @@ public class RequestUtil {
     public static List<String> getIpAddress(String ip) {
 
         // 使用全局的 vIndex 创建带 VectorIndex 缓存的查询对象。
-        Searcher searcher = Searcher.newWithVectorIndex(GEOPATH, vectorIndexBuff);
+        Searcher searcher = Searcher.newWithVectorIndex(tmpPath, vectorIndexBuff);
 
         long sTime = System.nanoTime();
 

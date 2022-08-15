@@ -210,20 +210,20 @@ public class AuthorizationServerConfiguration {
 
         OAuth2AuthorizationService authorizationService = http.getSharedObject(OAuth2AuthorizationService.class);
 
-        OAuth2PasswordAuthenticationProvider resourceOwnerPasswordAuthenticationProvider = new OAuth2PasswordAuthenticationProvider(
+        OAuth2PasswordAuthenticationProvider oauth2PasswordAuthenticationProvider = new OAuth2PasswordAuthenticationProvider(
                 authenticationManager, authorizationService, tokenGenerator);
 
-        OAuth2SmsAuthenticationProvider resourceOwnerSmsAuthenticationProvider = new OAuth2SmsAuthenticationProvider(
+        OAuth2SmsAuthenticationProvider oauth2SmsAuthenticationProvider = new OAuth2SmsAuthenticationProvider(
                 authenticationManager, authorizationService, tokenGenerator);
 
         // 处理 UsernamePasswordAuthenticationToken
         http.authenticationProvider(new UserDetailsAuthenticationProvider());
 
-        // 处理 OAuth2ResourceOwnerPasswordAuthenticationToken s
-        http.authenticationProvider(resourceOwnerPasswordAuthenticationProvider);
+        // 处理 OAuth2PasswordAuthenticationToken
+        http.authenticationProvider(oauth2PasswordAuthenticationProvider);
 
-        // 处理 OAuth2ResourceOwnerSmsAuthenticationToken
-        http.authenticationProvider(resourceOwnerSmsAuthenticationProvider);
+        // 处理 OAuth2SmsAuthenticationToken
+        http.authenticationProvider(oauth2SmsAuthenticationProvider);
     }
 
     /**
