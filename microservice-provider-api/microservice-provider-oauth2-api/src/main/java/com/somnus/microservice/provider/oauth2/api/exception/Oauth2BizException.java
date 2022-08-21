@@ -1,4 +1,4 @@
-package com.somnus.microservice.provider.oauth.api.exception;
+package com.somnus.microservice.provider.oauth2.api.exception;
 
 import com.somnus.microservice.commons.base.enums.ErrorCodeEnum;
 import com.somnus.microservice.commons.base.exception.BusinessException;

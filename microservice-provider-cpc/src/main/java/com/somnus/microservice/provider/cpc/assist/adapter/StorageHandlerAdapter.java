@@ -21,13 +21,13 @@ public class StorageHandlerAdapter {
         this.handlerMap = handlerMap;
     }
 
-    public AbstractStorageHandler getHandler(String lang) {
+    public AbstractStorageHandler<?> getHandler(String lang) {
 
         Class<?> clazz = handlerMap.get(lang);
 
         Optional.ofNullable(clazz).orElseThrow(() -> new IllegalArgumentException("not found AbstractStorageHandler for game: " + lang));
 
-        return (AbstractStorageHandler)SpringContextHolder.getBean(clazz);
+        return (AbstractStorageHandler<?>)SpringContextHolder.getBean(clazz);
     }
 
 }

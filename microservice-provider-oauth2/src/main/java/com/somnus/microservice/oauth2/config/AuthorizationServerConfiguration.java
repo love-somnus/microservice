@@ -170,13 +170,13 @@ public class AuthorizationServerConfiguration {
     public ProviderSettings providerSettings(@Value("${server.port}") Integer port) {
         return ProviderSettings.builder()
                 // 配置获取token的端点路径(当前是默认的，可以更改)
-                .tokenEndpoint("/oauth2/token")
+                .tokenEndpoint("/token")
                 // 配置获取code的端点路径(当前是默认的，可以更改)
-                .authorizationEndpoint("/oauth2/authorize")
+                .authorizationEndpoint("/authorize")
                 // 配置查看code的端点路径(当前是默认的，可以更改)
-                .tokenIntrospectionEndpoint("/oauth2/introspect")
+                .tokenIntrospectionEndpoint("/introspect")
                 // 配置查看jwk(公钥)的端点路径(当前是默认的，可以更改)
-                .jwkSetEndpoint("/oauth2/jwks")
+                .jwkSetEndpoint("/jwks")
                 .issuer("http://localhost:" + port)
                 .build();
     }

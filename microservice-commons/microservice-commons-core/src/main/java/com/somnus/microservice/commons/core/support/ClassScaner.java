@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.commons.core.utils
+ * @packageName com.somnus.microservice.commons.core.support
  * @title: ClassScaner
  * @description: TODO
  * @date 2019/12/23 16:04

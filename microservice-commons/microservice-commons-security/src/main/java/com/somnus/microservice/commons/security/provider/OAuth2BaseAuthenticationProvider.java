@@ -271,6 +271,11 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
                             "User credentials have expired"),
                     ""));
         }
+        if (authenticationException instanceof InternalAuthenticationServiceException) {
+            return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.CREDENTIALS_EXPIRED,
+                    authenticationException.getMessage(),
+                    ""));
+        }
         return new OAuth2AuthenticationException(OAuth2ErrorCodesExpand.UN_KNOW_LOGIN_ERROR);
     }
 

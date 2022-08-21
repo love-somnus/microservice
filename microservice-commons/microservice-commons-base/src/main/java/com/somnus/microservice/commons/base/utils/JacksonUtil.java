@@ -1,17 +1,26 @@
 package com.somnus.microservice.commons.base.utils;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.google.common.base.Preconditions;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author Kevin
@@ -20,23 +29,51 @@ import java.text.SimpleDateFormat;
  * @description: Jackson Json 工具类
  * @date 2019/3/19 14:48
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class JacksonUtil {
 
-    private static ObjectMapper defaultMapper;
-    private static ObjectMapper formatedMapper;
+    /**
+     * 默认日期时间格式
+     */
+    private static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    /**
+     * 默认日期格式
+     */
+    private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
+    /**
+     * 默认时间格式
+     */
+    private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
+
+    private static final ObjectMapper defaultMapper;
+
+    private static final ObjectMapper formatedMapper;
 
     static {
         // 默认的ObjectMapper
         defaultMapper = new ObjectMapper();
-        // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
-        defaultMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
+        defaultMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        defaultMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        defaultMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+        defaultMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+        defaultMapper.enable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
 
         formatedMapper = new ObjectMapper();
-        // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
-        formatedMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
-        // 所有日期格式都统一为固定格式
-        formatedMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        formatedMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        formatedMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        formatedMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+        formatedMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+        formatedMapper.enable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+        // java8日期日期处理
+        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)));
+        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
+        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT)));
+        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(DEFAULT_DATE_FORMAT)));
+        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(DEFAULT_TIME_FORMAT)));
+        formatedMapper.registerModule(javaTimeModule);
+
     }
 
     /**
@@ -84,11 +121,10 @@ public class JacksonUtil {
      *
      * @throws IOException the io exception
      */
-    @SuppressWarnings("unchecked")
     @SneakyThrows(IOException.class)
     public static <T> T parseJson(String jsonValue, JavaType valueType){
         Preconditions.checkArgument(StringUtils.isNotEmpty(jsonValue), "this argument is required; it must not be null");
-        return (T) defaultMapper.readValue(jsonValue, valueType);
+        return defaultMapper.readValue(jsonValue, valueType);
     }
 
     /**
@@ -102,11 +138,10 @@ public class JacksonUtil {
      *
      * @throws IOException the io exception
      */
-    @SuppressWarnings("unchecked")
     @SneakyThrows(IOException.class)
     public static <T> T parseJson(String jsonValue, TypeReference<T> valueTypeRef){
         Preconditions.checkArgument(StringUtils.isNotEmpty(jsonValue), "this argument is required; it must not be null");
-        return (T) defaultMapper.readValue(jsonValue, valueTypeRef);
+        return defaultMapper.readValue(jsonValue, valueTypeRef);
     }
 
     /**
@@ -154,11 +189,10 @@ public class JacksonUtil {
      *
      * @throws IOException the io exception
      */
-    @SuppressWarnings("unchecked")
     @SneakyThrows(IOException.class)
     public static <T> T parseJsonWithFormat(String jsonValue, JavaType valueType) {
         Preconditions.checkArgument(StringUtils.isNotEmpty(jsonValue), "this argument is required; it must not be null");
-        return (T) formatedMapper.readValue(jsonValue, valueType);
+        return formatedMapper.readValue(jsonValue, valueType);
     }
 
     /**
@@ -172,11 +206,10 @@ public class JacksonUtil {
      *
      * @throws IOException the io exception
      */
-    @SuppressWarnings("unchecked")
     @SneakyThrows(IOException.class)
     public static <T> T parseJsonWithFormat(String jsonValue, TypeReference<T> valueTypeRef){
         Preconditions.checkArgument(StringUtils.isNotEmpty(jsonValue), "jsonValue is not null");
-        return (T) formatedMapper.readValue(jsonValue, valueTypeRef);
+        return formatedMapper.readValue(jsonValue, valueTypeRef);
     }
 
 }
