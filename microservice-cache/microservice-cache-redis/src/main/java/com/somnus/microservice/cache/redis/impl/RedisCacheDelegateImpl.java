@@ -81,6 +81,7 @@ public class RedisCacheDelegateImpl implements CacheDelegate {
             if(List.class.isAssignableFrom(clazz)){
                 return object;
             }
+            @SuppressWarnings("unchecked")
             Map<String, Object> map = (Map<String, Object>)object;
             return PublicUtil.mapToBean(map, clazz);
             /* ***********************end**********************  */

@@ -2,8 +2,10 @@ package com.somnus.microservice.elasticjob.dynamic.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -23,18 +25,16 @@ import java.text.SimpleDateFormat;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JacksonUtil {
 
-    private static ObjectMapper defaultMapper;
-    private static ObjectMapper formatedMapper;
+    private static final ObjectMapper defaultMapper;
+    private static final ObjectMapper formatedMapper;
 
     static {
         // 默认的ObjectMapper
-        defaultMapper = new ObjectMapper();
         // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
-        defaultMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
+        defaultMapper = JsonMapper.builder().configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false).build();
 
-        formatedMapper = new ObjectMapper();
         // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
-        formatedMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
+        formatedMapper = JsonMapper.builder().configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false).build();
         // 所有日期格式都统一为固定格式
         formatedMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
     }

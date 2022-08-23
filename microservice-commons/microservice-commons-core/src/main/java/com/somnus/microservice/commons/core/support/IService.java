@@ -22,11 +22,11 @@ public interface IService<T> {
 
     default <DTO, R extends BaseEntity> R convert(DTO dto, Function<DTO, ? extends R> function){
 
-        BaseEntity entity = function.apply(dto);
+        R entity = function.apply(dto);
 
         entity.setUpdateInfo(getLoginAuth());
 
-        return (R)entity;
+        return entity;
     }
 
     /**

@@ -21,6 +21,7 @@ import java.util.Collection;
 @Component
 public class TokenAuthenticationManager implements ReactiveAuthenticationManager {
 
+    @SuppressWarnings("unchecked")
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
         return Mono.just(authentication)

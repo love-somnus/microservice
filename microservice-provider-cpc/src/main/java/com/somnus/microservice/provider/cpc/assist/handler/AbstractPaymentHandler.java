@@ -29,8 +29,9 @@ public abstract class AbstractPaymentHandler {
      * @param <R>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public <P, R> R handle(RequestParameter<P, R> parameter){
-        log.info("处理[{}]渠道的[{}]请求:[{}]", new Object[]{parameter.getChannel(), parameter.getType(), parameter.getParameter()});
+        log.info("处理[{}]渠道的[{}]请求:[{}]", parameter.getChannel(), parameter.getType(), parameter.getParameter());
         parameterHolder.set(parameter);
         RequestType type = parameter.getType();
         Object result;

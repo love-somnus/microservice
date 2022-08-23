@@ -5,7 +5,7 @@ import com.github.pagehelper.PageInfo;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -189,7 +189,7 @@ public abstract class Objects {
     @SuppressWarnings("rawtypes")
     public static boolean objCheckIsNull(Object object, List<String> passList) {
         Class clazz = (Class) object.getClass(); // 得到类对象
-        Field fields[] = clazz.getDeclaredFields(); // 得到所有属性
+        Field[] fields = clazz.getDeclaredFields(); // 得到所有属性
         boolean flag = true; // 定义返回结果，默认为true
         for (Field field : fields) {
             field.setAccessible(true);
@@ -199,7 +199,7 @@ public abstract class Objects {
             String fieldName = field.getName(); // 得到属性名
             fieldValue = field.get(object); // 得到属性值
 
-            if (StringUtils.isEmpty(fieldValue) && !passList.contains(fieldName)) { // 只要有一个属性值为null 就返回false 表示对象存在未填写值
+            if (ObjectUtils.isEmpty(fieldValue) && !passList.contains(fieldName)) { // 只要有一个属性值为null 就返回false 表示对象存在未填写值
                 flag = false;
                 break;
             }
