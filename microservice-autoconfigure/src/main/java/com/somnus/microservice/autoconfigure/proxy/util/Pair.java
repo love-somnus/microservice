@@ -36,4 +36,14 @@ public class Pair<K, V> implements Serializable, Cloneable, Map.Entry<K, V> {
     public V setValue(V value) {
         throw new IllegalArgumentException();
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pair<K, V> clone() {
+        try {
+            return (Pair<K, V>) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 }
