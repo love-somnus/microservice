@@ -49,21 +49,21 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
             OAuth2Authorization.Token<OAuth2AuthorizationCode> authorizationCode = authorization.getToken(OAuth2AuthorizationCode.class);
             OAuth2AuthorizationCode authorizationCodeToken = Objects.requireNonNull(authorizationCode).getToken();
             long between = ChronoUnit.MINUTES.between(Objects.requireNonNull(authorizationCodeToken.getIssuedAt()), authorizationCodeToken.getExpiresAt());
-            String key = buildKey(OAuth2ParameterNames.CODE, authorizationCodeToken.getTokenValue());
+            String key = buildKey(OAuth2ParameterNames.CODE, authorization.getId());
             redisTemplate.opsForValue().set(key, authorization, between, TimeUnit.MINUTES);
         }
 
         if (isRefreshToken(authorization)) {
             OAuth2RefreshToken refreshToken = Objects.requireNonNull(authorization.getRefreshToken()).getToken();
             long between = ChronoUnit.SECONDS.between(Objects.requireNonNull(refreshToken.getIssuedAt()), refreshToken.getExpiresAt());
-            String key = buildKey(OAuth2ParameterNames.REFRESH_TOKEN, refreshToken.getTokenValue());
+            String key = buildKey(OAuth2ParameterNames.REFRESH_TOKEN, authorization.getId());
             redisTemplate.opsForValue().set(key, authorization, between, TimeUnit.SECONDS);
         }
 
         if (isAccessToken(authorization)) {
             OAuth2AccessToken accessToken = authorization.getAccessToken().getToken();
             long between = ChronoUnit.SECONDS.between(Objects.requireNonNull(accessToken.getIssuedAt()), accessToken.getExpiresAt());
-            String key = buildKey(OAuth2ParameterNames.ACCESS_TOKEN, accessToken.getTokenValue());
+            String key = buildKey(OAuth2ParameterNames.ACCESS_TOKEN, authorization.getId());
             redisTemplate.opsForValue().set(key, authorization, between, TimeUnit.SECONDS);
         }
     }
@@ -104,9 +104,9 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
     @Override
     @Nullable
     public OAuth2Authorization findByToken(String token, @Nullable OAuth2TokenType tokenType) {
-        redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
         Assert.hasText(token, "token cannot be empty");
         Assert.notNull(tokenType, "tokenType cannot be empty");
+        redisTemplate.setValueSerializer(new JdkSerializationRedisSerializer());
         return (OAuth2Authorization) redisTemplate.opsForValue().get(buildKey(tokenType.getValue(), token));
     }
 

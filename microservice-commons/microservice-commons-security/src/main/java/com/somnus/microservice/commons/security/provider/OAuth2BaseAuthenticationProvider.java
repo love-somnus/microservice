@@ -2,6 +2,7 @@ package com.somnus.microservice.commons.security.provider;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.somnus.microservice.commons.security.core.exception.BadCaptchaException;
+import com.somnus.microservice.commons.security.core.principal.Oauth2User;
 import com.somnus.microservice.commons.security.util.OAuth2ErrorCodesExpand;
 import com.somnus.microservice.commons.security.token.OAuth2BaseAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
@@ -171,6 +172,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
              */
             OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization
                     .withRegisteredClient(registeredClient).principalName(principal.getName())
+                    .id(((Oauth2User)principal.getPrincipal()).getUsername())
                     .authorizationGrantType(baseAuthentication.getAuthorizationGrantType())
                     .attribute(Principal.class.getName(), principal)
                     .attribute(OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME, authorizedScopes);
