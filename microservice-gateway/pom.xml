@@ -28,6 +28,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
+        <!-- Security  公共组件 如果不是因为需要从redis里反序列化Oauth2User 本不需要此依赖-->
+        <dependency>
+            <groupId>com.somnus</groupId>
+            <artifactId>microservice-commons-security</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <!-- Project -->
         <dependency>
@@ -49,6 +55,13 @@
             <version>${project.parent.version}</version>
         </dependency>
 
+        <!-- redis 引入 -->
+        <dependency>
+            <groupId>com.somnus</groupId>
+            <artifactId>microservice-commons-redis</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -57,7 +70,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.somnus.microservice.gateway.GatewayApplication</mainClass>
+                    <mainClass>com.somnus.microservice.GatewayApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -5,6 +5,7 @@ import com.somnus.microservice.cache.redis.condition.RedisCacheCondition;
 import com.somnus.microservice.cache.redis.impl.RedisCacheDelegateImpl;
 import com.somnus.microservice.commons.redis.handler.RedisHandler;
 import com.somnus.microservice.commons.redis.handler.RedisHandlerImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ public class RedisCacheConfiguration {
 
     @Bean
     @Conditional(RedisCacheCondition.class)
+    @ConditionalOnMissingBean(RedisHandler.class)
     public RedisHandler redisHandler() {
         return new RedisHandlerImpl();
     }

@@ -1,10 +1,14 @@
 package com.somnus.microservice.limit.redis.configuration;
 
+import com.somnus.microservice.commons.redis.handler.RedisHandler;
+import com.somnus.microservice.commons.redis.handler.RedisHandlerImpl;
 import com.somnus.microservice.limit.LimitDelegate;
 import com.somnus.microservice.limit.LimitExecutor;
 import com.somnus.microservice.limit.redis.condition.RedisLimitCondition;
 import com.somnus.microservice.limit.redis.impl.RedisLimitDelegateImpl;
 import com.somnus.microservice.limit.redis.impl.RedisLimitExecutorImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -30,4 +34,10 @@ public class RedisLimitConfiguration {
         return new RedisLimitExecutorImpl();
     }
 
+    @Bean
+    @Conditional(RedisLimitCondition.class)
+    @ConditionalOnMissingBean(RedisHandler.class)
+    public RedisHandler redisHandler() {
+        return new RedisHandlerImpl();
+    }
 }

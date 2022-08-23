@@ -1,11 +1,16 @@
 package com.somnus.microservice.gateway.config;
 
+import com.somnus.microservice.gateway.config.converter.JwtTokenAuthenticationConverter;
 import com.somnus.microservice.gateway.config.handler.DefaultAuthenticationEntryPoint;
+import com.somnus.microservice.gateway.config.handler.DefaultServerAccessDeniedHandler;
+import com.somnus.microservice.gateway.config.manager.TokenAuthenticationManager;
+import com.somnus.microservice.gateway.config.manager.TokenAuthorizationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
@@ -36,24 +41,26 @@ public class WebFluxSecurityConfig {
 
     private static final String[] URLS = {"/oauth2/**", "/uac/v3/api-docs/**", "/cpc/v3/api-docs/**", "/swagger-ui.html","/webjars/**","/v3/api-docs/**"};
 
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    /*private final TokenAuthenticationManager tokenAuthenticationManager;*/
+
+    /*private final TokenAuthorizationManager tokenAuthorizationManager;*/
+
     private final DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
+
+    private final DefaultServerAccessDeniedHandler defaultServerAccessDeniedHandler;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {
         // JWT处理
         httpSecurity.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthenticationConverter());
-        httpSecurity
-                // 自定义处理JWT请求头过期或签名错误的结果
-                .oauth2ResourceServer().authenticationEntryPoint(defaultAuthenticationEntryPoint)
-                .and()
-                /* 请求拦截处理 */
-                .authorizeExchange(exchange -> exchange
-                        .pathMatchers(HttpMethod.OPTIONS).permitAll()
-                        .pathMatchers(URLS).permitAll()
-                        .anyExchange().authenticated()
-                )
-                .csrf().disable()
-        ;
+        // 自定义处理JWT请求头过期或签名错误的结果                      // 自定义处理JWT请求头鉴权失败的结果
+        httpSecurity.oauth2ResourceServer().authenticationEntryPoint(defaultAuthenticationEntryPoint).accessDeniedHandler(defaultServerAccessDeniedHandler);
+        /* 请求拦截处理 */
+        httpSecurity.authorizeExchange(exchange -> {
+            exchange.pathMatchers(HttpMethod.OPTIONS).permitAll().pathMatchers(URLS).permitAll().anyExchange().authenticated();
+        }).csrf().disable();
         return httpSecurity.build();
     }
 
@@ -68,7 +75,13 @@ public class WebFluxSecurityConfig {
     /**
      * ServerHttpSecurity没有将jwt中authorities的负载部分当做Authentication
      * 需要把jwt的Claim中的authorities加入
-     * 方案：重新定义ReactiveAuthenticationManager权限管理器，默认转换器JwtGrantedAuthoritiesConverter
+     * 方案：重新定义ReactiveAuthenticationManager权限管理器[JwtReactiveAuthenticationManager]
+     * 默认转换器JwtGrantedAuthoritiesConverter
+     *
+     * org.springframework.security.oauth2.core.OAuth2TokenValidator
+     * org.springframework.security.oauth2.jwt.JwtTimestampValidator
+     *
+     * org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
      */
     @Bean
     public Converter<Jwt, ? extends Mono<? extends AbstractAuthenticationToken>> jwtAuthenticationConverter() {
@@ -76,8 +89,11 @@ public class WebFluxSecurityConfig {
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
         jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
 
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        /*JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);*/
+        JwtTokenAuthenticationConverter jwtAuthenticationConverter = new JwtTokenAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+        jwtAuthenticationConverter.setRedisTemplate(redisTemplate);
         return new ReactiveJwtAuthenticationConverterAdapter(jwtAuthenticationConverter);
     }
 }
