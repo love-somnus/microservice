@@ -87,6 +87,8 @@ dubbo:
     name: dubbo
     port: -1
     serialization: kryo
+    #cloud:
+    #subscribed-services: oauth2
   scan:
     basePackages: com.somnus.microservice.provider.cpc.web.rpc
 

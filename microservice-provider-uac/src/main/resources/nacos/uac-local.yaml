@@ -1,6 +1,16 @@
 server:
   port: 8001
 
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    csrf:
+      enabled: true
+
 feign:
   httpclient:
     enabled: false
@@ -87,6 +97,8 @@ dubbo:
     name: dubbo
     port: -1
     serialization: kryo
+  cloud:
+    subscribed-services: cpc
   scan:
     basePackages: com.somnus.microservice.provider.uac.web.rpc
 
