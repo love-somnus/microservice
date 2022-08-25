@@ -95,6 +95,18 @@ public class RequestUtil {
     }
 
     /**
+     * 获得用户header值
+     * @return
+     */
+    @SneakyThrows
+    public static String getHeader(String key){
+
+        String value = getRequest().getHeader(key);
+
+        return java.net.URLDecoder.decode(value, "UTF-8");
+    }
+
+    /**
      * 获得Query查询串
      * @return
      */
