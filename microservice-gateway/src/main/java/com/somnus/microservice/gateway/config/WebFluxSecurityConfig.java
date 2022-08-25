@@ -39,7 +39,7 @@ import reactor.core.publisher.Mono;
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
-    private static final String[] URLS = {"/oauth2/**", "/uac/v3/api-docs/**", "/cpc/v3/api-docs/**", "/swagger-ui.html","/webjars/**","/v3/api-docs/**"};
+    private final IngoreUrlsConfig ingoreUrlsConfig;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -59,7 +59,7 @@ public class WebFluxSecurityConfig {
         httpSecurity.oauth2ResourceServer().authenticationEntryPoint(defaultAuthenticationEntryPoint).accessDeniedHandler(defaultServerAccessDeniedHandler);
         /* 请求拦截处理 */
         httpSecurity.authorizeExchange(exchange -> {
-            exchange.pathMatchers(HttpMethod.OPTIONS).permitAll().pathMatchers(URLS).permitAll().anyExchange().authenticated();
+            exchange.pathMatchers(HttpMethod.OPTIONS).permitAll().pathMatchers(ingoreUrlsConfig.getUrls()).permitAll().anyExchange().authenticated();
         }).csrf().disable();
         return httpSecurity.build();
     }
