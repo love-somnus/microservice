@@ -1,4 +1,4 @@
-package com.somnus.microservice.commons.core.utils;
+package com.somnus.microservice.commons.base.utils;
 
 import com.google.common.base.Preconditions;
 import lombok.AccessLevel;

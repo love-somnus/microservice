@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.somnus.microservice.commons.core.support.BaseService;
-import com.somnus.microservice.commons.core.utils.Objects;
+import com.somnus.microservice.commons.core.support.Objects;
 import com.somnus.microservice.commons.security.core.principal.UserInfo;
 import com.somnus.microservice.oauth2.mapper.RbacUserMapper;
 import com.somnus.microservice.oauth2.model.domain.RbacUser;

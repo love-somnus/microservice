@@ -99,7 +99,7 @@ public class Wrapper<T> implements Serializable {
     private T result;
 
     /**
-     * Instantiates a new wrapper. default code=200
+     * Instantiates a new wrapper. default status=ok
      */
     Wrapper() {
         this(SUCCESS_STATUS, SUCCESS_MESSAGE);
@@ -108,7 +108,7 @@ public class Wrapper<T> implements Serializable {
     /**
      * Instantiates a new wrapper.
      *
-     * @param status    the code
+     * @param status  the status
      * @param message the message
      */
     Wrapper(String status, String message) {
@@ -118,13 +118,13 @@ public class Wrapper<T> implements Serializable {
     /**
      * Instantiates a new wrapper.
      *
-     * @param status    the status
+     * @param status  the status
      * @param message the message
      * @param result  the result
      */
     Wrapper(String status, String message, T result) {
         super();
-        this.code(status).message(message).result(result);
+        this.status(status).message(message).result(result);
     }
 
     /**
@@ -134,7 +134,7 @@ public class Wrapper<T> implements Serializable {
      *
      * @return the wrapper
      */
-    private Wrapper<T> code(String status) {
+    private Wrapper<T> status(String status) {
         this.status = status;
         return this;
     }
@@ -164,9 +164,9 @@ public class Wrapper<T> implements Serializable {
     }
 
     /**
-     * 判断是否成功： 依据 Wrapper.SUCCESS_CODE == this.code
+     * 判断是否成功： 依据 Wrapper.SUCCESS_STATUS == this.status
      *
-     * @return code =200,true;否则 false.
+     * @return status = ok,true;否则 false.
      */
     @JsonIgnore
     public boolean success() {
@@ -174,9 +174,9 @@ public class Wrapper<T> implements Serializable {
     }
 
     /**
-     * 判断是否成功： 依据 Wrapper.SUCCESS_CODE != this.code
+     * 判断是否成功： 依据 Wrapper.SUCCESS_STATUS != this.status
      *
-     * @return code !=200,true;否则 false.
+     * @return status != ok,true;否则 false.
      */
     @JsonIgnore
     public boolean error() {

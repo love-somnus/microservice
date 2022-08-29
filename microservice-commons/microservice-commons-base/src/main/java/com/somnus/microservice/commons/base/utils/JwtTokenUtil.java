@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.impl.DefaultClock;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -24,6 +25,7 @@ import java.util.Map;
  * @date 2021/11/15 15:46
  */
 @Slf4j
+@UtilityClass
 public class JwtTokenUtil {
 
     private static final Clock CLOCK = DefaultClock.INSTANCE;

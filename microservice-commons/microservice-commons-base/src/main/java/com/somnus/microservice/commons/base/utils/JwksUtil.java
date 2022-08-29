@@ -9,6 +9,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Clock;
 import io.jsonwebtoken.impl.DefaultClock;
+import lombok.experimental.UtilityClass;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
 
@@ -28,7 +29,8 @@ import java.util.Map;
  * @description: keytool -genkey -alias jwt -keyalg RSA -keystore jwt.jks
  * @date 2021/11/16 16:16
  */
-public abstract class JwksUtil {
+@UtilityClass
+public class JwksUtil {
 
     private static final Clock CLOCK = DefaultClock.INSTANCE;
     private static final RSAPrivateKey privateKey;
