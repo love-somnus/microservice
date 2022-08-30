@@ -3,6 +3,7 @@ package com.somnus.microservice.commons.core.support;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.pagehelper.PageInfo;
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.util.ObjectUtils;
@@ -19,7 +20,8 @@ import java.util.stream.Collectors;
  * @description: TODO
  * @date 2021/2/4 15:46
  */
-public abstract class Objects {
+@UtilityClass
+public class Objects {
 
     /**
      * 对象转换
@@ -35,9 +37,7 @@ public abstract class Objects {
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        D d = mapper.map(s, clazz);
-
-        return d;
+        return mapper.map(s, clazz);
     }
 
     /**
@@ -74,9 +74,7 @@ public abstract class Objects {
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        List<VO> list = original.stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
-
-        return list;
+        return original.stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
     }
 
     /**
@@ -108,6 +106,48 @@ public abstract class Objects {
      * @param <VO>
      * @return
      */
+    public static <DOMAIN, VO> PageInfo<VO> convert(PageInfo<DOMAIN> original, Class<VO> clazz){
+
+        ModelMapper mapper = new ModelMapper();
+
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        List<VO> list = original.getList().stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
+
+        PageInfo<VO> pageInfo = mapper.map(original, PageInfo.class);
+
+        pageInfo.setList(list);
+
+        return pageInfo;
+    }
+
+    /**
+     * 对象转换DOMAIN -> VO
+     * @param original
+     * @param <DOMAIN>
+     * @param <VO>
+     * @return
+     */
+    public static <DOMAIN, VO> List<VO> convertList(List<DOMAIN> original, Class<VO> clazz, BiConsumer<DOMAIN, VO> consumer){
+
+        ModelMapper mapper = new ModelMapper();
+
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        return original.stream().map(entity -> {
+            VO vo = mapper.map(entity, clazz);
+            consumer.accept(entity, vo);
+            return vo;
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     * 分页对象转换DOMAIN -> VO
+     * @param original
+     * @param <DOMAIN>
+     * @param <VO>
+     * @return
+     */
     public static <DOMAIN, VO> IPage<VO> convertPage(IPage<DOMAIN> original, Class<VO> clazz, BiConsumer<DOMAIN, VO> consumer){
 
         ModelMapper mapper = new ModelMapper();
@@ -125,28 +165,6 @@ public abstract class Objects {
         page.setRecords(list);
 
         return page;
-    }
-
-    /**
-     * 分页对象转换DOMAIN -> VO
-     * @param original
-     * @param <DOMAIN>
-     * @param <VO>
-     * @return
-     */
-    public static <DOMAIN, VO> PageInfo<VO> convert(PageInfo<DOMAIN> original, Class<VO> clazz){
-
-        ModelMapper mapper = new ModelMapper();
-
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        List<VO> list = original.getList().stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
-
-        PageInfo<VO> pageInfo = mapper.map(original, PageInfo.class);
-
-        pageInfo.setList(list);
-
-        return pageInfo;
     }
 
     /**
