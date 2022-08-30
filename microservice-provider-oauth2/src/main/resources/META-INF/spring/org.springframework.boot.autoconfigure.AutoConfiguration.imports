@@ -1,7 +1,7 @@
 com.somnus.microservice.oauth2.config.SecurityMessageSourceConfiguration
 com.somnus.microservice.oauth2.config.service.Oauth2SmsDetailsServiceImpl
 com.somnus.microservice.oauth2.config.service.Oauth2UserDetailsServiceImpl
-com.netease.microservice.oauth2.service.impl.Oauth2ClientDetailsServiceImpl
+com.somnus.microservice.oauth2.service.impl.Oauth2ClientDetailsServiceImpl
 com.somnus.microservice.commons.security.service.RedisOAuth2AuthorizationService
 com.somnus.microservice.commons.security.service.RedisOAuth2AuthorizationConsentService
 com.somnus.microservice.oauth2.config.repository.RedisRegisteredClientRepository

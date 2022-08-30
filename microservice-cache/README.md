@@ -16,7 +16,7 @@
 ## 切换缓存类型
 ```java
 # Prefix
-prefix=netease
+prefix=somnus
 # Cache config
 # cache.enabled=true
 cache.type=redisCache
