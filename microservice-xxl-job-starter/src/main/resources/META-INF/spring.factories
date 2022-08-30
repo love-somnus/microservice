@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.somnus.microservice.xxljob.autoconfigure.XxlJobAutoConfiguration
+
+com.somnus.microservice.xxljob.annotation.EnableXxlJob=\
+  com.somnus.microservice.xxljob.autoconfigure.XxlJobAutoConfiguration

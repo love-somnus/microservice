@@ -34,6 +34,7 @@
         <logback-kafka.version>0.2.0-RC2</logback-kafka.version>
         <elastic-job.version>2.1.5</elastic-job.version>
         <elasticjob.version>3.0.1</elasticjob.version>
+        <xxl-job.version>2.3.1</xxl-job.version>
         <curator.version>5.2.0</curator.version>
         <springfox.version>3.0.0</springfox.version>
         <springdoc.version>1.6.9</springdoc.version>
@@ -236,6 +237,13 @@
                 <groupId>com.dangdang</groupId>
                 <artifactId>elastic-job-lite-spring</artifactId>
                 <version>${elastic-job.version}</version>
+            </dependency>
+
+            <!-- xxl-job 依赖 -->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job.version}</version>
             </dependency>
 
             <dependency>
