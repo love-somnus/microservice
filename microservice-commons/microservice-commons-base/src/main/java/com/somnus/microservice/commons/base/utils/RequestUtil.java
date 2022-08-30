@@ -47,7 +47,7 @@ public class RequestUtil {
     static {
         try {
             Path path = Files.createTempFile("ip2region", ".xdb");
-            InputStream is = new URL("https://web-static.baochuangames.com/nos/geo/ip2region.xdb").openStream();
+            InputStream is = new URL("https://love-somnus.github.io/oss/ip2region.xdb").openStream();
             Files.write(path, IOUtils.toByteArray(is));
             tmpPath = path.toString();
             log.info("临时文件目录:{}", tmpPath);
