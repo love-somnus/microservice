@@ -1,6 +1,7 @@
 package com.somnus.microservice.gateway.web.filter;
 
-import com.somnus.microservice.gateway.web.balancer.GrayLoadBalancer;
+import com.somnus.microservice.commons.base.utils.ReactiveRequestUtil;
+import com.somnus.microservice.gateway.web.balancer.IpGrayLoadBalancer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.DefaultRequest;
@@ -25,13 +26,13 @@ import java.util.Optional;
 
 /**
  * @author kevin.liu
- * @title: GrayReactiveLoadBalancerClientFilter
- * @projectName neshpub
- * @description: TODO
- * @date 2022/8/16 15:33
+ * @date 2022/9/27 14:31
+ * @see org.springframework.cloud.gateway.config.GatewayReactiveLoadBalancerClientAutoConfiguration
+ * @see org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter
+ * @see org.springframework.cloud.loadbalancer.core.RoundRobinLoadBalancer
  */
 @Slf4j
-public class GrayReactiveLoadBalancerClientFilter  implements GlobalFilter, Ordered {
+public class IpGrayReactiveLoadBalancerClientFilter implements GlobalFilter, Ordered {
 
     private static final int LOAD_BALANCER_CLIENT_FILTER_ORDER = 10150;
 
@@ -39,7 +40,7 @@ public class GrayReactiveLoadBalancerClientFilter  implements GlobalFilter, Orde
 
     private final GatewayLoadBalancerProperties properties;
 
-    public GrayReactiveLoadBalancerClientFilter(LoadBalancerClientFactory clientFactory, GatewayLoadBalancerProperties properties) {
+    public IpGrayReactiveLoadBalancerClientFilter(LoadBalancerClientFactory clientFactory, GatewayLoadBalancerProperties properties) {
         this.clientFactory = clientFactory;
         this.properties = properties;
     }
@@ -51,7 +52,7 @@ public class GrayReactiveLoadBalancerClientFilter  implements GlobalFilter, Orde
 
         String schemePrefix = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_SCHEME_PREFIX_ATTR);
 
-        /* 通过匹配配置中的url前缀是否含有graylb执行以下过滤器，如果前缀中不含有graylb则走默认的负载均衡 */
+        /* 通过匹配配置中的url前缀是否含有gray-lb执行以下过滤器，如果前缀中不含有gray-lb则走默认的负载均衡 */
         if (url != null && ("gray-lb".equals(url.getScheme()) || "gray-lb".equals(schemePrefix))) {
             ServerWebExchangeUtils.addOriginalRequestUrl(exchange, url);
 
@@ -85,7 +86,8 @@ public class GrayReactiveLoadBalancerClientFilter  implements GlobalFilter, Orde
 
     private Mono<Response<ServiceInstance>> choose(ServerWebExchange exchange) {
         URI uri = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR);
-        GrayLoadBalancer loadBalancer = new GrayLoadBalancer(clientFactory.getLazyProvider(Objects.requireNonNull(uri).getHost(), ServiceInstanceListSupplier.class), uri.getHost());
+        String ip = ReactiveRequestUtil.getRemoteAddress(exchange.getRequest());
+        IpGrayLoadBalancer loadBalancer = new IpGrayLoadBalancer(clientFactory.getLazyProvider(Objects.requireNonNull(uri).getHost(), ServiceInstanceListSupplier.class), uri.getHost(), ip);
         return Optional.of(loadBalancer)
                 .map(v -> loadBalancer.choose(new DefaultRequest<>(exchange.getRequest().getHeaders())))
                 .orElseThrow(() -> new NotFoundException("No loadbalancer available for " + uri.getHost()));

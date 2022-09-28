@@ -54,6 +54,7 @@ public class JacksonUtil {
         defaultMapper = new ObjectMapper();
         defaultMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         defaultMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        defaultMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         defaultMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
         defaultMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
         defaultMapper.enable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
@@ -61,6 +62,7 @@ public class JacksonUtil {
         formatedMapper = new ObjectMapper();
         formatedMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         formatedMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        formatedMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         formatedMapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
         formatedMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
         formatedMapper.enable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);

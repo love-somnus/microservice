@@ -16,9 +16,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "secure.ignore")
 @EnableConfigurationProperties({
-        IngoreUrlsConfig.class
+        IgnoreUrlsConfig.class
 })
-public class IngoreUrlsConfig {
+public class IgnoreUrlsConfig {
 
     private String[] urls;
 }

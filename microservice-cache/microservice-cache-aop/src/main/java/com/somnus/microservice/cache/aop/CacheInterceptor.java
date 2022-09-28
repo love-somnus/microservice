@@ -8,10 +8,10 @@ import com.somnus.microservice.cache.annotation.CachePut;
 import com.somnus.microservice.cache.annotation.Cacheable;
 import com.somnus.microservice.cache.constant.CacheConstant;
 import com.somnus.microservice.cache.exception.CacheException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 
@@ -19,16 +19,13 @@ import java.lang.reflect.Method;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache.aop
- * @title: CacheInterceptor
- * @description: TODO
  * @date 2019/7/5 15:36
  */
 @Slf4j
+@RequiredArgsConstructor
 public class CacheInterceptor extends AbstractInterceptor {
 
-    @Autowired
-    private CacheDelegate cacheDelegate;
+    private final CacheDelegate cacheDelegate;
 
     @Value("${" + CacheConstant.PREFIX + "}")
     private String prefix;

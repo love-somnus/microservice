@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.somnus.microservice.elasticjob.dynamic.bean.Job;
 import com.somnus.microservice.elasticjob.dynamic.service.JobService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2021/10/25 18:07
  */
 @RestController
+@RequiredArgsConstructor
 public class JobController {
 
-    @Autowired
-    private JobService jobService;
+    private final JobService jobService;
 
     /**
      * 添加动态任务（适用于脚本逻辑已存在的情况，只是动态添加了触发的时间）

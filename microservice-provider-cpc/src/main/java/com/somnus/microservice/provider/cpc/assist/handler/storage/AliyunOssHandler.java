@@ -8,9 +8,9 @@ import com.aliyun.oss.model.*;
 import com.somnus.microservice.commons.base.enums.HandlerType;
 import com.somnus.microservice.provider.cpc.assist.handler.AbstractStorageHandler;
 import com.somnus.microservice.provider.cpc.listener.OssProgressListener;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -31,17 +31,15 @@ import java.util.Objects;
 @Slf4j
 @Component
 @RefreshScope
+@RequiredArgsConstructor
 @HandlerType(values = {"zh-tw"})
 public class AliyunOssHandler extends AbstractStorageHandler<OSSClient>{
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
 
-    @Autowired
-    private AsyncTaskExecutor asyncExecutor;
+    private final AsyncTaskExecutor asyncExecutor;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
     @Override
     public OSSClient client(String lang){

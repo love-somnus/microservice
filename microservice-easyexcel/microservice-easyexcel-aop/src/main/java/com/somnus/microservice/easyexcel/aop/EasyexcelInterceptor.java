@@ -5,6 +5,7 @@ import com.somnus.microservice.easyexcel.annotation.ResponseExcel;
 import com.somnus.microservice.easyexcel.context.ThreadLocalContext;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.lang.NonNull;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
@@ -23,7 +24,7 @@ public class EasyexcelInterceptor extends AbstractInterceptor {
     public static final String EXCEL_NAME_KEY = "__EXCEL_NAME_KEY__";
 
     @Override
-    public Object invoke(MethodInvocation invocation) throws Throwable {
+    public Object invoke(@NonNull MethodInvocation invocation) throws Throwable {
         ResponseExcel excelAnnotation = getExcelAnnotation(invocation);
         if (excelAnnotation != null){
             String name = excelAnnotation.name();

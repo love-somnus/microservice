@@ -1,5 +1,6 @@
 package com.somnus.microservice.cache.configuration;
 
+import com.somnus.microservice.cache.CacheDelegate;
 import com.somnus.microservice.cache.aop.CacheAutoScanProxy;
 import com.somnus.microservice.cache.aop.CacheInterceptor;
 import com.somnus.microservice.cache.constant.CacheConstant;
@@ -9,9 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache.configuration
- * @title: CacheAopConfiguration
- * @description: TODO
  * @date 2019/7/5 15:39
  */
 @Configuration
@@ -26,7 +24,7 @@ public class CacheAopConfiguration {
     }
 
     @Bean
-    public CacheInterceptor cacheInterceptor() {
-        return new CacheInterceptor();
+    public CacheInterceptor cacheInterceptor(CacheDelegate delegate) {
+        return new CacheInterceptor(delegate);
     }
 }

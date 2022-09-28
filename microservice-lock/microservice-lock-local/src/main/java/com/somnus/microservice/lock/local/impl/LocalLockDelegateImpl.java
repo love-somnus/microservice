@@ -5,9 +5,9 @@ import com.somnus.microservice.lock.LockExecutor;
 import com.somnus.microservice.lock.constant.LockConstant;
 import com.somnus.microservice.lock.entity.LockType;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.concurrent.locks.Lock;
@@ -20,10 +20,10 @@ import java.util.concurrent.locks.Lock;
  * @date 2019/6/14 18:04
  */
 @Slf4j
+@RequiredArgsConstructor
 public class LocalLockDelegateImpl implements LockDelegate {
 
-    @Autowired
-    private LockExecutor<Lock> lockExecutor;
+    private final LockExecutor<Lock> lockExecutor;
 
     @Value("${" + LockConstant.LOCK_AOP_EXCEPTION_IGNORE + ":true}")
     private Boolean lockAopExceptionIgnore;

@@ -2,16 +2,12 @@ package com.somnus.microservice.commons.core.support;
 
 import com.google.common.collect.Lists;
 import com.somnus.microservice.commons.base.dto.BaseTree;
-import com.somnus.microservice.commons.base.utils.PublicUtil;
-import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.commons.core.support
  * @title: AbstractTreeService
  * @description: TODO
  * @date 2019/4/16 17:31
@@ -35,7 +31,7 @@ public abstract class AbstractTreeService<T extends BaseTree<T, ID>, ID extends 
             if (res.getPid() == null) {
                 continue;
             }
-            if (Objects.equals(res.getPid(), parentId)) {
+            if (Objects.nullSafeEquals(res.getPid(), parentId)) {
                 recursionFn(list, res);
                 returnList.add(res);
             }
@@ -52,7 +48,7 @@ public abstract class AbstractTreeService<T extends BaseTree<T, ID>, ID extends 
     @Override
     public void recursionFn(List<T> list, T t) {
         List<T> children = getChildList(list, t);
-        if (PublicUtil.isEmpty(children)) {
+        if (Objects.isEmpty(children)) {
             t.setChildren(children);
             t.setHasChild(true);
         }
@@ -81,11 +77,11 @@ public abstract class AbstractTreeService<T extends BaseTree<T, ID>, ID extends 
     public List<T> getChildList(List<T> list, T t) {
         List<T> childList = Lists.newArrayList();
         for (T child : list) {
-            if (ObjectUtils.isEmpty(child.getPid())) {
+            if (Objects.isEmpty(child.getPid())) {
                 continue;
             }
             // 判断集合的父ID是否等于上一级的id
-            if (Objects.equals(child.getPid(), t.getId())) {
+            if (Objects.nullSafeEquals(child.getPid(), t.getId())) {
                 childList.add(child);
             }
         }

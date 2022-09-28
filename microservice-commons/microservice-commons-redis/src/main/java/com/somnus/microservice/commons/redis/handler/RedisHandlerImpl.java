@@ -1,6 +1,6 @@
 package com.somnus.microservice.commons.redis.handler;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -11,13 +11,12 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  * @description: TODO
  * @date 2019/7/5 16:51
  */
+@RequiredArgsConstructor
 public class RedisHandlerImpl implements RedisHandler {
 
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
     /**
      * 获取RedisTemplate

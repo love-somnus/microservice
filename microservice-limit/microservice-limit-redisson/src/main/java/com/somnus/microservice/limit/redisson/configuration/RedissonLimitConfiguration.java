@@ -1,5 +1,6 @@
 package com.somnus.microservice.limit.redisson.configuration;
 
+import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
 import com.somnus.microservice.limit.LimitDelegate;
 import com.somnus.microservice.limit.LimitExecutor;
 import com.somnus.microservice.limit.redisson.condition.RedissonLimitCondition;
@@ -18,15 +19,16 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class RedissonLimitConfiguration {
+
     @Bean
     @Conditional(RedissonLimitCondition.class)
-    public LimitDelegate redisLimitDelegate() {
-        return new RedissonLimitDelegateImpl();
+    public LimitDelegate redisLimitDelegate(LimitExecutor executor) {
+        return new RedissonLimitDelegateImpl(executor);
     }
 
     @Bean
     @Conditional(RedissonLimitCondition.class)
-    public LimitExecutor redisLimitExecutor() {
-        return new RedissonLimitExecutorImpl();
+    public LimitExecutor redisLimitExecutor(RedissonHandler redissonHandler) {
+        return new RedissonLimitExecutorImpl(redissonHandler);
     }
 }

@@ -1,9 +1,11 @@
 package com.somnus.microservice.limit.configuration;
 
+import com.somnus.microservice.limit.LimitDelegate;
 import com.somnus.microservice.limit.aop.LimitAutoScanProxy;
 import com.somnus.microservice.limit.aop.LimitInterceptor;
 import com.somnus.microservice.limit.constant.LimitConstant;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,7 +28,8 @@ public class LimitAopConfiguration {
     }
 
     @Bean
-    public LimitInterceptor limitInterceptor() {
-        return new LimitInterceptor();
+    @ConditionalOnBean(LimitDelegate.class)
+    public LimitInterceptor limitInterceptor(LimitDelegate delegate) {
+        return new LimitInterceptor(delegate);
     }
 }

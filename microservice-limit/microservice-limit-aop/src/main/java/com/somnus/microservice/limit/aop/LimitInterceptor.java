@@ -2,15 +2,15 @@ package com.somnus.microservice.limit.aop;
 
 import com.somnus.microservice.autoconfigure.proxy.aop.AbstractInterceptor;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
-import com.somnus.microservice.commons.base.utils.ReactiveRequestUtil;
+import com.somnus.microservice.commons.base.utils.RequestUtil;
 import com.somnus.microservice.limit.LimitDelegate;
 import com.somnus.microservice.limit.annotation.Limit;
 import com.somnus.microservice.limit.constant.LimitConstant;
 import com.somnus.microservice.limit.exception.LimitException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.Nonnull;
@@ -25,10 +25,10 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/7/10 16:37
  */
 @Slf4j
+@RequiredArgsConstructor
 public class LimitInterceptor extends AbstractInterceptor {
 
-    @Autowired
-    private LimitDelegate limitDelegate;
+    private final LimitDelegate limitDelegate;
 
     @Value("${" + LimitConstant.PREFIX + "}")
     private String prefix;
@@ -82,7 +82,7 @@ public class LimitInterceptor extends AbstractInterceptor {
         }
 
         if(restrictIp){
-            String ip = ReactiveRequestUtil.getRemoteAddr();
+            String ip = RequestUtil.getRemoteAddr();
             compositeKey = compositeKey + "#" + ip;
         }
 

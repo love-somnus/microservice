@@ -1,7 +1,7 @@
 package com.somnus.microservice.provider.uac.config.service;
 
 import com.google.common.collect.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
  * @date 2021/11/15 15:18
  */
 @Service
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements ReactiveUserDetailsService {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Mono<UserDetails> findByUsername(String username) {

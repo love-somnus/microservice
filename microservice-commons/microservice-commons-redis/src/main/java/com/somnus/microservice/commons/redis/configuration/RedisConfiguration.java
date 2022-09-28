@@ -100,8 +100,8 @@ public class RedisConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(RedisHandler.class)
-    public RedisHandler redisHandler() {
-        return new RedisHandlerImpl();
+    public RedisHandler redisHandler(RedisTemplate<String, Object> redisTemplate, StringRedisTemplate stringRedisTemplate) {
+        return new RedisHandlerImpl(redisTemplate, stringRedisTemplate);
     }
 
 }

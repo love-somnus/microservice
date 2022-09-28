@@ -1,5 +1,6 @@
 package com.somnus.microservice.gateway.web.balancer;
 
+import com.somnus.microservice.commons.base.utils.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
  * @date 2022/8/16 15:29
  */
 @Slf4j
-public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
+public class VerGrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
     /**
      * loadbalancer 提供的访问当前服务的名称
@@ -42,11 +43,11 @@ public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
     private final ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider;
 
 
-    public GrayLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider, String serviceId) {
+    public VerGrayLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider, String serviceId) {
         this(serviceInstanceListSupplierProvider, serviceId, new Random().nextInt(1000));
     }
 
-    public GrayLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider, String serviceId, int seedPosition) {
+    public VerGrayLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider, String serviceId, int seedPosition) {
         this.serviceId = serviceId;
         this.serviceInstanceListSupplierProvider = serviceInstanceListSupplierProvider;
         this.position = new AtomicInteger(seedPosition);
@@ -69,17 +70,11 @@ public class GrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
             return new EmptyResponse();
         }
         HttpHeaders headers = (HttpHeaders) request.getContext();
-        String reqVersion = headers.getFirst("version");
-
-        if (StringUtils.isEmpty(reqVersion)) {
-            List<ServiceInstance> serviceInstances = instances.stream()
-                    .filter(instance -> "default".equals(instance.getMetadata().get("version")))
-                    .collect(Collectors.toList());
-            return processInstanceResponse(serviceInstances);
-        }
+        String requestVersion = headers.getFirst("version");
 
         List<ServiceInstance> serviceInstances = instances.stream()
-                .filter(instance -> reqVersion.equals(instance.getMetadata().get("version")))
+                .filter(instance -> Objects.isNotEmpty(requestVersion))
+                .filter(instance -> requestVersion.equals(instance.getMetadata().get("version")))
                 .collect(Collectors.toList());
 
         if (serviceInstances.size() > 0) {

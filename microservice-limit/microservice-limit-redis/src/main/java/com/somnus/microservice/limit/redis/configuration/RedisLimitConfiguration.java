@@ -12,6 +12,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
  * @author Kevin
@@ -24,20 +26,20 @@ import org.springframework.context.annotation.Configuration;
 public class RedisLimitConfiguration {
     @Bean
     @Conditional(RedisLimitCondition.class)
-    public LimitDelegate redisLimitDelegate() {
-        return new RedisLimitDelegateImpl();
+    public LimitDelegate redisLimitDelegate(LimitExecutor executor) {
+        return new RedisLimitDelegateImpl(executor);
     }
 
     @Bean
     @Conditional(RedisLimitCondition.class)
-    public LimitExecutor redisLimitExecutor() {
-        return new RedisLimitExecutorImpl();
+    public LimitExecutor redisLimitExecutor(RedisHandler redisHandler) {
+        return new RedisLimitExecutorImpl(redisHandler);
     }
 
     @Bean
     @Conditional(RedisLimitCondition.class)
     @ConditionalOnMissingBean(RedisHandler.class)
-    public RedisHandler redisHandler() {
-        return new RedisHandlerImpl();
+    public RedisHandler redisHandler(RedisTemplate<String, Object> redisTemplate, StringRedisTemplate stringRedisTemplate) {
+        return new RedisHandlerImpl(redisTemplate, stringRedisTemplate);
     }
 }

@@ -55,7 +55,7 @@ public class CpcProviderApplication {
         map.keySet().forEach(key -> openAPI.addSecurityItem(new SecurityRequirement().addList(key)));
 
         return openAPI
-                .servers(Collections.singletonList(new Server().url("http://192.168.97.101:8000/uac")))
+                .servers(Collections.singletonList(new Server().url("http://192.168.97.101:8000/cpc")))
                 .info(new Info().title("Spring API")
                         .description("Spring sample application")
                         .version("v0.0.1")

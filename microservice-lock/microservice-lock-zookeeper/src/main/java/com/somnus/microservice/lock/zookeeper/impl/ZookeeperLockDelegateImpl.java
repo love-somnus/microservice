@@ -4,10 +4,10 @@ import com.somnus.microservice.lock.LockDelegate;
 import com.somnus.microservice.lock.LockExecutor;
 import com.somnus.microservice.lock.constant.LockConstant;
 import com.somnus.microservice.lock.entity.LockType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -18,10 +18,10 @@ import org.springframework.beans.factory.annotation.Value;
  * @date 2019/7/30 14:46
  */
 @Slf4j
+@RequiredArgsConstructor
 public class ZookeeperLockDelegateImpl implements LockDelegate {
 
-    @Autowired
-    private LockExecutor<InterProcessMutex> lockExecutor;
+    private final LockExecutor<InterProcessMutex> lockExecutor;
 
     @Value("${" + LockConstant.LOCK_AOP_EXCEPTION_IGNORE + ":true}")
     private Boolean lockAopExceptionIgnore;

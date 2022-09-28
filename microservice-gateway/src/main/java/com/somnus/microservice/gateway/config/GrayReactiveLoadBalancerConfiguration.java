@@ -1,7 +1,8 @@
 package com.somnus.microservice.gateway.config;
 
-import com.somnus.microservice.gateway.web.filter.GrayReactiveLoadBalancerClientFilter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import com.somnus.microservice.gateway.web.filter.IpGrayReactiveLoadBalancerClientFilter;
+import com.somnus.microservice.gateway.web.filter.VerGrayReactiveLoadBalancerClientFilter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.config.GatewayLoadBalancerProperties;
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
 import org.springframework.context.annotation.Bean;
@@ -18,8 +19,14 @@ import org.springframework.context.annotation.Configuration;
 public class GrayReactiveLoadBalancerConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean({GrayReactiveLoadBalancerClientFilter.class})
-    public GrayReactiveLoadBalancerClientFilter grayReactiveLoadBalancerClientFilter(LoadBalancerClientFactory clientFactory, GatewayLoadBalancerProperties properties) {
-        return new GrayReactiveLoadBalancerClientFilter(clientFactory, properties);
+    @ConditionalOnProperty(prefix = "secure.gray-version",value = "enable",havingValue = "true")
+    public VerGrayReactiveLoadBalancerClientFilter grayReactiveLoadBalancerClientFilter(LoadBalancerClientFactory clientFactory, GatewayLoadBalancerProperties properties) {
+        return new VerGrayReactiveLoadBalancerClientFilter(clientFactory, properties);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "secure.gray-ip",value = "enable",havingValue = "true")
+    public IpGrayReactiveLoadBalancerClientFilter ipGrayReactiveLoadBalancerClientFilter(LoadBalancerClientFactory clientFactory, GatewayLoadBalancerProperties properties) {
+        return new IpGrayReactiveLoadBalancerClientFilter(clientFactory, properties);
     }
 }

@@ -14,7 +14,17 @@ springdoc:
       - { name: 'uac', url: '/uac/v3/api-docs' }
       - { name: 'cpc', url: '/cpc/v3/api-docs' }
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 secure:
+  gray-ip:
+    enable: true
+  gray-version:
+    enable: false
   ignore:
     urls:
       - /oauth2/**
@@ -38,16 +48,31 @@ spring:
       globalcors:
         corsConfigurations:
           '[/**]':
-            allowedOrigins: "*"
-            allowedMethods:
-              - GET
-              - POST
+            # 允许携带认证信息
+            allow-credentials: true
+            # 允许跨域的源,设置*为全部
+            allowedOriginPatterns: "*"
+            # 允许跨域的method,默认为GET和OPTIONS,设置*为全部
+            allowedMethods: "*"
+            # 允许跨域请求里的head字段,设置*为全部
+            allowedHeaders: "*"
       discovery:
         locator:
           enabled: true
+          lower-case-service-id: false
       # 默认过滤器（对所有route均生效）
       default-filters:
-        - StripPrefix=1
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+        - name: RequestRateLimiter
+          args:
+            # 令牌桶的速度为每秒100个，相当于QPS
+            redis-rate-limiter.replenishRate: 100
+            # 桶内能装200个令牌,相当于峰值，要注意的是:第1秒从桶内能取20个,但是第2秒只能取到100个了,因为入桶速度是每秒100个
+            redis-rate-limiter.burstCapacity: 200
+            # 每个请求需要的令牌数
+            redis-rate-limiter.requestedTokens: 1
+            # 使用SpEL表达式从Spring容器中获取Bean对象
+            key-resolver: "#{@pathKeyResolver}"
         - name: Retry
           args:
             # 重试次数
@@ -67,66 +92,42 @@ spring:
               basedOnPreviousValue: false
       routes:
         - id: uac
-          uri: lb://uac
+          order: -1
+          uri: gray-lb://uac
           filters:
-            - name: RequestRateLimiter
-              args:
-                # 令牌桶的速度为每秒10个，相当于QPS
-                redis-rate-limiter.replenishRate: 10
-                # 桶内能装20个令牌,相当于峰值，要注意的是:第1秒从桶内能取20个,但是第2秒只能取到10个了,因为入桶速度是每秒10个
-                redis-rate-limiter.burstCapacity: 20
-                # 每个请求需要的令牌数
-                redis-rate-limiter.requestedTokens: 1
-                # 使用SpEL表达式从Spring容器中获取Bean对象
-                key-resolver: "#{@pathKeyResolver}"
+            - AddRequestHeader=version,release
+            - StripPrefix=1
           predicates:
             - Method=GET,POST
             - Path=/uac/**
         - id: cpc
-          uri: lb://cpc
+          order: -1
+          uri: gray-lb://cpc
           filters:
-            - name: RequestRateLimiter
-              args:
-                # 令牌桶的速度为每秒10个，相当于QPS
-                redis-rate-limiter.replenishRate: 10
-                # 桶内能装20个令牌,相当于峰值，要注意的是:第1秒从桶内能取20个,但是第2秒只能取到10个了,因为入桶速度是每秒10个
-                redis-rate-limiter.burstCapacity: 20
-                # 每个请求需要的令牌数
-                redis-rate-limiter.requestedTokens: 1
-                # 使用SpEL表达式从Spring容器中获取Bean对象
-                key-resolver: "#{@pathKeyResolver}"
+            - AddRequestHeader=version,release
+            - StripPrefix=1
           predicates:
             - Method=GET,POST
             - Path=/cpc/**
+        - id: cpc-ws
+          uri: gray-lb:ws://cpc
+          predicates:
+            - Path=/cpc/ws/**
         - id: oauth
-          uri: lb://oauth
+          order: -1
+          uri: gray-lb://oauth
           filters:
-            - name: RequestRateLimiter
-              args:
-                # 令牌桶的速度为每秒10个，相当于QPS
-                redis-rate-limiter.replenishRate: 10
-                # 桶内能装20个令牌,相当于峰值，要注意的是:假如第1秒从桶内能取50个,但是第2秒只能取到10个了,因为入桶速度是每秒10个
-                redis-rate-limiter.burstCapacity: 50
-                # 每个请求需要的令牌数
-                redis-rate-limiter.requestedTokens: 1
-                # 使用SpEL表达式从Spring容器中获取Bean对象
-                key-resolver: "#{@pathKeyResolver}"
+            - AddRequestHeader=version,release
+            - StripPrefix=1
           predicates:
             - Method=GET,POST
             - Path=/oauth/**
         - id: oauth2
-          uri: lb://oauth2
+          order: -1
+          uri: gray-lb://oauth2
           filters:
-            - name: RequestRateLimiter
-              args:
-                # 令牌桶的速度为每秒10个，相当于QPS
-                redis-rate-limiter.replenishRate: 10
-                # 桶内能装20个令牌,相当于峰值，要注意的是:第1秒从桶内能取20个,但是第2秒只能取到10个了,因为入桶速度是每秒10个
-                redis-rate-limiter.burstCapacity: 20
-                # 每个请求需要的令牌数
-                redis-rate-limiter.requestedTokens: 1
-                # 使用SpEL表达式从Spring容器中获取Bean对象
-                key-resolver: "#{@pathKeyResolver}"
+            - AddRequestHeader=version,release
+            - StripPrefix=1
           predicates:
             - Method=GET,POST
             - Path=/oauth2/**

@@ -10,9 +10,9 @@ import com.netease.cloud.services.nos.transfer.Upload;
 import com.netease.cloud.services.nos.transfer.model.UploadResult;
 import com.somnus.microservice.commons.base.enums.HandlerType;
 import com.somnus.microservice.provider.cpc.assist.handler.AbstractStorageHandler;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.core.task.AsyncTaskExecutor;
@@ -37,17 +37,15 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 @RefreshScope
+@RequiredArgsConstructor
 @HandlerType(values = {"zh-cn", "zh-hk", "zh-sh"})
 public class NeteaseNosHandler extends AbstractStorageHandler<NosClient> {
 
-    @Autowired
-    private Environment env;
+    private final Environment env;
 
-    @Autowired
-    private AsyncTaskExecutor asyncExecutor;
+    private final AsyncTaskExecutor asyncExecutor;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
     @Override
     public NosClient client(String lang){

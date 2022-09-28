@@ -22,6 +22,11 @@
             <artifactId>microservice-lock-local</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.somnus</groupId>
+            <artifactId>microservice-lock-zookeeper</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>com.somnus</groupId>
@@ -34,5 +39,6 @@
             <artifactId>microservice-lock-aop</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
     </dependencies>
 </project>

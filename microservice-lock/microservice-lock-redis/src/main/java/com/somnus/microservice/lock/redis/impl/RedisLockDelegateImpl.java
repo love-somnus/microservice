@@ -4,10 +4,10 @@ import com.somnus.microservice.lock.LockDelegate;
 import com.somnus.microservice.lock.LockExecutor;
 import com.somnus.microservice.lock.entity.LockType;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
 import org.redisson.api.RLock;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Kevin
@@ -17,10 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @date 2019/6/14 16:35
  */
 @Slf4j
+@RequiredArgsConstructor
 public class RedisLockDelegateImpl implements LockDelegate {
 
-    @Autowired
-    private LockExecutor<RLock> lockExecutor;
+    private final LockExecutor<RLock> lockExecutor;
 
     @Override
     public Object invoke(MethodInvocation invocation, LockType lockType, String key, long leaseTime, long waitTime, boolean async, boolean fair) throws Throwable {

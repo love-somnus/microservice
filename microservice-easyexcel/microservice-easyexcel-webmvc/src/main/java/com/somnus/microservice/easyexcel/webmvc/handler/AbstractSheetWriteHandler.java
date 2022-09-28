@@ -27,7 +27,6 @@ import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.ClassPathResource;
@@ -65,9 +64,7 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
     private ApplicationContext applicationContext;
 
     @Getter
-    @Setter
-    @Autowired(required = false)
-    private I18nHeaderCellWriteHandler i18nHeaderCellWriteHandler;
+    private final I18nHeaderCellWriteHandler i18nHeaderCellWriteHandler;
 
     @Override
     public void check(ResponseExcel responseExcel) {

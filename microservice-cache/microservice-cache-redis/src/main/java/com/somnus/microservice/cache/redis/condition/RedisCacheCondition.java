@@ -5,9 +5,6 @@ import com.somnus.microservice.cache.constant.CacheConstant;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache.redis.condition
- * @title: RedisCacheCondition
- * @description: TODO
  * @date 2019/7/5 15:57
  */
 public class RedisCacheCondition extends CacheCondition {

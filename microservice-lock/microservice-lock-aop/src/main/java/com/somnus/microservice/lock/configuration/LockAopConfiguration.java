@@ -1,5 +1,6 @@
 package com.somnus.microservice.lock.configuration;
 
+import com.somnus.microservice.lock.LockDelegate;
 import com.somnus.microservice.lock.aop.LockAutoScanProxy;
 import com.somnus.microservice.lock.aop.LockInterceptor;
 import com.somnus.microservice.lock.constant.LockConstant;
@@ -26,7 +27,7 @@ public class LockAopConfiguration {
     }
 
     @Bean
-    public LockInterceptor lockInterceptor() {
-        return new LockInterceptor();
+    public LockInterceptor lockInterceptor(LockDelegate delegate) {
+        return new LockInterceptor(delegate);
     }
 }

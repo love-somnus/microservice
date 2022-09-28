@@ -8,9 +8,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache.annotation
- * @title: Cacheable
- * @description: TODO
  * @date 2019/7/5 15:34
  */
 @Target({ ElementType.METHOD, ElementType.TYPE })

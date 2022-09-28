@@ -6,16 +6,14 @@ import com.somnus.microservice.commons.security.core.principal.Oauth2User;
 import com.somnus.microservice.commons.security.service.Oauth2UserDetailsService;
 import com.somnus.microservice.oauth2.model.domain.RbacUser;
 import com.somnus.microservice.oauth2.service.RbacUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author kevin.liu
@@ -24,10 +22,10 @@ import java.util.Optional;
  * @description: TODO
  * @date 2021/11/22 15:36
  */
+@RequiredArgsConstructor
 public class Oauth2UserDetailsServiceImpl implements Oauth2UserDetailsService {
 
-    @Autowired
-    private RbacUserService userService;
+    private final RbacUserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

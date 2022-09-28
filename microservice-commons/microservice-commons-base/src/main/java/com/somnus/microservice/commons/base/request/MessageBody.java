@@ -1,4 +1,4 @@
-package com.somnus.microservice.commons.core.base;
+package com.somnus.microservice.commons.base.request;
 
 import lombok.Data;
 
@@ -24,9 +24,6 @@ public class MessageBody implements Serializable {
 
     /** 目标用户（告知 STOMP 代理转发到哪个用户） */
     private String receiver;
-
-    /** 目标用户（告知 STOMP 代理转发到哪个用户） */
-    private Integer appId;
 
     public MessageBody wrap(Long id){
         this.id = id;

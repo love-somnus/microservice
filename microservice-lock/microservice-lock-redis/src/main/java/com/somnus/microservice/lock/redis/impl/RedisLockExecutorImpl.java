@@ -8,13 +8,13 @@ import com.somnus.microservice.lock.constant.LockConstant;
 import com.somnus.microservice.lock.entity.LockType;
 import com.somnus.microservice.lock.redis.exception.RedisLockException;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PreDestroy;
@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/6/14 16:35
  */
 @Slf4j
+@RequiredArgsConstructor
 public class RedisLockExecutorImpl implements LockExecutor<RLock> {
 
     @Value("${" + LockConstant.PREFIX + "}")
@@ -37,8 +38,7 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
 
     private boolean lockCached = true;
 
-    @Autowired
-    private RedissonHandler redissonHandler;
+    private final RedissonHandler redissonHandler;
 
     private static final ThreadLocal<Pair<String, RLock>> threadLocal = new ThreadLocal<>();
 
@@ -126,6 +126,7 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
     }
 
 
+    @Override
     @SneakyThrows(Exception.class)
     public void unlock(RLock lock){
         if (redissonHandler.isStarted()) {

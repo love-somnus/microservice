@@ -5,7 +5,7 @@ import com.somnus.microservice.commons.core.support.BaseService;
 import com.somnus.microservice.oauth2.mapper.Oauth2ClientDetailsMapper;
 import com.somnus.microservice.oauth2.model.domain.Oauth2ClientDetails;
 import com.somnus.microservice.oauth2.service.Oauth2ClientDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
@@ -16,10 +16,10 @@ import java.util.Optional;
  * @description: TODO
  * @date 2022/6/14 20:56
  */
+@RequiredArgsConstructor
 public class Oauth2ClientDetailsServiceImpl extends BaseService<Oauth2ClientDetails> implements Oauth2ClientDetailsService {
 
-    @Autowired
-    private Oauth2ClientDetailsMapper clientDetailsMapper;
+    private final Oauth2ClientDetailsMapper clientDetailsMapper;
 
     @Override
     public Optional<Oauth2ClientDetails> findByClientId(String clientId) {

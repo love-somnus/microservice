@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.somnus.microservice.elasticjob.dynamic.bean.Job;
 import com.somnus.microservice.elasticjob.dynamic.util.JacksonUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.ChildData;
@@ -14,7 +15,6 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache.StartMode;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -42,13 +42,12 @@ import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JobService {
 
-    @Autowired
-    private ZookeeperRegistryCenter zookeeperRegistryCenter;
+    private final ZookeeperRegistryCenter zookeeperRegistryCenter;
 
-    @Autowired
-    private ApplicationContext ctx;
+    private final ApplicationContext ctx;
 
     // 记录任务添加次数
     private final Map<String, AtomicInteger> JOB_ADD_COUNT = new ConcurrentHashMap<>();

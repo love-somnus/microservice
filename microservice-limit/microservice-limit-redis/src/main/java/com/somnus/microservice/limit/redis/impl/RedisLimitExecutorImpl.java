@@ -5,9 +5,9 @@ import com.somnus.microservice.commons.redis.handler.RedisHandler;
 import com.somnus.microservice.limit.LimitExecutor;
 import com.somnus.microservice.limit.constant.LimitConstant;
 import com.somnus.microservice.limit.exception.LimitException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,10 +27,10 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/7/10 17:08
  */
 @Slf4j
+@RequiredArgsConstructor
 public class RedisLimitExecutorImpl implements LimitExecutor {
 
-    @Autowired
-    private RedisHandler redisHandler;
+    private final RedisHandler redisHandler;
 
     @Value("${" + LimitConstant.PREFIX + "}")
     private String prefix;

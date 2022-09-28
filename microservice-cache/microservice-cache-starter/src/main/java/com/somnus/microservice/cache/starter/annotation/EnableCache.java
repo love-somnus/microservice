@@ -11,9 +11,6 @@ import com.somnus.microservice.cache.starter.aop.CacheImportSelector;
 import org.springframework.context.annotation.Import;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache.starter.annotation
- * @title: EnableCache
- * @description: TODO
  * @date 2019/7/5 16:58
  */
 @Target(ElementType.TYPE)

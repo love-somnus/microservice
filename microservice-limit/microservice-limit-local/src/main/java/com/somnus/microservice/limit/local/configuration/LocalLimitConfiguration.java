@@ -18,10 +18,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class LocalLimitConfiguration {
+
     @Bean
     @Conditional(LocalLimitCondition.class)
-    public LimitDelegate localLimitDelegate() {
-        return new LocalLimitDelegateImpl();
+    public LimitDelegate localLimitDelegate(LimitExecutor executor) {
+        return new LocalLimitDelegateImpl(executor);
     }
 
     @Bean

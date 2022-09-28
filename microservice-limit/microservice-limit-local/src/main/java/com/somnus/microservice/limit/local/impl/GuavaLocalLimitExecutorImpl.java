@@ -5,6 +5,7 @@ import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.limit.LimitExecutor;
 import com.somnus.microservice.limit.constant.LimitConstant;
 import com.somnus.microservice.limit.exception.LimitException;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -19,7 +20,9 @@ import java.util.concurrent.TimeUnit;
  * @description: TODO
  * @date 2019/7/10 16:51
  */
+@RequiredArgsConstructor
 public class GuavaLocalLimitExecutorImpl implements LimitExecutor {
+
     @Value("${" + LimitConstant.PREFIX + "}")
     private String prefix;
 

@@ -7,9 +7,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache.starter.aop
- * @title: CacheImportSelector
- * @description: TODO
  * @date 2019/7/5 16:58
  */
 @Order(Ordered.LOWEST_PRECEDENCE - 100)

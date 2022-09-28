@@ -23,8 +23,8 @@ public class LocalLockConfiguration {
 
     @Bean
     @Conditional(LocalLockCondition.class)
-    public LockDelegate localLockDelegate() {
-        return new LocalLockDelegateImpl();
+    public LockDelegate localLockDelegate(LockExecutor<Lock> executor) {
+        return new LocalLockDelegateImpl(executor);
     }
 
     @Bean

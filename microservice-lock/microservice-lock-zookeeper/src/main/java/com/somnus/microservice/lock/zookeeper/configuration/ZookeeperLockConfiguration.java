@@ -22,19 +22,20 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class ZookeeperLockConfiguration {
+
     @Value("${" + GlobalConstant.PREFIX + "}")
     private String prefix;
 
     @Bean
     @Conditional(ZookeeperLockCondition.class)
-    public LockDelegate zookeeperLockDelegate() {
-        return new ZookeeperLockDelegateImpl();
+    public LockDelegate zookeeperLockDelegate(LockExecutor<InterProcessMutex> lockExecutor) {
+        return new ZookeeperLockDelegateImpl(lockExecutor);
     }
 
     @Bean
     @Conditional(ZookeeperLockCondition.class)
-    public LockExecutor<InterProcessMutex> zookeeperLockExecutor() {
-        return new ZookeeperLockExecutorImpl();
+    public LockExecutor<InterProcessMutex> zookeeperLockExecutor(CuratorHandler curatorHandler) {
+        return new ZookeeperLockExecutorImpl(curatorHandler);
     }
 
     @Bean

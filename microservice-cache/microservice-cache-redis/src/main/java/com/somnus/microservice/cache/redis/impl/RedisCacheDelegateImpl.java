@@ -1,15 +1,15 @@
 package com.somnus.microservice.cache.redis.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.cache.constant.CacheConstant;
 import com.somnus.microservice.commons.base.enums.ErrorCodeEnum;
 import com.somnus.microservice.commons.base.exception.BusinessException;
-import com.somnus.microservice.commons.base.utils.PublicUtil;
 import com.somnus.microservice.commons.redis.handler.RedisHandler;
 import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
+import lombok.RequiredArgsConstructor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.redisson.api.RBloomFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -17,27 +17,20 @@ import org.springframework.data.redis.core.ValueOperations;
 import com.somnus.microservice.cache.CacheDelegate;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache.redis.impl
- * @title: RedisCacheDelegateImpl
- * @description: TODO
  * @date 2019/7/5 16:00
  */
 @Slf4j
+@RequiredArgsConstructor
 public class RedisCacheDelegateImpl implements CacheDelegate {
 
-    @Autowired
-    private RedisHandler redisHandler;
+    private final RedisHandler redisHandler;
 
-    @Autowired
-    private RedissonHandler redissonHandler;
+    private final RedissonHandler redissonHandler;
 
     @Value("${" + CacheConstant.PREFIX + "}")
     private String prefix;
@@ -83,7 +76,7 @@ public class RedisCacheDelegateImpl implements CacheDelegate {
             }
             @SuppressWarnings("unchecked")
             Map<String, Object> map = (Map<String, Object>)object;
-            return PublicUtil.mapToBean(map, clazz);
+            return BeanUtil.toBean(map, clazz);
             /* ***********************end**********************  */
         }
 
@@ -202,6 +195,6 @@ public class RedisCacheDelegateImpl implements CacheDelegate {
 
         RedisTemplate<String, Object> redisTemplate = redisHandler.getRedisTemplate();
         Set<String> keys = redisTemplate.keys(compositeWildcardKey);
-        Optional.ofNullable(keys).ifPresent(set -> set.forEach(k -> redisTemplate.delete(k)));
+        Optional.ofNullable(keys).ifPresent(set -> set.stream().filter(Objects::nonNull).forEach(redisTemplate::delete));
     }
 }

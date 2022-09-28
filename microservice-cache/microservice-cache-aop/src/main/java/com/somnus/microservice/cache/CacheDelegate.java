@@ -3,9 +3,6 @@ package com.somnus.microservice.cache;
 import org.aopalliance.intercept.MethodInvocation;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache
- * @title: CacheDelegate
- * @description: TODO
  * @date 2019/7/5 15:32
  */
 public interface CacheDelegate {

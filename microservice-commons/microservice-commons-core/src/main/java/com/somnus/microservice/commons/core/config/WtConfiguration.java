@@ -5,7 +5,7 @@ import com.somnus.microservice.commons.base.properties.EmailProperties;
 import com.somnus.microservice.commons.base.request.BaiduStatisticsHeader;
 import com.somnus.microservice.commons.core.generator.IdGenerator;
 import com.somnus.microservice.commons.core.generator.SnowflakeIdGenerator;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2019/4/12 11:01
  */
 @Configuration
-@AllArgsConstructor
+@RequiredArgsConstructor
 @EnableConfigurationProperties({
         BaiduStatisticsProperties.class,
         EmailProperties.class

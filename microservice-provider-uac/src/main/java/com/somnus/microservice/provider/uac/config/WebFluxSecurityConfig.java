@@ -8,7 +8,7 @@ import com.somnus.microservice.provider.uac.config.manager.TokenAuthorizationMan
 import com.somnus.microservice.provider.uac.config.manager.TokenAuthenticationManager;
 import com.somnus.microservice.provider.uac.config.repository.DefaultSecurityContextRepository;
 import com.somnus.microservice.provider.uac.config.service.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +28,7 @@ import java.util.LinkedList;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.gateway.config
+ * @packageName com.somnus.microservice.uac.config
  * @title: WebFluxSecurityConfig
  * @description: uac security核心配置类
  * @date 2021/11/11 19:09
@@ -36,34 +36,27 @@ import java.util.LinkedList;
 @RefreshScope
 @Configuration
 @EnableWebFluxSecurity
+@RequiredArgsConstructor
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
     private final String[] urls = {"/auth/**", "/swagger-ui.html","/webjars/**","/v3/api-docs/**"};
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsServiceImpl;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
-    @Autowired
-    private TokenAuthenticationManager tokenAuthenticationManager;
+    private final TokenAuthenticationManager tokenAuthenticationManager;
 
-    @Autowired
-    private TokenAuthorizationManager tokenAuthorizationManager;
+    private final TokenAuthorizationManager tokenAuthorizationManager;
 
-    @Autowired
-    private DefaultSecurityContextRepository defaultSecurityContextRepository;
+    private final DefaultSecurityContextRepository defaultSecurityContextRepository;
 
-    @Autowired
-    private DefaultAccessDeniedHandler defaultAccessDeniedHandler;
+    private final DefaultAccessDeniedHandler defaultAccessDeniedHandler;
 
-    @Autowired
-    private DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
+    private final DefaultAuthenticationEntryPoint defaultAuthenticationEntryPoint;
 
-    @Autowired
-    private DefaultAuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
+    private final DefaultAuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
 
-    @Autowired
-    private DefaultAuthenticationFailureHandler defaultAuthenticationFailureHandler;
+    private final DefaultAuthenticationFailureHandler defaultAuthenticationFailureHandler;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {

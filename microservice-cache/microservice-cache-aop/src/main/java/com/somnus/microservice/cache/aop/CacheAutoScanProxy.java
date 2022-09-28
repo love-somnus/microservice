@@ -11,9 +11,6 @@ import java.lang.annotation.Annotation;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache.aop
- * @title: CacheAutoScanProxy
- * @description: TODO
  * @date 2019/7/5 15:35
  */
 public class CacheAutoScanProxy extends DefaultAutoScanProxy {

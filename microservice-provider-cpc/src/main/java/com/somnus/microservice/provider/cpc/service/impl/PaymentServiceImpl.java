@@ -8,8 +8,8 @@ import com.somnus.microservice.provider.cpc.mapper.PaymentOrderMapper;
 import com.somnus.microservice.provider.cpc.model.domain.PaymentOrder;
 import com.somnus.microservice.provider.cpc.model.vo.PaymentOrderVo;
 import com.somnus.microservice.provider.cpc.service.PaymentService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,10 +25,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class PaymentServiceImpl extends BaseService<PaymentOrder> implements PaymentService {
 
-    @Autowired
-    private PaymentOrderMapper mapper;
+    private final PaymentOrderMapper mapper;
 
     @Override
     @Cacheable(name = "paymentOrder", key = "#id", expire = -1L)

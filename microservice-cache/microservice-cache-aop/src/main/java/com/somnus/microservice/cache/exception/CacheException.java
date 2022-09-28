@@ -2,9 +2,6 @@ package com.somnus.microservice.cache.exception;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.lock.exception
- * @title: LockException
- * @description: TODO
  * @date 2019/6/14 9:55
  */
 public class CacheException extends RuntimeException {

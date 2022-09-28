@@ -7,9 +7,9 @@ import java.util.Map;
 import com.somnus.microservice.elasticjob.annotation.ElasticJobConf;
 import com.somnus.microservice.elasticjob.base.JobAttributeTag;
 import com.somnus.microservice.elasticjob.dynamic.service.JobService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -38,17 +38,16 @@ import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
  * @date 2021/10/25 18:01
  */
 @Slf4j
+@RequiredArgsConstructor
 public class JobConfParser implements ApplicationContextAware {
-
-    @Autowired
-    private ZookeeperRegistryCenter zookeeperRegistryCenter;
 
     private final String prefix = "elastic.job.";
 
     private Environment environment;
 
-    @Autowired(required=false)
-    private JobService jobService;
+    private final JobService jobService;
+
+    private final ZookeeperRegistryCenter zookeeperRegistryCenter;
 
     private List<String> jobTypeNameList = Arrays.asList("SimpleJob", "DataflowJob", "ScriptJob");
 

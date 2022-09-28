@@ -19,6 +19,7 @@ public interface LockExecutor<T> {
      * @param waitTime 没有获取到锁时，等待时间(单位毫秒)
      * @param async 是否采用锁的异步执行方式
      * @param fair 是否采用公平锁
+     * @return boolean
      */
     boolean tryLock(LockType lockType, String name, String key, long leaseTime, long waitTime, boolean async, boolean fair);
 

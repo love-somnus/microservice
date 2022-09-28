@@ -2,12 +2,10 @@ package com.somnus.microservice.cache.constant;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.cache.constant
- * @title: CacheConstant
- * @description: TODO
  * @date 2019/7/5 15:40
  */
 public class CacheConstant {
+
     public static final String CACHE_TYPE = "cache.type";
 
     public static final String CACHE_TYPE_REDIS = "redisCache";

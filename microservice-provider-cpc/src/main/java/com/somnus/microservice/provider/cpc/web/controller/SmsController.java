@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -29,12 +29,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @RefreshScope
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(value = "sms")
 @Tag(name = "SmsController", description = "短信相关接口")
 public class SmsController {
 
-    @Autowired
-    private SmsService service;
+    private final SmsService service;
 
     /**
      * @param request

@@ -2,8 +2,8 @@ package com.somnus.microservice.gateway.config.manager;
 
 import cn.hutool.core.convert.Convert;
 import com.somnus.microservice.commons.redis.handler.RedisHandler;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
@@ -24,10 +24,10 @@ import java.util.List;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TokenAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
-    @Autowired
-    private RedisHandler redisHandler;
+    private final RedisHandler redisHandler;
 
     private static final String REQUEST_KEY = "wt:config:security:path";
 

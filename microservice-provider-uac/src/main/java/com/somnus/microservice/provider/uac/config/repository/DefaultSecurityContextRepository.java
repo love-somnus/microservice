@@ -1,8 +1,8 @@
 package com.somnus.microservice.provider.uac.config.repository;
 
 import com.somnus.microservice.provider.uac.config.manager.TokenAuthenticationManager;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,14 +21,14 @@ import java.util.List;
  * @date 2021/11/15 15:22
  */
 @Component
+@RequiredArgsConstructor
 public class DefaultSecurityContextRepository implements ServerSecurityContextRepository {
 
     public final static String TOKEN_HEADER = "Authorization";
 
     public final static String BEARER = "Bearer ";
 
-    @Autowired
-    private TokenAuthenticationManager tokenAuthenticationManager;
+    private final TokenAuthenticationManager tokenAuthenticationManager;
 
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {

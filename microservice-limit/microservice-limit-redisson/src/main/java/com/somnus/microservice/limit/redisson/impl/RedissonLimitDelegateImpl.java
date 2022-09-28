@@ -3,8 +3,8 @@ package com.somnus.microservice.limit.redisson.impl;
 import com.somnus.microservice.limit.LimitDelegate;
 import com.somnus.microservice.limit.LimitExecutor;
 import com.somnus.microservice.limit.exception.LimitException;
+import lombok.RequiredArgsConstructor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.TimeUnit;
 
@@ -15,10 +15,10 @@ import java.util.concurrent.TimeUnit;
  * @description: TODO
  * @date 2019/7/10 17:07
  */
+@RequiredArgsConstructor
 public class RedissonLimitDelegateImpl implements LimitDelegate {
 
-    @Autowired
-    private LimitExecutor limitExecutor;
+    private final LimitExecutor limitExecutor;
 
     @Override
     public Object invoke(MethodInvocation invocation, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit) throws Throwable {

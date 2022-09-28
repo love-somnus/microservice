@@ -12,10 +12,10 @@ import com.somnus.microservice.lock.annotation.WriteLock;
 import com.somnus.microservice.lock.constant.LockConstant;
 import com.somnus.microservice.lock.entity.LockType;
 import com.somnus.microservice.lock.exception.LockException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 /**
@@ -26,10 +26,10 @@ import org.springframework.beans.factory.annotation.Value;
  * @date 2019/6/14 15:03
  */
 @Slf4j
+@RequiredArgsConstructor
 public class LockInterceptor extends AbstractInterceptor {
 
-    @Autowired
-    private LockDelegate lockDelegate;
+    private final LockDelegate lockDelegate;
 
     @Value("${" + LockConstant.PREFIX + "}")
     private String prefix;

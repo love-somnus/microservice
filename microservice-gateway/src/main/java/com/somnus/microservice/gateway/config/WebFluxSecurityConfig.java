@@ -3,8 +3,6 @@ package com.somnus.microservice.gateway.config;
 import com.somnus.microservice.gateway.config.converter.JwtTokenAuthenticationConverter;
 import com.somnus.microservice.gateway.config.handler.DefaultAuthenticationEntryPoint;
 import com.somnus.microservice.gateway.config.handler.DefaultServerAccessDeniedHandler;
-import com.somnus.microservice.gateway.config.manager.TokenAuthenticationManager;
-import com.somnus.microservice.gateway.config.manager.TokenAuthorizationManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +17,6 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -39,7 +36,7 @@ import reactor.core.publisher.Mono;
 @EnableReactiveMethodSecurity
 public class WebFluxSecurityConfig {
 
-    private final IngoreUrlsConfig ingoreUrlsConfig;
+    private final IgnoreUrlsConfig ignoreUrlsConfig;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -59,7 +56,7 @@ public class WebFluxSecurityConfig {
         httpSecurity.oauth2ResourceServer().authenticationEntryPoint(defaultAuthenticationEntryPoint).accessDeniedHandler(defaultServerAccessDeniedHandler);
         /* 请求拦截处理 */
         httpSecurity.authorizeExchange(exchange -> {
-            exchange.pathMatchers(HttpMethod.OPTIONS).permitAll().pathMatchers(ingoreUrlsConfig.getUrls()).permitAll().anyExchange().authenticated();
+            exchange.pathMatchers(HttpMethod.OPTIONS).permitAll().pathMatchers(ignoreUrlsConfig.getUrls()).permitAll().anyExchange().authenticated();
         }).csrf().disable();
         return httpSecurity.build();
     }

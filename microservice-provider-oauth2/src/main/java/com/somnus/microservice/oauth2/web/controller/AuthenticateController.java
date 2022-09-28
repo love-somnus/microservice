@@ -4,7 +4,7 @@ import com.somnus.microservice.commons.base.wrapper.WrapMapper;
 import com.somnus.microservice.commons.base.wrapper.Wrapper;
 import com.somnus.microservice.oauth2.model.query.UserPageQuery;
 import com.somnus.microservice.oauth2.service.RbacUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.*;
  * @date 2021/11/19 19:09
  */
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("auth")
 public class AuthenticateController {
 
-    @Autowired
-    private RbacUserService userService;
+    private final RbacUserService userService;
 
     @GetMapping(value = "")
     public String auth(){

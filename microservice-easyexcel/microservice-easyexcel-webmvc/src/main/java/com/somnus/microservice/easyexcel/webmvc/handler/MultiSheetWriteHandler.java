@@ -3,6 +3,7 @@ package com.somnus.microservice.easyexcel.webmvc.handler;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.converters.Converter;
 import com.alibaba.excel.write.metadata.WriteSheet;
+import com.somnus.microservice.easyexcel.head.I18nHeaderCellWriteHandler;
 import com.somnus.microservice.easyexcel.webmvc.enhance.WriterBuilderEnhancer;
 import com.somnus.microservice.easyexcel.properties.ExcelConfigProperties;
 import com.somnus.microservice.easyexcel.annotation.ResponseExcel;
@@ -22,8 +23,8 @@ import java.util.List;
  */
 public class MultiSheetWriteHandler extends AbstractSheetWriteHandler {
 
-    public MultiSheetWriteHandler(ExcelConfigProperties configProperties, ObjectProvider<List<Converter<?>>> converterProvider, WriterBuilderEnhancer enhance) {
-        super(configProperties, converterProvider, enhance);
+    public MultiSheetWriteHandler(ExcelConfigProperties configProperties, ObjectProvider<List<Converter<?>>> converterProvider, WriterBuilderEnhancer enhance, I18nHeaderCellWriteHandler handler) {
+        super(configProperties, converterProvider, enhance, handler);
     }
 
     /**

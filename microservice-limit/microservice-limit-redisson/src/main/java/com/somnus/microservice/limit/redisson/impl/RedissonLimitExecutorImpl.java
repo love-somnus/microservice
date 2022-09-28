@@ -5,12 +5,12 @@ import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
 import com.somnus.microservice.limit.LimitExecutor;
 import com.somnus.microservice.limit.constant.LimitConstant;
 import com.somnus.microservice.limit.exception.LimitException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.concurrent.TimeUnit;
@@ -23,10 +23,10 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/7/10 17:08
  */
 @Slf4j
+@RequiredArgsConstructor
 public class RedissonLimitExecutorImpl implements LimitExecutor {
 
-    @Autowired
-    private RedissonHandler redissonHandler;
+    private final RedissonHandler redissonHandler;
 
     @Value("${" + LimitConstant.PREFIX + "}")
     private String prefix;

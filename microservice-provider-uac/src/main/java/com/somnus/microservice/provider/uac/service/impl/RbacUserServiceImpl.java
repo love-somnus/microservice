@@ -5,7 +5,7 @@ import com.somnus.microservice.commons.core.support.BaseService;
 import com.somnus.microservice.provider.uac.mapper.RbacUserMapper;
 import com.somnus.microservice.provider.uac.model.domain.RbacUser;
 import com.somnus.microservice.provider.uac.service.RbacUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +19,12 @@ import java.util.Optional;
  * @date 2021/11/22 15:49
  */
 @Service
+@RequiredArgsConstructor
 public class RbacUserServiceImpl extends BaseService<RbacUser> implements RbacUserService {
 
-    @Autowired
-    private RbacUserMapper rbacUserMapper;
+    private final RbacUserMapper rbacUserMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<RbacUser> getByUsername(String username) {

@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -39,15 +38,16 @@ public class ReactiveRequestUtil {
      * @return the getHttpHeader
      */
     public static String getHttpHeader(String header) {
-        return getRequest().getHeaders().getFirst(header);
+        return getHttpHeader(getRequest(), header);
     }
 
     /**
-     * 获得用户User-Agent
-     * @return
+     * Gets header.
+     *
+     * @return the getHttpHeader
      */
-    public static String getUserAgent(){
-        return getHttpHeader(HttpHeaders.USER_AGENT);
+    public static String getHttpHeader(ServerHttpRequest request, String header) {
+        return request.getHeaders().getFirst(header);
     }
 
     /**
@@ -55,28 +55,37 @@ public class ReactiveRequestUtil {
      *
      * @return the string
      */
-    public static String getRemoteAddr() {
-        String ipAddress = getHttpHeader(GlobalConstant.X_REAL_IP);
+    public static String getRemoteAddress(){
+        return getRemoteAddress(getRequest());
+    }
+
+    /**
+     * 获得用户远程地址
+     *
+     * @return the string
+     */
+    public static String getRemoteAddress(ServerHttpRequest request) {
+        String ipAddress = getHttpHeader(request, GlobalConstant.X_REAL_IP);
         if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = getHttpHeader(GlobalConstant.X_FORWARDED_FOR);
+            ipAddress = getHttpHeader(request, GlobalConstant.X_FORWARDED_FOR);
         }
         if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = getHttpHeader(GlobalConstant.PROXY_CLIENT_IP);
+            ipAddress = getHttpHeader(request, GlobalConstant.PROXY_CLIENT_IP);
         }
         if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = getHttpHeader(GlobalConstant.WL_PROXY_CLIENT_IP);
+            ipAddress = getHttpHeader(request, GlobalConstant.WL_PROXY_CLIENT_IP);
         }
         if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = getHttpHeader(GlobalConstant.HTTP_CLIENT_IP);
+            ipAddress = getHttpHeader(request, GlobalConstant.HTTP_CLIENT_IP);
         }
         if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = getHttpHeader(GlobalConstant.HTTP_X_FORWARDED_FOR);
+            ipAddress = getHttpHeader(request, GlobalConstant.HTTP_X_FORWARDED_FOR);
         }
         if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = Objects.requireNonNull(getRequest().getRemoteAddress()).getAddress().getHostAddress();
+            ipAddress = Objects.requireNonNull(request.getRemoteAddress()).getAddress().getHostAddress();
         }
         if (StringUtils.isEmpty(ipAddress) || GlobalConstant.UNKNOWN.equalsIgnoreCase(ipAddress)) {
-            ipAddress = Objects.requireNonNull(getRequest().getRemoteAddress()).getAddress().getHostAddress();
+            ipAddress = Objects.requireNonNull(request.getRemoteAddress()).getAddress().getHostAddress();
             if (GlobalConstant.LOCALHOST_IP.equals(ipAddress) || GlobalConstant.LOCALHOST_IP_16.equals(ipAddress)) {
                 //根据网卡取本机配置的IP
                 InetAddress inet = null;

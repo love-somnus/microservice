@@ -4,22 +4,48 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.util.ObjectUtils;
+import org.springframework.lang.Nullable;
 
-import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /**
  * @author kevin.liu
  * @title: Objects
- * @projectName webteam
  * @description: TODO
  * @date 2021/2/4 15:46
  */
 @UtilityClass
-public class Objects {
+public class Objects extends org.springframework.util.ObjectUtils{
+
+    /**
+     * 数组不为空
+     * @param array
+     * @return boolean
+     */
+    public static boolean isNotEmpty(@Nullable Object[] array){
+        return !isEmpty(array);
+    }
+
+    /**
+     * 对象不为空
+     * @param obj
+     * @return boolean
+     */
+    public static boolean isNotEmpty(@Nullable Object obj){
+        return !isEmpty(obj);
+    }
+
+    /**
+     * Object 转换为map
+     * @param src
+     * @return Map
+     */
+    public static Map<?, ?> beanToMap(Object src){
+        return org.springframework.cglib.beans.BeanMap.create(src);
+    }
 
     /**
      * 对象转换
@@ -72,56 +98,7 @@ public class Objects {
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        return original.stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
-    }
-
-    /**
-     * 对象转换DOMAIN -> VO
-     * @param original
-     * @param <DOMAIN>
-     * @param <VO>
-     * @return
-     */
-    public static <DOMAIN, VO> List<VO> convertList(List<DOMAIN> original, Class<VO> clazz, BiConsumer<DOMAIN, VO> consumer){
-
-        ModelMapper mapper = new ModelMapper();
-
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        return original.stream().map(entity -> {
-            VO vo = mapper.map(entity, clazz);
-            consumer.accept(entity, vo);
-            return vo;
-        }).collect(Collectors.toList());
-    }
-
-    /**
-     * 判断对象是否为空，且对象的所有属性都为空
-     * ps: boolean类型会有默认值false 判断结果不会为null 会影响判断结果
-     * 序列化的默认值也会影响判断结果
-     *
-     * @param object
-     * @param passList 需要过滤的字段
-     * @return
-     */
-    @SneakyThrows
-    public static boolean objCheckIsNull(Object object, List<String> passList) {
-        Class<?> clazz = object.getClass(); // 得到类对象
-        Field[] fields = clazz.getDeclaredFields(); // 得到所有属性
-        boolean flag = true; // 定义返回结果，默认为true
-        for (Field field : fields) {
-            field.setAccessible(true);
-            Object fieldValue;
-            // 得到属性类型
-            String fieldName = field.getName(); // 得到属性名
-            fieldValue = field.get(object); // 得到属性值
-
-            if (ObjectUtils.isEmpty(fieldValue) && !passList.contains(fieldName)) { // 只要有一个属性值为null 就返回false 表示对象存在未填写值
-                flag = false;
-                break;
-            }
-        }
-        return flag;
+        return original.parallelStream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
     }
 
 }

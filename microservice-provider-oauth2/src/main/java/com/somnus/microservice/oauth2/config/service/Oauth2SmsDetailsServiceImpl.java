@@ -6,7 +6,7 @@ import com.somnus.microservice.commons.security.core.principal.Oauth2User;
 import com.somnus.microservice.commons.security.service.Oauth2UserDetailsService;
 import com.somnus.microservice.oauth2.model.domain.RbacUser;
 import com.somnus.microservice.oauth2.service.RbacUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,10 +22,10 @@ import java.util.List;
  * @description: TODO
  * @date 2022/6/14 19:14
  */
+@RequiredArgsConstructor
 public class Oauth2SmsDetailsServiceImpl implements Oauth2UserDetailsService {
 
-    @Autowired
-    private RbacUserService userService;
+    private final RbacUserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String mobile) {
@@ -55,7 +55,7 @@ public class Oauth2SmsDetailsServiceImpl implements Oauth2UserDetailsService {
      */
     @Override
     public boolean support(String clientId, String grantType) {
-        return SecurityConstants.SMS.equals(clientId);
+        return SecurityConstants.SMS.equals(grantType);
     }
 
 }

@@ -8,13 +8,13 @@ import com.somnus.microservice.lock.LockExecutor;
 import com.somnus.microservice.lock.entity.LockType;
 import com.somnus.microservice.lock.zookeeper.exception.ZookeeperLockException;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.framework.recipes.locks.InterProcessReadWriteLock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PreDestroy;
@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/7/30 14:44
  */
 @Slf4j
+@RequiredArgsConstructor
 public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex> {
 
     @Value("${" + GlobalConstant.PREFIX + "}")
@@ -37,8 +38,7 @@ public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex
 
     private boolean lockCached = true;
 
-    @Autowired
-    private CuratorHandler curatorHandler;
+    private final CuratorHandler curatorHandler;
 
     private static final ThreadLocal<Pair<String, InterProcessMutex>> threadLocal = new ThreadLocal<>();
 

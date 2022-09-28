@@ -29,9 +29,6 @@ public abstract class BaseService<T> implements IService<T> {
     @Autowired
     protected BaseMapper<T> mapper;
 
-    @Autowired
-    protected StringRedisTemplate redisTemplate;
-
     /**
      * Gets mapper.
      *

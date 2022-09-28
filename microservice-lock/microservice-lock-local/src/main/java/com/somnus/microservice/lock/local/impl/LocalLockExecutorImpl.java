@@ -15,6 +15,7 @@ import com.somnus.microservice.lock.constant.LockConstant;
 import com.somnus.microservice.lock.entity.LockType;
 import com.somnus.microservice.lock.local.exception.LocalLockException;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
  * @date 2019/6/14 18:06
  */
 @Slf4j
+@RequiredArgsConstructor
 public class LocalLockExecutorImpl implements LockExecutor<Lock> {
 
     @Value("${" + LockConstant.PREFIX + "}")
@@ -105,6 +107,7 @@ public class LocalLockExecutorImpl implements LockExecutor<Lock> {
         lock.lock();
     }
 
+    @Override
     @SneakyThrows(Exception.class)
     public void unlock(Lock lock){
         if (lock != null) {

@@ -1,7 +1,8 @@
 package com.somnus.microservice.elasticjob.autoconfigure;
 
+import com.somnus.microservice.elasticjob.dynamic.service.JobService;
 import com.somnus.microservice.elasticjob.parser.JobConfParser;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +17,11 @@ import com.dangdang.ddframe.job.reg.zookeeper.ZookeeperRegistryCenter;
  * @date 2021/10/25 17:57
  */
 @Configuration
+@RequiredArgsConstructor
 @EnableConfigurationProperties(ZookeeperProperties.class)
 public class JobParserAutoConfiguration {
 
-    @Autowired
-    private ZookeeperProperties zookeeperProperties;
+    private final ZookeeperProperties zookeeperProperties;
 
     /**
      * 初始化Zookeeper注册中心
@@ -39,8 +40,8 @@ public class JobParserAutoConfiguration {
     }
 
     @Bean
-    public JobConfParser jobConfParser() {
-        return new JobConfParser();
+    public JobConfParser jobConfParser(JobService jobService, ZookeeperRegistryCenter zookeeperRegistryCenter) {
+        return new JobConfParser(jobService, zookeeperRegistryCenter);
     }
 
 }

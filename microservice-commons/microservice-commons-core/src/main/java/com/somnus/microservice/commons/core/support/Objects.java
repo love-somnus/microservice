@@ -2,26 +2,46 @@ package com.somnus.microservice.commons.core.support;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.util.ObjectUtils;
+import org.springframework.cglib.beans.BeanMap;
+import org.springframework.lang.Nullable;
 
-import java.lang.reflect.Field;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /**
  * @author kevin.liu
  * @title: Objects
- * @projectName webteam
  * @description: TODO
  * @date 2021/2/4 15:46
  */
 @UtilityClass
-public class Objects {
+public class Objects extends org.springframework.util.ObjectUtils {
+
+    /**
+     * 数组不为空
+     * @param array
+     * @return boolean
+     */
+    public static boolean isNotEmpty(@Nullable Object[] array){
+        return !isEmpty(array);
+    }
+
+    /**
+     * 对象不为空
+     * @param obj
+     * @return boolean
+     */
+    public static boolean isNotEmpty(@Nullable Object obj){
+        return !isEmpty(obj);
+    }
 
     /**
      * 对象转换
@@ -74,7 +94,7 @@ public class Objects {
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        return original.stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
+        return original.parallelStream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
     }
 
     /**
@@ -90,7 +110,7 @@ public class Objects {
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        List<VO> list = original.getRecords().stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
+        List<VO> list = convert(original.getRecords(), clazz);
 
         IPage<VO> page = mapper.map(original, IPage.class);
 
@@ -112,7 +132,7 @@ public class Objects {
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        List<VO> list = original.getList().stream().map(entity -> mapper.map(entity, clazz)).collect(Collectors.toList());
+        List<VO> list = convert(original.getList(), clazz);
 
         PageInfo<VO> pageInfo = mapper.map(original, PageInfo.class);
 
@@ -134,11 +154,7 @@ public class Objects {
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        return original.stream().map(entity -> {
-            VO vo = mapper.map(entity, clazz);
-            consumer.accept(entity, vo);
-            return vo;
-        }).collect(Collectors.toList());
+        return original.parallelStream().map(entity -> convert(entity, clazz, consumer)).collect(Collectors.toList());
     }
 
     /**
@@ -154,11 +170,7 @@ public class Objects {
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        List<VO> list = original.getRecords().stream().map(entity -> {
-            VO vo = mapper.map(entity, clazz);
-            consumer.accept(entity, vo);
-            return vo;
-        }).collect(Collectors.toList());
+        List<VO> list = original.getRecords().parallelStream().map(entity -> convert(entity, clazz, consumer)).collect(Collectors.toList());
 
         IPage<VO> page = mapper.map(original, IPage.class);
 
@@ -180,11 +192,7 @@ public class Objects {
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
-        List<VO> list = original.getList().stream().map(entity -> {
-            VO vo = mapper.map(entity, clazz);
-            consumer.accept(entity, vo);
-            return vo;
-        }).collect(Collectors.toList());
+        List<VO> list = original.getList().parallelStream().map(entity -> convert(entity, clazz, consumer)).collect(Collectors.toList());
 
         PageInfo<VO> pageInfo = mapper.map(original, PageInfo.class);
 
@@ -193,33 +201,30 @@ public class Objects {
         return pageInfo;
     }
 
-    /**
-     * 判断对象是否为空，且对象的所有属性都为空
-     * ps: boolean类型会有默认值false 判断结果不会为null 会影响判断结果
-     * 序列化的默认值也会影响判断结果
-     *
-     * @param object
-     * @param passList 需要过滤的字段
-     * @return
-     */
-    @SneakyThrows
-    public static boolean objCheckIsNull(Object object, List<String> passList) {
-        Class<?> clazz = object.getClass(); // 得到类对象
-        Field[] fields = clazz.getDeclaredFields(); // 得到所有属性
-        boolean flag = true; // 定义返回结果，默认为true
-        for (Field field : fields) {
-            field.setAccessible(true);
-            Object fieldValue;
-            // 得到属性类型
-            String fieldName = field.getName(); // 得到属性名
-            fieldValue = field.get(object); // 得到属性值
-
-            if (ObjectUtils.isEmpty(fieldValue) && !passList.contains(fieldName)) { // 只要有一个属性值为null 就返回false 表示对象存在未填写值
-                flag = false;
-                break;
+    public static String[] shortUrl(String url){
+        String hex = DigestUtils.md5Hex(url);
+        String[] chars = new String[]{
+                "a","b","c","d","e","f","g","h", "i","j","k","l","m","n","o","p", "q","r","s","t","u","v","w","x", "y","z",
+                "0","1","2","3","4","5", "6","7","8","9",
+                "A","B","C","D", "E","F","G","H","I","J","K","L", "M","N","O","P","Q","R","S","T", "U","V","W","X","Y","Z"
+        };
+        String[] resUrl = new String[4];
+        for (int i = 0; i < 4; i++) {
+            //把加密字符按照8位一组16进制与0x3FFFFFFF进行位与运算
+            int hexint = 0x3FFFFFFF & Integer.parseUnsignedInt(hex.substring(i * 8, (i+1) * 8), 16);
+            String outChars = "";
+            for (int j = 0; j < 6; j++) {
+                //把得到的值与0x0000003D进行位与运算，取得字符数组chars索引
+                int index = 0x0000003D & hexint;
+                //把取得的字符相加
+                outChars += chars[index];
+                //每次循环按位右移5位
+                hexint = hexint >> 5;
             }
+            //把字符串存入对应索引的输出数组
+            resUrl[i] = outChars;
         }
-        return flag;
+        return resUrl;
     }
 
 }
