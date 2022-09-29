@@ -154,11 +154,6 @@
             </dependency>
             <!-- for swagger -->
 
-            <dependency>
-                <groupId>org.apache.shardingsphere.elasticjob</groupId>
-                <artifactId>elasticjob-lite-core</artifactId>
-                <version>${elasticjob.version}</version>
-            </dependency>
             <!-- 中间件 数据库 -->
             <dependency>
                 <groupId>org.apache.shardingsphere</groupId>
@@ -224,16 +219,10 @@
             </dependency>
             <!-- elastic-job依赖-->
             <dependency>
-                <groupId>com.dangdang</groupId>
-                <artifactId>elastic-job-lite-core</artifactId>
-                <version>${elastic-job.version}</version>
+                <groupId>org.apache.shardingsphere.elasticjob</groupId>
+                <artifactId>elasticjob-lite-core</artifactId>
+                <version>${elasticjob.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.dangdang</groupId>
-                <artifactId>elastic-job-lite-spring</artifactId>
-                <version>${elastic-job.version}</version>
-            </dependency>
-
             <!-- xxl-job 依赖 -->
             <dependency>
                 <groupId>com.xuxueli</groupId>
