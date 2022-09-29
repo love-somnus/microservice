@@ -37,10 +37,6 @@
                     <groupId>com.alibaba.cloud</groupId>
                     <artifactId>spring-cloud-starter-dubbo</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-webflux</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
 

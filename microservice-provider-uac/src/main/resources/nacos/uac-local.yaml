@@ -39,6 +39,9 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.95.41:8848
+        metadata:
+          version: release
+          ip: release
     sentinel:
       transport:
         port: 8719
