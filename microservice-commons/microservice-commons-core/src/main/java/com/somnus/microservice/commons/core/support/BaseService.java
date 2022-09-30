@@ -7,18 +7,17 @@ import com.somnus.microservice.commons.base.dto.LoginAuthDto;
 import com.somnus.microservice.commons.base.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.List;
 
 /**
+ * @param <T> the type parameter
  * @author Kevin
  * @packageName com.somnus.microservice.commons.core.support
  * @title: BaseService
  * @description: TODO
  * @date 2019/4/16 17:33
- @param <T> the type parameter
  */
 @Slf4j
 public abstract class BaseService<T> implements IService<T> {
@@ -49,7 +48,6 @@ public abstract class BaseService<T> implements IService<T> {
      * Select list.
      *
      * @param wrapper the wrapper
-     *
      * @return the list
      */
     @Override
@@ -61,7 +59,6 @@ public abstract class BaseService<T> implements IService<T> {
      * Select by key t.
      *
      * @param key the key
-     *
      * @return the t
      */
     @Override
@@ -73,7 +70,6 @@ public abstract class BaseService<T> implements IService<T> {
      * Select one t.
      *
      * @param wrapper the wrapper
-     *
      * @return the t
      */
     @Override
@@ -85,11 +81,10 @@ public abstract class BaseService<T> implements IService<T> {
      * Select count int.
      *
      * @param wrapper the wrapper
-     *
      * @return the int
      */
     @Override
-    public int selectCount(Wrapper<T> wrapper) {
+    public long selectCount(Wrapper<T> wrapper) {
         return mapper.selectCount(wrapper);
     }
 
@@ -97,7 +92,6 @@ public abstract class BaseService<T> implements IService<T> {
      * Save int.
      *
      * @param record the record
-     *
      * @return the int
      */
     @Override
@@ -109,7 +103,6 @@ public abstract class BaseService<T> implements IService<T> {
      * Update int.
      *
      * @param entity the entity
-     *
      * @return the int
      */
     @Override
@@ -121,7 +114,6 @@ public abstract class BaseService<T> implements IService<T> {
      * Delete int.
      *
      * @param wrapper the wrapper
-     *
      * @return the int
      */
     @Override
@@ -133,7 +125,6 @@ public abstract class BaseService<T> implements IService<T> {
      * Delete by key int.
      *
      * @param key the key
-     *
      * @return the int
      */
     @Override
@@ -146,7 +137,6 @@ public abstract class BaseService<T> implements IService<T> {
      *
      * @param record  the record
      * @param wrapper the wrapper
-     *
      * @return the int
      */
     @Override

@@ -63,7 +63,7 @@ public interface IService<T> {
      *
      * @return the int
      */
-    int selectCount(Wrapper<T> wrapper);
+    long selectCount(Wrapper<T> wrapper);
 
     /**
      * 保存一个实体, null的属性不会保存, 会使用数据库默认值  @param record the record
