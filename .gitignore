@@ -15,6 +15,10 @@ target/
 *.iml
 *.ipr
 
+### gradle ###
+**/build
+.gradle
+
 ### JRebel ###
 rebel.xml
 

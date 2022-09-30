@@ -1,0 +1,30 @@
+plugins {
+    id("com.somnus.common")
+}
+
+dependencies {
+    api("org.springframework.boot:spring-boot-starter-data-redis-reactive")
+    api("org.springframework.boot:spring-boot-starter-validation")
+    optional("org.springdoc:springdoc-openapi-webflux-ui")
+    optional("org.springframework.boot:spring-boot")
+    api("javax.persistence:javax.persistence-api")
+    optional("org.springframework.boot:spring-boot-starter-web")
+    api("io.jsonwebtoken:jjwt-jackson")
+    api("io.jsonwebtoken:jjwt-impl")
+    optional("com.nimbusds:nimbus-jose-jwt")
+    optional("org.springframework.security:spring-security-rsa")
+    api("org.apache.httpcomponents:fluent-hc")
+    api("org.apache.httpcomponents:httpmime")
+    api("eu.bitwalker:UserAgentUtils")
+    api("org.lionsoul:ip2region")
+    api("org.springframework.boot:spring-boot-starter-logging")
+    api("org.springframework.boot:spring-boot-starter-json")
+    api("commons-codec:commons-codec")
+    api("org.apache.commons:commons-text")
+    api("commons-io:commons-io")
+    api("cn.hutool:hutool-all")
+    api("com.google.guava:guava")
+    api("org.modelmapper:modelmapper")
+    api("com.netease.cloud:nos-sdk-java-publiccloud")
+    api("com.aliyun.oss:aliyun-sdk-oss")
+}
