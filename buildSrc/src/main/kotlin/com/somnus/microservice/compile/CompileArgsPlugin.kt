@@ -1,12 +1,12 @@
 package com.somnus.microservice.compile
 
 import com.somnus.microservice.info.ManifestPlugin
-import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.testing.Test
+import org.slf4j.LoggerFactory
 
 /**
  * <p>
@@ -17,19 +17,21 @@ import org.gradle.api.tasks.testing.Test
  * @date 2022/7/7
  */
 abstract class CompileArgsPlugin : Plugin<Project> {
+
     companion object {
         val COMPILER_ARGS = ArrayList<String>()
         val UTF_8 = "UTF-8"
+        val log = LoggerFactory.getLogger(CompileArgsPlugin::class.java);
 
         init {
-//            COMPILER_ARGS.addAll(
-//                listOf(
-//                    "-Xlint:-options",
-//                    "-Xlint:rawtypes",
-//                    "-Xlint:deprecation",
-//                    "-Xlint:unchecked"
-//                )
-//            )
+            COMPILER_ARGS.addAll(
+                listOf(
+                    "-Xlint:-options",
+                    "-Xlint:rawtypes",
+                    "-Xlint:deprecation",
+                    "-Xlint:unchecked"
+                )
+            )
         }
     }
 

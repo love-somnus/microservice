@@ -1,6 +1,5 @@
 package com.somnus.microservice
 
-import com.somnus.microservice.ModulePlugin
 import com.somnus.microservice.compile.ResourcesPlugin
 import com.somnus.microservice.info.ManifestPlugin
 import com.somnus.microservice.maven.DeployedPlugin
