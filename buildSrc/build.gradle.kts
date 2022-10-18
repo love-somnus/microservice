@@ -9,12 +9,8 @@ repositories {
     maven { setUrl("https://repo.spring.io/release") }
 }
 
-ext {
-    set("springBootVersion", "2.7.4")
-}
-
 dependencies {
-    implementation("org.springframework.boot:spring-boot-gradle-plugin:${project.ext["springBootVersion"]}")
+    implementation("org.springframework.boot:spring-boot-gradle-plugin:${libs.versions.springBoot.get()}")
 }
 
 gradlePlugin {
