@@ -18,12 +18,10 @@ import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;
 import org.springframework.beans.BeansException;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.autoconfigure.proxy.aop
- * @title: AbstractAutoScanProxy
- * @description: TODO
  * @date 2019/6/14 9:50
  */
 @Slf4j
@@ -41,13 +39,13 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     private final Map<String, Boolean> proxyTargetClassMap = new ConcurrentHashMap<>();
 
     // 扫描目录，如果不指定，则扫描全局。两种方式运行结果没区别，只是指定扫描目录加快扫描速度，同时可以减少缓存量
-    private String[] scanPackages;
+    private final String[] scanPackages;
 
     // 通过注解确定代理
-    private ProxyMode proxyMode;
+    private final ProxyMode proxyMode;
 
     // 扫描注解后的处理
-    private ScanMode scanMode;
+    private final ScanMode scanMode;
 
     public AbstractAutoScanProxy() {
         this((String[]) null);
@@ -131,7 +129,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     }
 
     @Override
-    protected Object[] getAdvicesAndAdvisorsForBean(Class<?> beanClass, String beanName, TargetSource targetSource) {
+    protected Object[] getAdvicesAndAdvisorsForBean(@NonNull Class<?> beanClass, @NonNull String beanName, TargetSource targetSource) {
         boolean scanPackagesEnabled = scanPackagesEnabled();
         // scanPackagesEnabled=false，表示“只扫描指定目录”的方式未开启，则不会对扫描到的bean进行代理预先判断
         if (scanPackagesEnabled) {
@@ -164,10 +162,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
             }
 
             // 扫描实现类（如果接口上没找到注解， 就找实现类的注解）
-            Object[] proxyInterceptors = scanAndProxyForTarget(targetClass, beanName, true);
-            if (proxyInterceptors != DO_NOT_PROXY) {
-                return proxyInterceptors;
-            }
+            return scanAndProxyForTarget(targetClass, beanName, true);
         }
 
         return DO_NOT_PROXY;
@@ -209,7 +204,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
                 }
 
                 // 是否需要代理
-                proxyMap.put(targetClassName, Boolean.valueOf(proxyInterceptors != DO_NOT_PROXY));
+                proxyMap.put(targetClassName, proxyInterceptors != DO_NOT_PROXY);
 
                 if (proxyInterceptors != DO_NOT_PROXY) {
                     // 是接口代理还是类代理
@@ -294,7 +289,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     }
 
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessBeforeInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
         Object object = super.postProcessBeforeInitialization(bean, beanName);
 
         // 前置扫描，把Bean名称和Bean对象关联存入Map
@@ -314,7 +309,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     }
 
     @Override
-    protected boolean shouldProxyTargetClass(Class<?> beanClass, String beanName) {
+    protected boolean shouldProxyTargetClass(@NonNull Class<?> beanClass, String beanName) {
         // 设置不同场景下的接口代理，还是类代理
         Boolean proxyTargetClass = proxyTargetClassMap.get(beanName);
         if (proxyTargetClass != null) {

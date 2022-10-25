@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
@@ -117,7 +118,7 @@ public abstract class AbstractRegistrar implements ImportBeanDefinitionRegistrar
     protected ClassPathScanningCandidateComponentProvider getScanner() {
         return new ClassPathScanningCandidateComponentProvider(false, this.environment) {
             @Override
-            protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
+            protected boolean isCandidateComponent(@NonNull AnnotatedBeanDefinition beanDefinition) {
                 if (beanDefinition.getMetadata().isIndependent()) {
                     if (beanDefinition.getMetadata().isInterface() && beanDefinition.getMetadata().getInterfaceNames().length == 1 && Annotation.class.getName().equals(beanDefinition.getMetadata().getInterfaceNames()[0])) {
                         try {
@@ -141,18 +142,25 @@ public abstract class AbstractRegistrar implements ImportBeanDefinitionRegistrar
         Map<String, Object> attributes = importingClassMetadata.getAnnotationAttributes(getEnableAnnotationClass().getCanonicalName());
 
         Set<String> basePackages = new HashSet<>();
-        for (String pkg : (String[]) attributes.get("value")) {
-            if (StringUtils.hasText(pkg)) {
-                basePackages.add(pkg);
+
+        if(Objects.nonNull(attributes) && attributes.containsKey("value")){
+            for (String pkg : (String[]) attributes.get("value")) {
+                if (StringUtils.hasText(pkg)) {
+                    basePackages.add(pkg);
+                }
             }
         }
-        for (String pkg : (String[]) attributes.get("basePackages")) {
-            if (StringUtils.hasText(pkg)) {
-                basePackages.add(pkg);
+        if(Objects.nonNull(attributes) && attributes.containsKey("basePackages")){
+            for (String pkg : (String[]) attributes.get("basePackages")) {
+                if (StringUtils.hasText(pkg)) {
+                    basePackages.add(pkg);
+                }
             }
         }
-        for (Class<?> clazz : (Class<?>[]) attributes.get("basePackageClasses")) {
-            basePackages.add(ClassUtils.getPackageName(clazz));
+        if(Objects.nonNull(attributes) && attributes.containsKey("basePackageClasses")){
+            for (Class<?> clazz : (Class<?>[]) attributes.get("basePackageClasses")) {
+                basePackages.add(ClassUtils.getPackageName(clazz));
+            }
         }
 
         if (basePackages.isEmpty()) {
