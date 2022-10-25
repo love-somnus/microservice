@@ -12,8 +12,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 /**
  * @author kevin.liu
- * @title: DefaultAnalysisEventListener
- * @projectName microservice
  * @description: 默认的 AnalysisEventListener
  * @date 2021/12/9 13:07
  */

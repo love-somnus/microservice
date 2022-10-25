@@ -14,7 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = ExcelConfigProperties.PREFIX)
 public class ExcelConfigProperties {
 
-    public static final String PREFIX = "excel";
+    public static final String PREFIX = "easyexcel";
 
     /**
      * 模板路径

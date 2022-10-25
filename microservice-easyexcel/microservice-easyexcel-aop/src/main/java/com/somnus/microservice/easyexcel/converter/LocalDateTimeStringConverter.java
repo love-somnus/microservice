@@ -13,9 +13,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 /**
  * @author kevin.liu
- * @title: LocalDateTimeStringConverter
- * @projectName microservice
- * @description: TODO
  * @date 2021/12/9 13:27
  */
 public enum LocalDateTimeStringConverter implements Converter<LocalDateTime> {

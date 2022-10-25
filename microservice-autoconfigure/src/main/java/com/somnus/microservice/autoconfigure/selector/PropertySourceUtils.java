@@ -9,9 +9,6 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.PropertySources;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.autoconfigure.selector
- * @title: PropertySourceUtils
- * @description: TODO
  * @date 2019/6/14 10:00
  */
 public abstract class PropertySourceUtils {

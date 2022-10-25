@@ -8,9 +8,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.commons.core.support
- * @title: ThreadLocalContext
- * @description: TODO
  * @date 2020/4/22 15:15
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

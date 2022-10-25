@@ -2,9 +2,6 @@ package com.somnus.microservice.autoconfigure.selector;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.autoconfigure.selector
- * @title: KeyUtil
- * @description: TODO
  * @date 2019/6/14 15:09
  */
 public class KeyUtil {

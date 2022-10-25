@@ -6,9 +6,6 @@ import java.util.List;
 
 /**
  * @author kevin.liu
- * @title: ListAnalysisEventListener
- * @projectName microservice
- * @description: TODO
  * @date 2021/12/9 13:11
  */
 public abstract class ListAnalysisEventListener<T> extends AnalysisEventListener<T> {

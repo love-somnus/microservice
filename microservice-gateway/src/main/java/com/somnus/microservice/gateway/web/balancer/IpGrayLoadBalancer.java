@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -73,7 +74,7 @@ public class IpGrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
         List<ServiceInstance> serviceInstances = instances.stream()
                 .filter(instance -> {
-                    String ips = instance.getMetadata().get("ip");
+                    String ips = Optional.ofNullable(instance.getMetadata().get("ip")).orElse("release");
                     AntPathMatcher antPathMatcher = new AntPathMatcher();
                     return Arrays.stream(ips.split("[|]")).anyMatch(regex -> antPathMatcher.match(regex, ip));
                 })
@@ -85,7 +86,7 @@ public class IpGrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
             //排除被指定了ip的灰度服务
             List<ServiceInstance> availableInstances = instances.stream()
                     .filter(instance -> {
-                        String ips = instance.getMetadata().get("ip");
+                        String ips = Optional.ofNullable(instance.getMetadata().get("ip")).orElse("release");
                         AntPathMatcher antPathMatcher = new AntPathMatcher();
                         return Arrays.stream(ips.split("[|]")).anyMatch(regex -> antPathMatcher.match(regex, "release"));
                     })

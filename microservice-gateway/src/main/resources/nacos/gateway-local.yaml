@@ -96,7 +96,7 @@ spring:
           uri: gray-lb://uac
           filters:
             - AddRequestHeader=version,release
-            - StripPrefix=1
+            - RewritePath=/uac/(?<segment>.*),/$\{segment}
           predicates:
             - Method=GET,POST
             - Path=/uac/**
@@ -105,7 +105,7 @@ spring:
           uri: gray-lb://cpc
           filters:
             - AddRequestHeader=version,release
-            - StripPrefix=1
+            - RewritePath=/cpc/(?<segment>.*),/$\{segment}
           predicates:
             - Method=GET,POST
             - Path=/cpc/**
@@ -118,7 +118,7 @@ spring:
           uri: gray-lb://oauth
           filters:
             - AddRequestHeader=version,release
-            - StripPrefix=1
+            - RewritePath=/oauth/(?<segment>.*),/$\{segment}
           predicates:
             - Method=GET,POST
             - Path=/oauth/**
@@ -127,7 +127,7 @@ spring:
           uri: gray-lb://oauth2
           filters:
             - AddRequestHeader=version,release
-            - StripPrefix=1
+            - RewritePath=/oauth2/(?<segment>.*),/$\{segment}
           predicates:
             - Method=GET,POST
             - Path=/oauth2/**

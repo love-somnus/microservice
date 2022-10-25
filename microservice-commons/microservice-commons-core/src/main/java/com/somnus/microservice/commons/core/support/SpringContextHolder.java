@@ -5,6 +5,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,7 +28,7 @@ public class SpringContextHolder implements ApplicationContextAware {
      * @throws BeansException the beans exception
      */
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         if(SpringContextHolder.applicationContext == null) {
             SpringContextHolder.applicationContext = applicationContext;
         }

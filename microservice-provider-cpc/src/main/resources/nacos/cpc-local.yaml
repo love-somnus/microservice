@@ -113,3 +113,19 @@ elastic:
     zk:
       namespace: elasticjob
       serverLists: 192.168.95.33:2181,192.168.95.33:2182,192.168.95.33:2183
+
+xxl:
+  job:
+    enable: true
+    accessToken: default_token
+    admin: #如调度中心集群部署存在多个地址则用逗号分隔。执行器将会使用该地址进行"执行器心跳注册"和"任务结果回调"；为空则关闭自动注册；
+      addresses: http://192.168.95.13/xxl-job-admin
+      username: admin
+      password: 123456
+    executor:
+      address: ''
+      appname: cloud-flower
+      ip: ''
+      logpath: /home/www/logs/flower/xxl-job
+      logretentiondays: 1
+      port: 9001

@@ -5,9 +5,6 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.MutablePropertyValues;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.autoconfigure.registrar
- * @title: AbstractRegistrarInterceptor
- * @description: TODO
  * @date 2019/6/14 9:58
  */
 public abstract class AbstractRegistrarInterceptor extends AbstractInterceptor {

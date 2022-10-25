@@ -96,7 +96,7 @@ spring:
           uri: gray-lb://uac
           filters:
             - AddRequestHeader=version,release
-            - StripPrefix=1
+            - RewritePath=/uac/(?<segment>.*),/$\{segment}
           predicates:
             - Method=GET,POST
             - Path=/uac/**
@@ -105,7 +105,7 @@ spring:
           uri: gray-lb://cpc
           filters:
             - AddRequestHeader=version,release
-            - StripPrefix=1
+            - RewritePath=/cpc/(?<segment>.*),/$\{segment}
           predicates:
             - Method=GET,POST
             - Path=/cpc/**
@@ -118,7 +118,7 @@ spring:
           uri: gray-lb://oauth
           filters:
             - AddRequestHeader=version,release
-            - StripPrefix=1
+            - RewritePath=/oauth/(?<segment>.*),/$\{segment}
           predicates:
             - Method=GET,POST
             - Path=/oauth/**
@@ -127,23 +127,17 @@ spring:
           uri: gray-lb://oauth2
           filters:
             - AddRequestHeader=version,release
-            - StripPrefix=1
+            - RewritePath=/oauth2/(?<segment>.*),/$\{segment}
           predicates:
             - Method=GET,POST
             - Path=/oauth2/**
   redis:
     timeout: 5000
-    cluster:
-      max-redirects: 5
-      nodes:
-        - 192.168.95.31:6379
-        - 192.168.95.32:6379
-        - 192.168.95.33:6379
-        - 192.168.95.36:6379
-        - 192.168.95.37:6379
-        - 192.168.95.38:6379
     database: 0
-    lettuce:
+    host: 192.168.95.31
+    port: 6379
+    password: 123456
+    jedis:
       pool:
         max-active: 8 #连接池最大连接数（使用负值表示没有限制） 默认 8
         max-idle: 8 #连接池中的最大空闲连接 默认 8

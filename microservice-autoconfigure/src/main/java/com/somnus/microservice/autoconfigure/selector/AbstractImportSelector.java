@@ -13,27 +13,26 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.autoconfigure.selector
- * @title: AbstractImportSelector
- * @description: TODO
  * @date 2019/6/14 9:59
  */
 @Slf4j
 public abstract class AbstractImportSelector<T> implements DeferredImportSelector, BeanClassLoaderAware, EnvironmentAware {
 
-    private ClassLoader     beanClassLoader;
-    private Class<T>        annotationClass;
-    private Environment     environment;
+    private ClassLoader             beanClassLoader;
+    private final Class<T>          annotationClass;
+    private Environment             environment;
 
     protected AbstractImportSelector() {
         this.annotationClass = (Class<T>) GenericTypeResolver.resolveTypeArgument(this.getClass(), AbstractImportSelector.class);
     }
 
+    @NonNull
     @Override
-    public String[] selectImports(AnnotationMetadata metadata) {
+    public String[] selectImports(@NonNull AnnotationMetadata metadata) {
         if (!isEnabled()) {
             return new String[0];
         }
@@ -54,7 +53,7 @@ public abstract class AbstractImportSelector<T> implements DeferredImportSelecto
             log.warn("More than one implementation " + "of @" + getSimpleName() + " (now relying on @Conditionals to pick one): " + factories);
         }
 
-        return factories.toArray(new String[factories.size()]);
+        return factories.toArray(new String[0]);
     }
 
     protected boolean hasDefaultFactory() {
@@ -74,12 +73,12 @@ public abstract class AbstractImportSelector<T> implements DeferredImportSelecto
     }
 
     @Override
-    public void setEnvironment(Environment environment) {
+    public void setEnvironment(@NonNull Environment environment) {
         this.environment = environment;
     }
 
     @Override
-    public void setBeanClassLoader(ClassLoader classLoader) {
+    public void setBeanClassLoader(@NonNull ClassLoader classLoader) {
         this.beanClassLoader = classLoader;
     }
 

@@ -12,7 +12,7 @@ import org.springframework.lang.NonNull;
  * @date 2022/9/14 13:16
  */
 @RequiredArgsConstructor
-public class ExcelCondition  implements Condition {
+public class ExcelCondition implements Condition {
 
     private final String key;
 

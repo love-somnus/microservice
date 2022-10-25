@@ -2,8 +2,6 @@ package com.somnus.microservice.easyexcel.head;
 
 /**
  * @author kevin.liu
- * @title: HeadGenerator
- * @projectName microservice
  * @description: Excel头生成器，用于自定义生成头部信息
  * @date 2021/12/9 13:31
  */

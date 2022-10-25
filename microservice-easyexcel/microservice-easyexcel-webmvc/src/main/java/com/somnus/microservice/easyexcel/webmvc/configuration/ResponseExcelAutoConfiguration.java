@@ -1,13 +1,10 @@
 package com.somnus.microservice.easyexcel.webmvc.configuration;
 
-import com.somnus.microservice.easyexcel.properties.ExcelConfigProperties;
 import com.somnus.microservice.easyexcel.webmvc.resolver.RequestExcelArgumentResolver;
 import com.somnus.microservice.easyexcel.webmvc.resolver.ResponseExcelReturnValueHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
@@ -20,14 +17,10 @@ import java.util.Objects;
 /**
  * @author kevin.liu
  * @title: ResponseExcelAutoConfiguration
- * @projectName microservice
- * @description: TODO
  * @date 2021/12/9 13:17
  */
+@Configuration
 @RequiredArgsConstructor
-@Import(ExcelHandlerConfiguration.class)
-@Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(ExcelConfigProperties.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ResponseExcelAutoConfiguration {
 

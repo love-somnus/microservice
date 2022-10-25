@@ -28,6 +28,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author kevin.liu
@@ -43,13 +44,13 @@ public class JwtTokenAuthenticationConverter implements Converter<Jwt, AbstractA
 
     private String principalClaimName = JwtClaimNames.SUB;
 
-    private OAuth2TokenValidator<Jwt> jwtValidator = JwtValidators.createDefault();
+    private final OAuth2TokenValidator<Jwt> jwtValidator = JwtValidators.createDefault();
 
     @Setter
     private RedisTemplate<String, Object> redisTemplate;
 
-    private String buildKey(String type, String id) {
-        return String.format("%s:%s:%s", OAuth2ParameterNames.TOKEN, type, id);
+    private String buildKey(String appAbbr, String id) {
+        return String.format("%s:%s:%s:%s", OAuth2ParameterNames.TOKEN, OAuth2ParameterNames.ACCESS_TOKEN, appAbbr, id);
     }
 
     @Override
@@ -58,17 +59,15 @@ public class JwtTokenAuthenticationConverter implements Converter<Jwt, AbstractA
 
         Map<String, Object> map = jwt.getClaimAsMap("user_info");
 
-        OAuth2Authorization authorization = (OAuth2Authorization) redisTemplate.opsForValue().get(buildKey(OAuth2TokenType.ACCESS_TOKEN.getValue(), map.get("username").toString()));
+        OAuth2Authorization authorization = (OAuth2Authorization) redisTemplate.opsForValue().get(buildKey(map.get("appAbbr").toString(), map.get("uId").toString()));
 
         Collection<GrantedAuthority> authorities = extractAuthorities(jwt);
 
         String principalClaimValue = jwt.getClaimAsString(this.principalClaimName);
 
-        log.info("redis access-token isExpired :{} value :{}", authorization.getAccessToken().isExpired(), authorization.getAccessToken().getToken().getTokenValue());
-
-        if(! jwt.getTokenValue().equals(authorization.getAccessToken().getToken().getTokenValue())){
+        if(! jwt.getTokenValue().equals(Objects.requireNonNull(authorization).getAccessToken().getToken().getTokenValue())){
             String tokenValue = JwksUtil.generateToken(Collections.singletonMap("sub", principalClaimValue),"jwt", 8L, ChronoUnit.HOURS);
-            Jwt oldJwt = Jwt.withTokenValue(tokenValue).expiresAt(Instant.now().minusSeconds(1*60*60)).header("alg","RS256").claim("calim", "calim").build();
+            Jwt oldJwt = Jwt.withTokenValue(tokenValue).expiresAt(Instant.now().minusSeconds(60 * 60)).header("alg","RS256").claim("calim", "calim").build();
             return new JwtAuthenticationToken(validateJwt(oldJwt), authorities, principalClaimValue);
         }
 
@@ -76,7 +75,6 @@ public class JwtTokenAuthenticationConverter implements Converter<Jwt, AbstractA
 
     }
 
-    @Deprecated
     protected Collection<GrantedAuthority> extractAuthorities(Jwt jwt) {
         return this.jwtGrantedAuthoritiesConverter.convert(jwt);
     }
@@ -87,6 +85,7 @@ public class JwtTokenAuthenticationConverter implements Converter<Jwt, AbstractA
         this.jwtGrantedAuthoritiesConverter = jwtGrantedAuthoritiesConverter;
     }
 
+    @Deprecated
     public void setPrincipalClaimName(String principalClaimName) {
         Assert.hasText(principalClaimName, "principalClaimName cannot be empty");
         this.principalClaimName = principalClaimName;

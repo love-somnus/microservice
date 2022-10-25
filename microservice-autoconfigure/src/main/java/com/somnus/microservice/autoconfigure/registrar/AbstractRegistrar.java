@@ -26,6 +26,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.lang.NonNull;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 /**
@@ -46,22 +47,22 @@ public abstract class AbstractRegistrar implements ImportBeanDefinitionRegistrar
     private Environment     environment;
 
     @Override
-    public void setResourceLoader(ResourceLoader resourceLoader) {
+    public void setResourceLoader(@NonNull ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
     @Override
-    public void setBeanClassLoader(ClassLoader classLoader) {
+    public void setBeanClassLoader(@NonNull ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
     @Override
-    public void setEnvironment(Environment environment) {
+    public void setEnvironment(@NonNull Environment environment) {
         this.environment = environment;
     }
 
     @Override
-    public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry) {
+    public void registerBeanDefinitions(@NonNull AnnotationMetadata metadata, @NonNull BeanDefinitionRegistry registry) {
         registerAnnotations(metadata, registry);
     }
 
@@ -150,7 +151,7 @@ public abstract class AbstractRegistrar implements ImportBeanDefinitionRegistrar
                 basePackages.add(pkg);
             }
         }
-        for (Class<?> clazz : (Class[]) attributes.get("basePackageClasses")) {
+        for (Class<?> clazz : (Class<?>[]) attributes.get("basePackageClasses")) {
             basePackages.add(ClassUtils.getPackageName(clazz));
         }
 

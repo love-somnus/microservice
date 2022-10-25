@@ -2,32 +2,28 @@ package com.somnus.microservice.autoconfigure.proxy.aop;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 import com.somnus.microservice.autoconfigure.proxy.constant.ProxyConstant;
-import com.somnus.microservice.autoconfigure.proxy.exception.ProxyException;
 import com.somnus.microservice.autoconfigure.proxy.util.ProxyUtil;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.core.ParameterNameDiscoverer;
 import org.springframework.core.StandardReflectionParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.autoconfigure.proxy.aop
- * @title: AbstractInterceptor
- * @description: TODO
  * @date 2019/6/14 9:52
  */
 public abstract class AbstractInterceptor implements MethodInterceptor {
-    // 通过标准反射来获取变量名，适用于接口代理
-    // 只作用在Java8下，同时需要在IDE和Maven里设置"-parameters"的Compiler Argument。参考如下：
-    // 1)Eclipse加"-parameters"参数：https://www.concretepage.com/java/jdk-8/java-8-reflection-access-to-parameter-names-of-method-and-constructor-with-maven-gradle-and-eclipse-using-parameters-compiler-argument
-    // 2)Idea加"-parameters"参数：http://blog.csdn.net/royal_lr/article/details/52279993
+
+    private final ExpressionParser parser = new SpelExpressionParser();
+
     private final ParameterNameDiscoverer standardReflectionParameterNameDiscoverer = new StandardReflectionParameterNameDiscoverer();
 
     // 通过解析字节码文件的本地变量表来获取的，只支持CGLIG(ASM library)，适用于类代理
@@ -96,11 +92,14 @@ public abstract class AbstractInterceptor implements MethodInterceptor {
         return ProxyUtil.toString(parameterTypes);
     }
 
-    // 获取变量名
+    /**
+     * 获取变量名
+     */
     public String[] getMethodParameterNames(MethodInvocation invocation) {
         Method method = getMethod(invocation);
 
         boolean isCglibAopProxy = isCglibAopProxy(invocation);
+
         if (isCglibAopProxy) {
             return localVariableTableParameterNameDiscoverer.getParameterNames(method);
         } else {
@@ -116,66 +115,22 @@ public abstract class AbstractInterceptor implements MethodInterceptor {
         return invocation.getArguments();
     }
 
-    // 获取参数注解对应的参数值。例如方法doXX(@MyAnnotation String id)，根据MyAnnotation注解和String类型，获得id的值
-    // 但下面的方法只适用于同时满足如下三个条件的场景（更多场景请自行扩展）：
-    // 1. 方法注解parameterAnnotationType，只能放在若干个参数中的一个
-    // 2. 方法注解parameterAnnotationType，对应的参数类型必须匹配给定的类型parameterType
-    // 3. 方法注解parameterAnnotationType，对应的参数值不能为null
-    @SuppressWarnings("unchecked")
-    public <T> T getValueByParameterAnnotation(MethodInvocation invocation, Class<?> parameterAnnotationType, Class<T> parameterType) {
-        String methodName = getMethodName(invocation);
-        String parameterTypesValue = getMethodParameterTypesValue(invocation);
-        Annotation[][] parameterAnnotations = getMethodParameterAnnotations(invocation);
-        Object[] arguments = getArguments(invocation);
-
-        if (ArrayUtils.isEmpty(parameterAnnotations)) {
-            throw new ProxyException("Not found any annotations");
-        }
-
-        T value = null;
-        int annotationIndex = 0;
-        int valueIndex = 0;
-        for (Annotation[] parameterAnnotation : parameterAnnotations) {
-            for (Annotation annotation : parameterAnnotation) {
-                if (annotation.annotationType() == parameterAnnotationType) {
-                    // 方法注解在方法上只允许有一个（通过判断value的重复赋值）
-                    if (value != null) {
-                        throw new ProxyException("Only 1 annotation=" + parameterAnnotationType.getName() + " can be added in method [name=" + methodName + ", parameterTypes=" + parameterTypesValue + "]");
-                    }
-
-                    Object object = arguments[valueIndex];
-                    // 方法注解的值不允许为空
-                    if (object == null) {
-                        throw new ProxyException("Value for annotation=" + parameterAnnotationType.getName() + " in method [name=" + methodName + ", parameterTypes=" + parameterTypesValue + "] is null");
-                    }
-
-                    // 方法注解的类型不匹配
-                    if (object.getClass() != parameterType) {
-                        throw new ProxyException("Type for annotation=" + parameterAnnotationType.getName() + " in method [name=" + methodName + ", parameterTypes=" + parameterTypesValue + "] must be " + parameterType.getName());
-                    }
-
-                    value = (T) object;
-
-                    annotationIndex++;
-                }
-            }
-            valueIndex++;
-        }
-
-        if (annotationIndex == 0) {
-            return null;
-            // throw new MatrixException("Not found annotation=" + parameterAnnotationType.getName() + " in method [name=" + methodName + ", parameterTypes=" + parameterTypesValue + "]");
-        }
-
-        return value;
-    }
-
-    public String getSpelKey(MethodInvocation invocation, String key) {
+    /**
+     * 解析SpEL表达式
+     * 非模板表达式: #username
+     * 模板表达式:"#{#username}"
+     *
+     * @param invocation  方法
+     * @param condition   表达式
+     * @param returnClass 返回类型
+     * @param template    是否启用模板
+     * @param <T>         类型
+     * @return T
+     */
+    private <T> T parse(MethodInvocation invocation, String condition, Class<T> returnClass, boolean template) {
         String[] parameterNames = getMethodParameterNames(invocation);
-        Object[] arguments = getArguments(invocation);
 
-        // 使用SPEL进行Key的解析
-        ExpressionParser parser = new SpelExpressionParser();
+        Object[] arguments = getArguments(invocation);
 
         // SPEL上下文
         EvaluationContext context = new StandardEvaluationContext();
@@ -184,7 +139,22 @@ public abstract class AbstractInterceptor implements MethodInterceptor {
         for (int i = 0; i < parameterNames.length; i++) {
             context.setVariable(parameterNames[i], arguments[i]);
         }
-
-        return parser.parseExpression(key).getValue(context, String.class);
+        if (template) {
+            return parser.parseExpression(condition, ParserContext.TEMPLATE_EXPRESSION).getValue(context, returnClass);
+        } else {
+            return parser.parseExpression(condition).getValue(context, returnClass);
+        }
     }
+
+    public String getSpelKey(MethodInvocation invocation, String condition) {
+
+        String spelKey = parse(invocation, condition, String.class, true);
+
+        if(Objects.equals(spelKey, condition)){
+            return parse(invocation, condition, String.class, false);
+        }
+
+        return spelKey;
+    }
+
 }

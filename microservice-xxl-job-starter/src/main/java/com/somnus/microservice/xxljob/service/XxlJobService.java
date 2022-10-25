@@ -1,5 +1,6 @@
 package com.somnus.microservice.xxljob.service;
 
+import com.somnus.microservice.xxljob.constants.Wrapper;
 import com.somnus.microservice.xxljob.response.JobInfoPageResult;
 import com.somnus.microservice.xxljob.request.DefaultXxlJobInfoRequiredParam;
 import com.somnus.microservice.xxljob.request.XxlJobInfo;
@@ -54,7 +55,7 @@ public interface XxlJobService {
      *
      * @param jobInfo 任务信息
      */
-    void update(XxlJobInfo jobInfo);
+    Wrapper<String> update(XxlJobInfo jobInfo);
 
     /**
      * start job
@@ -68,20 +69,20 @@ public interface XxlJobService {
      *
      * @param id 任务id
      */
-    void stop(int id);
+    Wrapper<String> stop(int id);
 
     /**
      * remove job
      * 	 *
      * @param id 任务id
      */
-    void remove(int id);
+    Wrapper<String> remove(int id);
 
     /**
      * 取消任务(先暂停，后删除)
      * @param id
      */
-    void cancle(int id);
+    Wrapper<String> cancel(int id);
 
     /**
      * 注册任务(先添加，后启动)

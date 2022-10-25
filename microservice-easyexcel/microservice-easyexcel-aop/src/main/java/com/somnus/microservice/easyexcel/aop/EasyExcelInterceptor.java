@@ -13,13 +13,10 @@ import java.time.LocalDateTime;
 
 /**
  * @author kevin.liu
- * @title: DynamicNameAspect
- * @projectName microservice
- * @description: TODO
  * @date 2021/12/9 13:19
  */
 @Slf4j
-public class EasyexcelInterceptor extends AbstractInterceptor {
+public class EasyExcelInterceptor extends AbstractInterceptor {
 
     public static final String EXCEL_NAME_KEY = "__EXCEL_NAME_KEY__";
 

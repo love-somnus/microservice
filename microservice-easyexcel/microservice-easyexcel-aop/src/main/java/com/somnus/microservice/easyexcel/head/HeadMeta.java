@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Set;
 /**
  * @author kevin.liu
- * @title: HeadMeta
- * @projectName microservice
- * @description: TODO
  * @date 2021/12/9 13:30
  */
 @Data

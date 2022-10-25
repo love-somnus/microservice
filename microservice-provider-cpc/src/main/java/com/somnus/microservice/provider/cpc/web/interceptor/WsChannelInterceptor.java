@@ -68,7 +68,7 @@ public class WsChannelInterceptor implements ChannelInterceptor {
 
             return MessageBuilder.createMessage(new byte[0], accessor.getMessageHeaders());
         } else if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
-            log.info("preSend: {} close connect", accessor.getUser());
+            log.info("preSend: {} close connect", JacksonUtil.toJson(accessor));
         }
         return message;
     }

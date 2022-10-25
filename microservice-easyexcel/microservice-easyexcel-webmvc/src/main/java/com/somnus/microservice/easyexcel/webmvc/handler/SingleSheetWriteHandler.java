@@ -29,7 +29,7 @@ public class SingleSheetWriteHandler extends AbstractSheetWriteHandler {
     /**
      * obj 是List 且list不为空同时list中的元素不是是List 才返回true
      * @param obj 返回对象
-     * @return
+     * @return 布尔值
      */
     @Override
     public boolean support(ResponseExcel obj) {
@@ -39,7 +39,7 @@ public class SingleSheetWriteHandler extends AbstractSheetWriteHandler {
     @Override
     @SneakyThrows
     public void write(Object obj, HttpServletResponse response, ResponseExcel responseExcel) {
-        List list = (List) obj;
+        List<?> list = (List<?>) obj;
         ExcelWriter excelWriter = getExcelWriter(response, responseExcel);
 
         // 有模板则不指定sheet名

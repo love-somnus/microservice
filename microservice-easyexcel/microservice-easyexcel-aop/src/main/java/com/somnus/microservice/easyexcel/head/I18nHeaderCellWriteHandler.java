@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author kevin.liu
- * @title: I18nHeaderCellWriteHandler
- * @projectName microservice
  * @description: 对表头进行国际化处理
  * @date 2021/12/9 13:29
  */

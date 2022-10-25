@@ -10,9 +10,6 @@ import java.util.regex.Pattern;
 import org.springframework.util.StringUtils;
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.autoconfigure.selector
- * @title: RelaxedNames
- * @description: TODO
  * @date 2019/6/14 10:00
  */
 public final class RelaxedNames implements Iterable<String> {
