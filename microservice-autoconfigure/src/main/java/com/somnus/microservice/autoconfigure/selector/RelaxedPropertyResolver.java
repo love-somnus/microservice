@@ -3,6 +3,7 @@ package com.somnus.microservice.autoconfigure.selector;
 import java.util.Map;
 import java.util.Objects;
 
+import lombok.SneakyThrows;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
@@ -47,7 +48,7 @@ public class RelaxedPropertyResolver implements PropertyResolver {
     @Nullable
     @Override
     public String getProperty(@NonNull String key) {
-        return getProperty(key, String.class, null);
+        return getProperty(key, String.class, "");
     }
 
     @NonNull
@@ -58,8 +59,9 @@ public class RelaxedPropertyResolver implements PropertyResolver {
 
     @Nullable
     @Override
+    @SneakyThrows
     public <T> T getProperty(@NonNull String key, @NonNull Class<T> targetType) {
-        return getProperty(key, targetType, null);
+        return getProperty(key, targetType, targetType.newInstance());
     }
 
     @NonNull
