@@ -52,6 +52,7 @@ public class Objects extends org.springframework.util.ObjectUtils {
      * @since 2.1
      * @throws IllegalArgumentException if the array types are incompatible
      */
+    @SafeVarargs
     public static <T> T[] addAll(final T[] array1, final T... array2) {
         if (array1 == null) {
             return clone(array2);
