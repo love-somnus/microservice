@@ -6,6 +6,7 @@ import com.somnus.microservice.limit.aop.LimitInterceptor;
 import com.somnus.microservice.limit.constant.LimitConstant;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  * @description: TODO
  * @date 2019/7/10 16:44
  */
-@Configuration
+@ConditionalOnProperty(prefix = "limit",value = "enabled",havingValue = "true")
 public class LimitAopConfiguration {
 
     @Value("${" + LimitConstant.LIMIT_SCAN_PACKAGES + ":}")

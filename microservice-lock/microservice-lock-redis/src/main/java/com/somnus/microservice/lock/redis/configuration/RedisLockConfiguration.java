@@ -3,13 +3,15 @@ package com.somnus.microservice.lock.redis.configuration;
 import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
 import com.somnus.microservice.lock.LockDelegate;
 import com.somnus.microservice.lock.LockExecutor;
+import com.somnus.microservice.lock.configuration.LockAopConfiguration;
 import com.somnus.microservice.lock.redis.condition.RedisLockCondition;
 import com.somnus.microservice.lock.redis.impl.RedisLockDelegateImpl;
 import com.somnus.microservice.lock.redis.impl.RedisLockExecutorImpl;
 import org.redisson.api.RLock;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Kevin
@@ -18,7 +20,8 @@ import org.springframework.context.annotation.Configuration;
  * @description: TODO
  * @date 2019/6/14 15:42
  */
-@Configuration
+@AutoConfigureBefore(LockAopConfiguration.class)
+@ConditionalOnProperty(prefix = "lock",value = "enabled",havingValue = "true")
 public class RedisLockConfiguration {
 
     @Bean

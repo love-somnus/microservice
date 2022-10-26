@@ -1,15 +1,17 @@
 package com.somnus.microservice.cache.redis.configuration;
 
 import com.somnus.microservice.cache.CacheDelegate;
+import com.somnus.microservice.cache.configuration.CacheAopConfiguration;
 import com.somnus.microservice.cache.redis.condition.RedisCacheCondition;
 import com.somnus.microservice.cache.redis.impl.RedisCacheDelegateImpl;
 import com.somnus.microservice.commons.redis.handler.RedisHandler;
 import com.somnus.microservice.commons.redis.handler.RedisHandlerImpl;
 import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -17,7 +19,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  * @author Kevin
  * @date 2019/7/5 15:59
  */
-@Configuration
+@AutoConfigureBefore(CacheAopConfiguration.class)
+@ConditionalOnProperty(prefix = "cache",value = "enabled",havingValue = "true")
 public class RedisCacheConfiguration {
 
     @Bean

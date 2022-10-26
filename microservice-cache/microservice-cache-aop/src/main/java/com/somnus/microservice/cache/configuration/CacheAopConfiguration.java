@@ -5,14 +5,15 @@ import com.somnus.microservice.cache.aop.CacheAutoScanProxy;
 import com.somnus.microservice.cache.aop.CacheInterceptor;
 import com.somnus.microservice.cache.constant.CacheConstant;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Kevin
  * @date 2019/7/5 15:39
  */
-@Configuration
+@ConditionalOnProperty(prefix = "cache",value = "enabled",havingValue = "true")
 public class CacheAopConfiguration {
 
     @Value("${" + CacheConstant.CACHE_SCAN_PACKAGES + ":}")
@@ -24,6 +25,7 @@ public class CacheAopConfiguration {
     }
 
     @Bean
+    @ConditionalOnBean(CacheDelegate.class)
     public CacheInterceptor cacheInterceptor(CacheDelegate delegate) {
         return new CacheInterceptor(delegate);
     }

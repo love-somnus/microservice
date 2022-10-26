@@ -1,5 +1,6 @@
 package com.somnus.microservice.limit.redisson.impl;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
 import com.somnus.microservice.limit.LimitExecutor;
@@ -7,7 +8,6 @@ import com.somnus.microservice.limit.constant.LimitConstant;
 import com.somnus.microservice.limit.exception.LimitException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RRateLimiter;
 import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
@@ -36,11 +36,11 @@ public class RedissonLimitExecutorImpl implements LimitExecutor {
 
     @Override
     public boolean tryAccess(String name, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new LimitException("Name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new LimitException("Key is null or empty");
         }
 
@@ -51,7 +51,7 @@ public class RedissonLimitExecutorImpl implements LimitExecutor {
 
     @Override
     public boolean tryAccess(String compositeKey, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
-        if (StringUtils.isEmpty(compositeKey)) {
+        if (Objects.isEmpty(compositeKey)) {
             throw new LimitException("Composite key is null or empty");
         }
 

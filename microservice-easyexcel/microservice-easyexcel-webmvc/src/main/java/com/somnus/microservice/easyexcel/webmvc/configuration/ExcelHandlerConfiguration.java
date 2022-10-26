@@ -1,7 +1,6 @@
 package com.somnus.microservice.easyexcel.webmvc.configuration;
 
 import com.alibaba.excel.converters.Converter;
-import com.somnus.microservice.easyexcel.webmvc.condition.EasyExcelCondition;
 import com.somnus.microservice.easyexcel.webmvc.enhance.DefaultWriterBuilderEnhancer;
 import com.somnus.microservice.easyexcel.webmvc.enhance.WriterBuilderEnhancer;
 import com.somnus.microservice.easyexcel.webmvc.handler.MultiSheetWriteHandler;
@@ -12,14 +11,14 @@ import com.somnus.microservice.easyexcel.properties.ExcelConfigProperties;
 import com.somnus.microservice.easyexcel.webmvc.resolver.ResponseExcelReturnValueHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
@@ -27,9 +26,10 @@ import java.util.List;
  * @author kevin.liu
  * @date 2021/12/9 13:16
  */
-@Configuration
 @RequiredArgsConstructor
+@AutoConfigureBefore(ResponseExcelAutoConfiguration.class)
 @EnableConfigurationProperties(ExcelConfigProperties.class)
+@ConditionalOnProperty(prefix = "easyexcel",value = "enabled",havingValue = "true")
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class ExcelHandlerConfiguration {
 
@@ -52,7 +52,6 @@ public class ExcelHandlerConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @Conditional(EasyExcelCondition.class)
     public SingleSheetWriteHandler singleSheetWriteHandler(I18nHeaderCellWriteHandler i18nHeaderCellWriteHandler) {
         return new SingleSheetWriteHandler(configProperties, converterProvider, writerBuilderEnhancer(), i18nHeaderCellWriteHandler);
     }
@@ -62,7 +61,6 @@ public class ExcelHandlerConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @Conditional(EasyExcelCondition.class)
     public MultiSheetWriteHandler manySheetWriteHandler(I18nHeaderCellWriteHandler i18nHeaderCellWriteHandler) {
         return new MultiSheetWriteHandler(configProperties, converterProvider, writerBuilderEnhancer(), i18nHeaderCellWriteHandler);
     }
@@ -74,7 +72,6 @@ public class ExcelHandlerConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @Conditional(EasyExcelCondition.class)
     public ResponseExcelReturnValueHandler responseExcelReturnValueHandler(List<SheetWriteHandler> sheetWriteHandlerList) {
         return new ResponseExcelReturnValueHandler(sheetWriteHandlerList);
     }

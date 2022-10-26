@@ -22,8 +22,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class WebSocketConnectListener implements ApplicationListener<SessionConnectEvent> {
 
-    private final StringRedisTemplate stringRedisTemplate;
-
     @Override
     public void onApplicationEvent(SessionConnectEvent event) {
 
@@ -33,14 +31,9 @@ public class WebSocketConnectListener implements ApplicationListener<SessionConn
 
             String uid = accessor.getFirstNativeHeader("uid");
 
-            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-
-            executor.schedule(() -> template.convertAndSend("fanout.banner.exchange", "ws.banner" + uid, new Object()), 1, TimeUnit.SECONDS);
-
             log.info("websocket online: uid {} session {}", uid, accessor.getSessionId());
         });
     }
 
-    private final RabbitTemplate template;
 }
 

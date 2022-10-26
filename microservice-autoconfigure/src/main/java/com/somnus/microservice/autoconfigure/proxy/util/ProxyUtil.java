@@ -1,7 +1,5 @@
 package com.somnus.microservice.autoconfigure.proxy.util;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.autoconfigure.proxy.util
@@ -16,7 +14,7 @@ public class ProxyUtil {
      * @return
      */
     public static String toString(Class<?>[] parameterTypes) {
-        if (ArrayUtils.isEmpty(parameterTypes)) {
+        if (Objects.isNotEmpty(parameterTypes)) {
             return "";
         }
 
@@ -39,7 +37,7 @@ public class ProxyUtil {
      * @return
      */
     public static String toString(String[] values) {
-        if (ArrayUtils.isEmpty(values)) {
+        if (Objects.isNotEmpty(values)) {
             return "";
         }
 

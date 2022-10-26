@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import com.somnus.microservice.autoconfigure.proxy.aop.AbstractInterceptor;
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.lock.LockDelegate;
 import com.somnus.microservice.lock.annotation.Lock;
@@ -15,8 +16,8 @@ import com.somnus.microservice.lock.exception.LockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 
 /**
  * @author Kevin
@@ -38,7 +39,7 @@ public class LockInterceptor extends AbstractInterceptor {
     private Boolean frequentLogPrint;
 
     @Override
-    public Object invoke(MethodInvocation invocation) throws Throwable {
+    public Object invoke(@NonNull MethodInvocation invocation) throws Throwable {
         Lock lockAnnotation = getLockAnnotation(invocation);
         if (lockAnnotation != null) {
             String name = lockAnnotation.name();
@@ -113,15 +114,15 @@ public class LockInterceptor extends AbstractInterceptor {
 
         String lockTypeValue = lockType.getValue();
 
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new LockException("Annotation [" + lockTypeValue + "]'s name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new LockException("Annotation [" + lockTypeValue + "]'s key is null or empty");
         }
 
-        String spelKey = spelKey = getSpelKey(invocation, key);
+        String spelKey = getSpelKey(invocation, key);
         String compositeKey = KeyUtil.getCompositeKey(prefix, name, spelKey);
         String proxyType = getProxyType(invocation);
         String proxiedClassName = getProxiedClassName(invocation);

@@ -1,7 +1,7 @@
 package com.somnus.microservice.lock.condition;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
@@ -25,6 +25,6 @@ public class LockCondition implements Condition {
     public boolean matches(ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {
         String beanName = context.getEnvironment().getProperty(key);
 
-        return StringUtils.equals(beanName, value);
+        return Objects.equals(beanName, value);
     }
 }

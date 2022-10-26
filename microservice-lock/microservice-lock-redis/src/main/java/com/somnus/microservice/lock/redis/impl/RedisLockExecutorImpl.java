@@ -1,5 +1,6 @@
 package com.somnus.microservice.lock.redis.impl;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.proxy.util.Pair;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
@@ -11,7 +12,6 @@ import com.somnus.microservice.lock.redis.exception.RedisLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RReadWriteLock;
 import org.redisson.api.RedissonClient;
@@ -59,11 +59,11 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
 
     @Override
     public boolean tryLock(LockType lockType, String name, String key, long leaseTime, long waitTime, boolean async, boolean fair) {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new RedisLockException("Name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new RedisLockException("Key is null or empty");
         }
 
@@ -74,7 +74,7 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
 
     @Override
     public boolean tryLock(LockType lockType, String compositeKey, long leaseTime, long waitTime, boolean async, boolean fair){
-        if (StringUtils.isEmpty(compositeKey)) {
+        if (Objects.isEmpty(compositeKey)) {
             throw new RedisLockException("Composite key is null or empty");
         }
 
@@ -93,11 +93,11 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
 
     @Override
     public void lock(LockType lockType, String name, String key, boolean async, boolean fair) {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new RedisLockException("Name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new RedisLockException("Key is null or empty");
         }
 
@@ -108,7 +108,7 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
 
     @Override
     public void lock(LockType lockType, String compositeKey, boolean async, boolean fair) {
-        if (StringUtils.isEmpty(compositeKey)) {
+        if (Objects.isEmpty(compositeKey)) {
             throw new RedisLockException("Composite key is null or empty");
         }
 
@@ -124,7 +124,6 @@ public class RedisLockExecutorImpl implements LockExecutor<RLock> {
             invokeLock(lockType, compositeKey,fair);
         }
     }
-
 
     @Override
     @SneakyThrows(Exception.class)

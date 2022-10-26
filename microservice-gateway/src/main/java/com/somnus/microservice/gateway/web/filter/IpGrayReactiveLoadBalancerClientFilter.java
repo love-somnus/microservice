@@ -52,7 +52,7 @@ public class IpGrayReactiveLoadBalancerClientFilter implements GlobalFilter, Ord
 
         String schemePrefix = exchange.getAttribute(ServerWebExchangeUtils.GATEWAY_SCHEME_PREFIX_ATTR);
 
-        /* 通过匹配配置中的url前缀是否含有gray-lb执行以下过滤器，如果前缀中不含有gray-lb则走默认的负载均衡 */
+        /* 通过匹配配置中的url前缀是否含有gray-lb执行以下过滤器，如果前缀中不含有gray-lb则走默认的负载均衡 actuator/gateway/routes*/
         if (url != null && ("gray-lb".equals(url.getScheme()) || "gray-lb".equals(schemePrefix))) {
             ServerWebExchangeUtils.addOriginalRequestUrl(exchange, url);
 

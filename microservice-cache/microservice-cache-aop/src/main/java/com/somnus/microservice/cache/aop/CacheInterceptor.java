@@ -1,6 +1,7 @@
 package com.somnus.microservice.cache.aop;
 
 import com.somnus.microservice.autoconfigure.proxy.aop.AbstractInterceptor;
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.cache.CacheDelegate;
 import com.somnus.microservice.cache.annotation.CacheEvict;
@@ -11,7 +12,6 @@ import com.somnus.microservice.cache.exception.CacheException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 
@@ -94,11 +94,11 @@ public class CacheInterceptor extends AbstractInterceptor {
     }
 
     private Object invokeCacheable(MethodInvocation invocation, String name, String key, long expire) throws Throwable {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new CacheException("Annotation [Cacheable]'s name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new CacheException("Annotation [Cacheable]'s key is null or empty");
         }
 
@@ -116,11 +116,11 @@ public class CacheInterceptor extends AbstractInterceptor {
     }
 
     private Object invokeCachePut(MethodInvocation invocation, String name, String key, long expire) throws Throwable {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new CacheException("Annotation [CachePut]'s name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new CacheException("Annotation [CachePut]'s key is null or empty");
         }
 
@@ -138,11 +138,11 @@ public class CacheInterceptor extends AbstractInterceptor {
     }
 
     private Object invokeCacheEvict(MethodInvocation invocation, String name, String key, boolean allEntries, boolean beforeInvocation) throws Throwable {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new CacheException("Annotation [CacheEvict]'s name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new CacheException("Annotation [CacheEvict]'s key is null or empty");
         }
 

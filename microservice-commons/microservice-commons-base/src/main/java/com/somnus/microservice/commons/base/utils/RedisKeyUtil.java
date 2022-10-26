@@ -3,7 +3,6 @@ package com.somnus.microservice.commons.base.utils;
 import com.google.common.base.Preconditions;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
 
@@ -39,7 +38,7 @@ public class RedisKeyUtil {
 	 * @return
 	 */
 	public static String getOrderStatisticsKey(String alias) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(alias), "参数不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(alias), "参数不能为空");
 		return ORDER_STATISTICS + ":" + alias;
 	}
 
@@ -51,7 +50,7 @@ public class RedisKeyUtil {
 	 * @return
 	 */
 	public static String getResetPwdTokenKey(String mobile) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(mobile), "参数不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(mobile), "参数不能为空");
 		return RESET_PWD_TOKEN_KEY + ":" + mobile;
 	}
 
@@ -62,7 +61,7 @@ public class RedisKeyUtil {
 	 * @return
 	 */
 	public static String getVoteIpKey(String ipAddr) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(ipAddr), "参数不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(ipAddr), "参数不能为空");
 		return VOTE_IP + ":" + ipAddr;
 	}
 
@@ -73,7 +72,7 @@ public class RedisKeyUtil {
 	 * @return
 	 */
 	public static String getOrderRestrictIpKey(String ipAddr) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(ipAddr), "参数不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(ipAddr), "参数不能为空");
 		return ORDER_RESTRICT_IP + ":" + ipAddr;
 	}
 
@@ -85,7 +84,7 @@ public class RedisKeyUtil {
 	 * @return
 	 */
 	public static String getEsMemberModifyCountKey(String mobile) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(mobile), "参数不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(mobile), "参数不能为空");
 		return ES_MEMBER_MODIFY_COUNT + ":" + mobile;
 
 	}
@@ -98,14 +97,14 @@ public class RedisKeyUtil {
 	 * @return the reset pwd token key
 	 */
 	public static String getEsAnchorModifyCountKey(String modifyCount) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(modifyCount), "参数不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(modifyCount), "参数不能为空");
 		return ES_ANCHOR_MODIFY_COUNT + ":" + modifyCount;
 
 	}
 
 	public static String getSendEmailCodeKey(String game, String email) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(game), "游戏不能为空");
-		Preconditions.checkArgument(StringUtils.isNotEmpty(email), "email不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(game), "游戏不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(email), "email不能为空");
 		return MessageFormat.format(SEND_EMAIL_CODE, game, email);
 	}
 
@@ -117,7 +116,7 @@ public class RedisKeyUtil {
 	 * @return the active user key
 	 */
 	public static String getActiveUserKey(String activeToken) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(activeToken), "参数不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(activeToken), "参数不能为空");
 		return ACTIVE_USER + ":" + activeToken;
 
 	}
@@ -131,7 +130,7 @@ public class RedisKeyUtil {
 	 * @return the send sms count key
 	 */
 	public static String getSendSmsCountKey(String ipAddr, String type) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(ipAddr), "请不要篡改IP地址");
+		Preconditions.checkArgument(Objects.isNotEmpty(ipAddr), "请不要篡改IP地址");
 		return SEND_SMS_COUNT + ":" + type + ":" + ipAddr;
 
 	}
@@ -145,7 +144,7 @@ public class RedisKeyUtil {
 	 * @return the send sms rate key
 	 */
 	public static String getSendSmsRateKey(String ipAddr) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(ipAddr), "请不要篡改IP地址");
+		Preconditions.checkArgument(Objects.isNotEmpty(ipAddr), "请不要篡改IP地址");
 		return SEND_SMS_COUNT + ":" + ipAddr;
 
 	}
@@ -158,28 +157,16 @@ public class RedisKeyUtil {
 	 * @return the send sms rate key
 	 */
 	public static String getSendSmsCodeKey(String game, String mobile) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(game), "游戏不能为空");
-		Preconditions.checkArgument(StringUtils.isNotEmpty(mobile), "手机号不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(game), "游戏不能为空");
+		Preconditions.checkArgument(Objects.isNotEmpty(mobile), "手机号不能为空");
 		return MessageFormat.format(SEND_SMS_CODE, game, mobile);
 	}
 
 	public static String getAccessTokenKey(String token) {
-		Preconditions.checkArgument(StringUtils.isNotEmpty(token), "非法请求token参数不存在");
+		Preconditions.checkArgument(Objects.isNotEmpty(token), "非法请求token参数不存在");
 		return ACCESS_TOKEN + ":" + token;
 	}
 
-	public static String createMqKey(String topic, String tag, String refNo, String body) {
-		String temp = refNo;
-		Preconditions.checkArgument(StringUtils.isNotEmpty(topic), "topic is null");
-		Preconditions.checkArgument(StringUtils.isNotEmpty(tag), "tag is null");
-		Preconditions.checkArgument(StringUtils.isNotEmpty(refNo), "refNo is null");
-		Preconditions.checkArgument(StringUtils.isNotEmpty(body), "body is null");
-
-		if (refNo.length() > REF_NO_MAX_LENGTH) {
-			temp = StringUtils.substring(refNo, 0, REF_NO_MAX_LENGTH) + "...";
-		}
-		return topic + "_" + tag + "_" + temp + "-" + body.hashCode();
-	}
 
 	public static String getFileSizeKey() {
 		return UPLOAD_FILE_SIZE;
