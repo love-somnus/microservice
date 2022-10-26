@@ -13,31 +13,26 @@ import java.util.stream.Collectors;
 public class ProxyUtil {
     /**
      * 转换Class数组成字符串格式
+     *
      * @param parameterTypes
      * @return
      */
     public static String toString(Class<?>[] parameterTypes) {
-        if (Objects.isEmpty(parameterTypes)) {
-            return "";
-        }
-
-        return Arrays.stream(parameterTypes)
-                .map(Class::getCanonicalName)
-                .collect(Collectors.joining(","))
-                .trim();
+        return Objects.isEmpty(parameterTypes) ? "" :
+                Arrays.stream(parameterTypes)
+                        .map(Class::getCanonicalName)
+                        .collect(Collectors.joining(","))
+                        .trim();
     }
 
     /**
      * 转换String数组成字符串格式
+     *
      * @param values
      * @return
      */
     public static String toString(String[] values) {
-        if (Objects.isEmpty(values)) {
-            return "";
-        }
-
-        return String.join(",", values).trim();
+        return Objects.isEmpty(values) ? "" : String.join(",", values).trim();
     }
 
     public static void main(String[] args) {
