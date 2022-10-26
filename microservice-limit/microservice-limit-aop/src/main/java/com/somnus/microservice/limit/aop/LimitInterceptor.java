@@ -1,6 +1,7 @@
 package com.somnus.microservice.limit.aop;
 
 import com.somnus.microservice.autoconfigure.proxy.aop.AbstractInterceptor;
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.commons.base.utils.RequestUtil;
 import com.somnus.microservice.limit.LimitDelegate;
@@ -10,10 +11,9 @@ import com.somnus.microservice.limit.exception.LimitException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +37,7 @@ public class LimitInterceptor extends AbstractInterceptor {
     private Boolean frequentLogPrint;
 
     @Override
-    public Object invoke(@Nonnull MethodInvocation invocation) throws Throwable {
+    public Object invoke(@NonNull MethodInvocation invocation) throws Throwable {
         Limit limitAnnotation = getLimitAnnotation(invocation);
         if (limitAnnotation != null) {
             String name = limitAnnotation.name();
@@ -63,11 +63,11 @@ public class LimitInterceptor extends AbstractInterceptor {
     }
 
     private Object invoke(MethodInvocation invocation, String name, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit, boolean restrictIp) throws Throwable {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new LimitException("Annotation [Limit]'s name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new LimitException("Annotation [Limit]'s key is null or empty");
         }
 

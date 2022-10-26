@@ -5,9 +5,12 @@ import com.somnus.microservice.commons.base.enums.ErrorCodeEnum;
 import com.somnus.microservice.commons.base.exception.BusinessException;
 import com.somnus.microservice.commons.base.utils.JacksonUtil;
 import com.somnus.microservice.commons.base.wrapper.Wrapper;
+import com.somnus.microservice.commons.core.support.Objects;
 import com.somnus.microservice.commons.core.support.Optionally;
 import com.somnus.microservice.commons.core.support.SpringContextHolder;
 import com.somnus.microservice.provider.cpc.model.response.UserProfileResponse;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.fluent.Request;
@@ -22,13 +25,14 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.security.Principal;
 
 /**
  * @author kevin.liu
  * @date 2022/9/28 19:42
  */
 @Slf4j
+@RequiredArgsConstructor
 public class WsChannelInterceptor implements ChannelInterceptor {
 
     /**
@@ -47,7 +51,7 @@ public class WsChannelInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
 
         /* 判断是否首次连接请求, 如果已经连接, 返回message */
-        if (StompCommand.CONNECT.equals(Objects.requireNonNull(accessor).getCommand())) {
+        if (Objects.isNotEmpty(accessor) && StompCommand.CONNECT.equals(accessor.getCommand())) {
             String authorization = accessor.getFirstNativeHeader("Authorization");
 
             log.info( "authorization:[{}]>>>>>>>>>>开始连接服务器。。。。。。", authorization);
@@ -62,12 +66,12 @@ public class WsChannelInterceptor implements ChannelInterceptor {
             Optionally.ofNullable(wrapper).trueThrow(v -> wrapper.error(), () -> new BusinessException(ErrorCodeEnum.EN10019));
 
             // 设置当前访问器的认证用户
-            accessor.setUser(()-> wrapper.getResult().getUid());
+            accessor.setUser(new WsPrincipal(wrapper.getResult().getUid(), wrapper.getResult()));
 
             accessor.addNativeHeader("uid", wrapper.getResult().getUid());
 
             return MessageBuilder.createMessage(new byte[0], accessor.getMessageHeaders());
-        } else if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
+        } else if (Objects.isNotEmpty(accessor) && StompCommand.DISCONNECT.equals(accessor.getCommand())) {
             log.info("preSend: {} close connect", JacksonUtil.toJson(accessor));
         }
         return message;
@@ -84,10 +88,19 @@ public class WsChannelInterceptor implements ChannelInterceptor {
     public void afterSendCompletion(@NonNull Message<?> message, @NonNull MessageChannel channel, boolean sent, Exception ex) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message,StompHeaderAccessor.class);
         /* 判断是否首次连接请求, 如果已经连接, 返回message */
-        if (StompCommand.ACK.equals(Objects.requireNonNull(accessor).getCommand())) {
+        if (Objects.isNotEmpty(accessor) && StompCommand.ACK.equals(accessor.getCommand())) {
             String id = accessor.getFirstNativeHeader("id");
             String messageId = accessor.getFirstNativeHeader("message-id");
             log.info("消息id-->[{}]-->message-id-->[{}]已被接收消费", id, messageId);
         }
+    }
+
+    @Data
+    @RequiredArgsConstructor
+    public static class WsPrincipal implements Principal {
+
+        private final String name;
+
+        private final UserProfileResponse response;
     }
 }

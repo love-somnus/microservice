@@ -2,12 +2,14 @@ package com.somnus.microservice.lock.local.configuration;
 
 import com.somnus.microservice.lock.LockDelegate;
 import com.somnus.microservice.lock.LockExecutor;
+import com.somnus.microservice.lock.configuration.LockAopConfiguration;
 import com.somnus.microservice.lock.local.condition.LocalLockCondition;
 import com.somnus.microservice.lock.local.impl.LocalLockDelegateImpl;
 import com.somnus.microservice.lock.local.impl.LocalLockExecutorImpl;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.locks.Lock;
 
@@ -18,7 +20,8 @@ import java.util.concurrent.locks.Lock;
  * @description: TODO
  * @date 2019/6/14 18:03
  */
-@Configuration
+@AutoConfigureBefore(LockAopConfiguration.class)
+@ConditionalOnProperty(prefix = "lock",value = "enabled",havingValue = "true")
 public class LocalLockConfiguration {
 
     @Bean

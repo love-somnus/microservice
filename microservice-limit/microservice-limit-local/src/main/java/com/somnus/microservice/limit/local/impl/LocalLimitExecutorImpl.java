@@ -1,11 +1,11 @@
 package com.somnus.microservice.limit.local.impl;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.limit.LimitExecutor;
 import com.somnus.microservice.limit.constant.LimitConstant;
 import com.somnus.microservice.limit.exception.LimitException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
@@ -34,18 +34,18 @@ public class LocalLimitExecutorImpl implements LimitExecutor {
     @Value("${" + LimitConstant.FREQUENT_LOG_PRINT + ":true}")
     private Boolean frequentLogPrint;
 
-    private volatile Map<String, AtomicInteger> counterMap = new ConcurrentHashMap<String, AtomicInteger>();
-    private volatile Map<String, AtomicBoolean> statusMap = new ConcurrentHashMap<String, AtomicBoolean>();
-    private volatile Map<String, Lock> lockMap = new ConcurrentHashMap<String, Lock>();
-    private volatile Map<String, Timer> timerMap = new ConcurrentHashMap<String, Timer>();
+    private final Map<String, AtomicInteger> counterMap = new ConcurrentHashMap<>();
+    private final Map<String, AtomicBoolean> statusMap = new ConcurrentHashMap<>();
+    private final Map<String, Lock> lockMap = new ConcurrentHashMap<>();
+    private final Map<String, Timer> timerMap = new ConcurrentHashMap<>();
 
     @Override
     public boolean tryAccess(String name, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new LimitException("Name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new LimitException("Key is null or empty");
         }
 
@@ -56,7 +56,7 @@ public class LocalLimitExecutorImpl implements LimitExecutor {
 
     @Override
     public boolean tryAccess(String compositeKey, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
-        if (StringUtils.isEmpty(compositeKey)) {
+        if (Objects.isEmpty(compositeKey)) {
             throw new LimitException("Composite key is null or empty");
         }
 

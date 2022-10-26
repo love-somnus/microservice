@@ -5,8 +5,8 @@ import com.somnus.microservice.lock.aop.LockAutoScanProxy;
 import com.somnus.microservice.lock.aop.LockInterceptor;
 import com.somnus.microservice.lock.constant.LockConstant;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Kevin
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @description: TODO
  * @date 2019/6/14 14:57
  */
-@Configuration
+@ConditionalOnProperty(prefix = "lock",value = "enabled",havingValue = "true")
 public class LockAopConfiguration {
 
     @Value("${" + LockConstant.LOCK_SCAN_PACKAGES + ":}")

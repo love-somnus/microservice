@@ -3,12 +3,14 @@ package com.somnus.microservice.limit.redisson.configuration;
 import com.somnus.microservice.commons.redisson.handler.RedissonHandler;
 import com.somnus.microservice.limit.LimitDelegate;
 import com.somnus.microservice.limit.LimitExecutor;
+import com.somnus.microservice.limit.configuration.LimitAopConfiguration;
 import com.somnus.microservice.limit.redisson.condition.RedissonLimitCondition;
 import com.somnus.microservice.limit.redisson.impl.RedissonLimitDelegateImpl;
 import com.somnus.microservice.limit.redisson.impl.RedissonLimitExecutorImpl;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Kevin
@@ -17,7 +19,8 @@ import org.springframework.context.annotation.Configuration;
  * @description: TODO
  * @date 2019/7/10 17:06
  */
-@Configuration
+@AutoConfigureBefore(LimitAopConfiguration.class)
+@ConditionalOnProperty(prefix = "limit",value = "enabled",havingValue = "true")
 public class RedissonLimitConfiguration {
 
     @Bean

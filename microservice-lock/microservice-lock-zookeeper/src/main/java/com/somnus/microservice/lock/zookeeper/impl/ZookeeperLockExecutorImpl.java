@@ -1,5 +1,6 @@
 package com.somnus.microservice.lock.zookeeper.impl;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.proxy.util.Pair;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.commons.base.constant.GlobalConstant;
@@ -11,7 +12,6 @@ import com.somnus.microservice.lock.zookeeper.exception.ZookeeperLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.apache.curator.framework.recipes.locks.InterProcessReadWriteLock;
@@ -59,11 +59,11 @@ public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex
 
     @Override
     public boolean tryLock(LockType lockType, String name, String key, long leaseTime, long waitTime, boolean async, boolean fair){
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new ZookeeperLockException("Name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new ZookeeperLockException("Key is null or empty");
         }
 
@@ -75,7 +75,7 @@ public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex
     @Override
     @SneakyThrows(Exception.class)
     public boolean tryLock(LockType lockType, String compositeKey, long leaseTime, long waitTime, boolean async, boolean fair) {
-        if (StringUtils.isEmpty(compositeKey)) {
+        if (Objects.isEmpty(compositeKey)) {
             throw new ZookeeperLockException("Composite key is null or empty");
         }
 
@@ -96,11 +96,11 @@ public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex
 
     @Override
     public void lock(LockType lockType, String name, String key, boolean async, boolean fair) {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new ZookeeperLockException("Name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new ZookeeperLockException("Key is null or empty");
         }
 
@@ -112,7 +112,7 @@ public class ZookeeperLockExecutorImpl implements LockExecutor<InterProcessMutex
     @Override
     @SneakyThrows(Exception.class)
     public void lock(LockType lockType, String compositeKey, boolean async, boolean fair) {
-        if (StringUtils.isEmpty(compositeKey)) {
+        if (Objects.isEmpty(compositeKey)) {
             throw new ZookeeperLockException("Composite key is null or empty");
         }
 

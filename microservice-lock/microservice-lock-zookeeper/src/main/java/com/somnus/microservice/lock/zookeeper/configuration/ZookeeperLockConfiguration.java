@@ -5,14 +5,17 @@ import com.somnus.microservice.commons.zookeeper.handler.CuratorHandler;
 import com.somnus.microservice.commons.zookeeper.handler.CuratorHandlerImpl;
 import com.somnus.microservice.lock.LockDelegate;
 import com.somnus.microservice.lock.LockExecutor;
+import com.somnus.microservice.lock.configuration.LockAopConfiguration;
 import com.somnus.microservice.lock.zookeeper.condition.ZookeeperLockCondition;
 import com.somnus.microservice.lock.zookeeper.impl.ZookeeperLockDelegateImpl;
 import com.somnus.microservice.lock.zookeeper.impl.ZookeeperLockExecutorImpl;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
+
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.lock.zookeeper.configuration
@@ -20,7 +23,8 @@ import org.springframework.context.annotation.Configuration;
  * @description: TODO
  * @date 2019/7/30 14:43
  */
-@Configuration
+@AutoConfigureBefore(LockAopConfiguration.class)
+@ConditionalOnProperty(prefix = "lock",value = "enable",havingValue = "true")
 public class ZookeeperLockConfiguration {
 
     @Value("${" + GlobalConstant.PREFIX + "}")

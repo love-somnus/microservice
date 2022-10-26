@@ -3,17 +3,15 @@ package com.somnus.microservice.autoconfigure.proxy.aop;
 import com.somnus.microservice.autoconfigure.proxy.constant.ProxyConstant;
 import com.somnus.microservice.autoconfigure.proxy.mode.ProxyMode;
 import com.somnus.microservice.autoconfigure.proxy.mode.ScanMode;
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.proxy.util.ProxyUtil;
 import lombok.extern.slf4j.Slf4j;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.aopalliance.intercept.MethodInterceptor;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.TargetSource;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator;
@@ -76,7 +74,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     }
 
     public AbstractAutoScanProxy(String scanPackages, ProxyMode proxyMode, ScanMode scanMode, boolean exposeProxy) {
-        this(StringUtils.isNotEmpty(scanPackages) ? scanPackages.trim().split(ProxyConstant.SEPARATOR) : null, proxyMode, scanMode, exposeProxy);
+        this(Objects.isNotEmpty(scanPackages) ? scanPackages.trim().split(ProxyConstant.SEPARATOR) : null, proxyMode, scanMode, exposeProxy);
     }
 
     public AbstractAutoScanProxy(String[] scanPackages, ProxyMode proxyMode, ScanMode scanMode, boolean exposeProxy) {
@@ -86,7 +84,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
         this.scanMode = scanMode;
 
         StringBuilder builder = new StringBuilder();
-        if (ArrayUtils.isNotEmpty(scanPackages)) {
+        if (Objects.isNotEmpty(scanPackages)) {
             for (int i = 0; i < scanPackages.length; i++) {
                 String scanPackage = scanPackages[i];
                 builder.append(scanPackage);
@@ -97,7 +95,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
         }
         log.info("------------- Matrix Aop Information ------------");
         log.info("Auto scan proxy class is {}", getClass().getCanonicalName());
-        log.info("Scan packages is {}", ArrayUtils.isNotEmpty(scanPackages) ? builder.toString() : "not set");
+        log.info("Scan packages is {}", Objects.isNotEmpty(scanPackages) ? builder.toString() : "not set");
         log.info("Proxy mode is {}", proxyMode);
         log.info("Scan mode is {}", scanMode);
         log.info("Expose proxy is {}", exposeProxy);
@@ -108,14 +106,14 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
         Class<? extends MethodInterceptor>[] commonInterceptorClasses = getCommonInterceptors();
         String[] commonInterceptorNames = getCommonInterceptorNames();
 
-        String[] interceptorNames = ArrayUtils.addAll(commonInterceptorNames, convertInterceptorNames(commonInterceptorClasses));
-        if (ArrayUtils.isNotEmpty(interceptorNames)) {
+        String[] interceptorNames = Objects.addAll(commonInterceptorNames, convertInterceptorNames(commonInterceptorClasses));
+        if (Objects.isNotEmpty(interceptorNames)) {
             setInterceptorNames(interceptorNames);
         }
     }
 
     private String[] convertInterceptorNames(Class<? extends MethodInterceptor>[] commonInterceptorClasses) {
-        if (ArrayUtils.isNotEmpty(commonInterceptorClasses)) {
+        if (Objects.isNotEmpty(commonInterceptorClasses)) {
             String[] interceptorNames = new String[commonInterceptorClasses.length];
             for (int i = 0; i < commonInterceptorClasses.length; i++) {
                 Class<? extends MethodInterceptor> interceptorClass = commonInterceptorClasses[i];
@@ -172,7 +170,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
         String targetClassName = targetClass.getCanonicalName();
         Object[] interceptors = getInterceptors(targetClass);
         // 排除java开头的接口，例如java.io.Serializable，java.io.Closeable等，执行不被代理
-        if (StringUtils.isNotEmpty(targetClassName) && !targetClassName.startsWith("java.")) {
+        if (Objects.isNotEmpty(targetClassName) && !targetClassName.startsWith("java.")) {
             // 避免对同一个接口或者类扫描多次
             Boolean proxied = proxyMap.get(targetClassName);
             if (proxied != null) {
@@ -212,16 +210,16 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
 
                     log.info("------------ Matrix Proxy Information -----------");
                     Class<? extends MethodInterceptor>[] commonInterceptorClasses = getCommonInterceptors();
-                    if (ArrayUtils.isNotEmpty(commonInterceptorClasses)) {
+                    if (Objects.isNotEmpty(commonInterceptorClasses)) {
                         log.info("Class [{}] is proxied by common interceptor classes [{}], proxyTargetClass={}", targetClassName, ProxyUtil.toString(commonInterceptorClasses), proxyTargetClass);
                     }
 
                     String[] commonInterceptorNames = getCommonInterceptorNames();
-                    if (ArrayUtils.isNotEmpty(commonInterceptorNames)) {
+                    if (Objects.isNotEmpty(commonInterceptorNames)) {
                         log.info("Class [{}] is proxied by common interceptor beans [{}], proxyTargetClass={}", targetClassName, ProxyUtil.toString(commonInterceptorNames), proxyTargetClass);
                     }
 
-                    if (proxyInterceptors != PROXY_WITHOUT_ADDITIONAL_INTERCEPTORS && ArrayUtils.isNotEmpty(proxyInterceptors)) {
+                    if (proxyInterceptors != PROXY_WITHOUT_ADDITIONAL_INTERCEPTORS && Objects.isNotEmpty(proxyInterceptors)) {
                         log.info("Class [{}] is proxied by additional interceptors [{}], proxyTargetClass={}", targetClassName, proxyInterceptors, proxyTargetClass);
                     }
                     log.info("-------------------------------------------------");
@@ -238,7 +236,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
         // 判断目标注解是否标注在接口名或者类名上
         boolean proxied = false;
         Class<? extends Annotation>[] classAnnotations = getClassAnnotations();
-        if (ArrayUtils.isNotEmpty(classAnnotations)) {
+        if (Objects.isNotEmpty(classAnnotations)) {
             for (Class<? extends Annotation> classAnnotation : classAnnotations) {
                 if (targetClass.isAnnotationPresent(classAnnotation)) {
                     // 是否执行“注解扫描后处理”
@@ -264,7 +262,7 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
         // 判断目标注解是否标注在方法上
         boolean proxied = false;
         Class<? extends Annotation>[] methodAnnotations = getMethodAnnotations();
-        if (ArrayUtils.isNotEmpty(methodAnnotations)) {
+        if (Objects.isNotEmpty(methodAnnotations)) {
             for (Method method : targetClass.getDeclaredMethods()) {
                 for (Class<? extends Annotation> methodAnnotation : methodAnnotations) {
                     if (method.isAnnotationPresent(methodAnnotation)) {
@@ -321,16 +319,16 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
 
     // 是否是“只扫描指定目录”的方式
     protected boolean scanPackagesEnabled() {
-        return ArrayUtils.isNotEmpty(scanPackages);
+        return Objects.isNotEmpty(scanPackages);
     }
 
     // 是否指定的beanClass包含在扫描目录中
     protected boolean scanPackagesContained(Class<?> beanClass) {
         for (String scanPackage : scanPackages) {
-            if (StringUtils.isNotEmpty(scanPackage)) {
+            if (Objects.isNotEmpty(scanPackage)) {
                 // beanClassName有时候会为null...
                 String beanClassName = beanClass.getCanonicalName();
-                if (StringUtils.isNotEmpty(beanClassName)) {
+                if (Objects.isNotEmpty(beanClassName)) {
                     if (beanClassName.startsWith(scanPackage) || beanClassName.contains(ProxyConstant.JDK_PROXY_NAME_KEY) || beanClassName.contains(ProxyConstant.CGLIB_PROXY_NAME_KEY)) {
                         return true;
                     }
@@ -349,13 +347,13 @@ public abstract class AbstractAutoScanProxy extends AbstractAutoProxyCreator {
     // 3. 如果从全局拦截类列表中没取到，就不代理（DO_NOT_PROXY）
     protected Object[] getInterceptors(Class<?> targetClass) {
         Object[] interceptors = getAdditionalInterceptors(targetClass);
-        if (ArrayUtils.isNotEmpty(interceptors)) {
+        if (Objects.isNotEmpty(interceptors)) {
             return interceptors;
         }
 
         Class<? extends MethodInterceptor>[] commonInterceptorClasses = getCommonInterceptors();
         String[] commonInterceptorNames = getCommonInterceptorNames();
-        if (ArrayUtils.isNotEmpty(commonInterceptorClasses) || ArrayUtils.isNotEmpty(commonInterceptorNames)) {
+        if (Objects.isNotEmpty(commonInterceptorClasses) || Objects.isNotEmpty(commonInterceptorNames)) {
             return PROXY_WITHOUT_ADDITIONAL_INTERCEPTORS;
         }
 

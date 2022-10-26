@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.proxy.util.Pair;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.lock.LockExecutor;
@@ -18,7 +19,6 @@ import com.somnus.microservice.lock.local.exception.LocalLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 /**
  * @author Kevin
@@ -39,18 +39,18 @@ public class LocalLockExecutorImpl implements LockExecutor<Lock> {
     private static final ThreadLocal<Pair<String, Lock>> threadLocal = new ThreadLocal<>();
 
     /** 可重入锁可重复使用 */
-    private volatile Map<String, Lock> lockMap = new ConcurrentHashMap<>();
+    private final Map<String, Lock> lockMap = new ConcurrentHashMap<>();
 
     /** 读写锁 */
     private final Map<String, ReadWriteLock> readWriteLockMap = new ConcurrentHashMap<>();
 
     @Override
     public boolean tryLock(LockType lockType, String name, String key, long leaseTime, long waitTime, boolean async, boolean fair){
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new LocalLockException("Name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new LocalLockException("Key is null or empty");
         }
 
@@ -62,7 +62,7 @@ public class LocalLockExecutorImpl implements LockExecutor<Lock> {
     @Override
     @SneakyThrows(Exception.class)
     public boolean tryLock(LockType lockType, String compositeKey, long leaseTime, long waitTime, boolean async, boolean fair){
-        if (StringUtils.isEmpty(compositeKey)) {
+        if (Objects.isEmpty(compositeKey)) {
             throw new LocalLockException("Composite key is null or empty");
         }
 
@@ -79,11 +79,11 @@ public class LocalLockExecutorImpl implements LockExecutor<Lock> {
 
     @Override
     public void lock(LockType lockType, String name, String key, boolean async, boolean fair) {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new LocalLockException("Name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new LocalLockException("Key is null or empty");
         }
 
@@ -94,7 +94,7 @@ public class LocalLockExecutorImpl implements LockExecutor<Lock> {
 
     @Override
     public void lock(LockType lockType, String compositeKey, boolean async, boolean fair) {
-        if (StringUtils.isEmpty(compositeKey)) {
+        if (Objects.isEmpty(compositeKey)) {
             throw new LocalLockException("Composite key is null or empty");
         }
 

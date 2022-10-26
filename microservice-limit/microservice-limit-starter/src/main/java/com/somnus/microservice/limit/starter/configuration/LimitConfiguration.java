@@ -4,7 +4,6 @@ import com.somnus.microservice.limit.configuration.LimitAopConfiguration;
 import com.somnus.microservice.limit.local.configuration.LocalLimitConfiguration;
 import com.somnus.microservice.limit.redis.configuration.RedisLimitConfiguration;
 import com.somnus.microservice.limit.redisson.configuration.RedissonLimitConfiguration;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Import;
  * @description: TODO
  * @date 2019/7/10 17:14
  */
-@Configuration
 @Import({ LimitAopConfiguration.class, RedisLimitConfiguration.class, RedissonLimitConfiguration.class, LocalLimitConfiguration.class })
 public class LimitConfiguration {
 

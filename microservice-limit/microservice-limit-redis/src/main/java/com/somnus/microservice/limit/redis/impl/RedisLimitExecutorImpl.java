@@ -1,5 +1,6 @@
 package com.somnus.microservice.limit.redis.impl;
 
+import com.somnus.microservice.autoconfigure.proxy.util.Objects;
 import com.somnus.microservice.autoconfigure.selector.KeyUtil;
 import com.somnus.microservice.commons.redis.handler.RedisHandler;
 import com.somnus.microservice.limit.LimitExecutor;
@@ -7,7 +8,6 @@ import com.somnus.microservice.limit.constant.LimitConstant;
 import com.somnus.microservice.limit.exception.LimitException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,7 +16,6 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,11 +48,11 @@ public class RedisLimitExecutorImpl implements LimitExecutor {
 
     @Override
     public boolean tryAccess(String name, String key, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
-        if (StringUtils.isEmpty(name)) {
+        if (Objects.isEmpty(name)) {
             throw new LimitException("Name is null or empty");
         }
 
-        if (StringUtils.isEmpty(key)) {
+        if (Objects.isEmpty(key)) {
             throw new LimitException("Key is null or empty");
         }
 
@@ -64,7 +63,7 @@ public class RedisLimitExecutorImpl implements LimitExecutor {
 
     @Override
     public boolean tryAccess(String compositeKey, int rate, int rateInterval, TimeUnit rateIntervalUnit) {
-        if (StringUtils.isEmpty(compositeKey)) {
+        if (Objects.isEmpty(compositeKey)) {
             throw new LimitException("Composite key is null or empty");
         }
 
@@ -84,7 +83,7 @@ public class RedisLimitExecutorImpl implements LimitExecutor {
                 rate,
                 1);
 
-        return Objects.requireNonNull(result).get(0) >= result.get(1);
+        return result.get(0) >= result.get(1);
     }
 
     /*@Override

@@ -36,6 +36,35 @@ spring:
       transport:
         port: 8719
         dashboard: 192.168.95.41:8080
+  rabbitmq:
+    addresses: 192.168.95.36:5672,192.168.95.37:5672,192.168.95.38:5672
+    host: 192.168.95.28
+    username: admin
+    password: passw0rd
+    virtual-host: /
+    template:
+      retry:
+        enabled: true
+      mandatory: true
+    publisher-confirms: true # 开启发送确认
+    publisher-returns: true  # 开启发送失败退回
+    listener:
+      type: simple
+      direct:
+        acknowledge-mode: manual # 开启手动ACK
+        prefetch: 200
+        retry:
+          enabled: true
+      simple:
+        acknowledge-mode: manual # 开启手动ACK
+        prefetch: 200
+        retry:
+          enabled: true
+          max-attempts: 5
+          max-interval: 10000   # 重试最大间隔时间
+          initial-interval: 10000  # 重试初始间隔时间
+          multiplier: 2 # 间隔时间乘子，间隔时间*乘子=下一次的间隔时间，最大不能超过设置的最大间隔时间
+        default-requeue-rejected: false #true表示会重新放回队列，为false表示不会放回队列
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver

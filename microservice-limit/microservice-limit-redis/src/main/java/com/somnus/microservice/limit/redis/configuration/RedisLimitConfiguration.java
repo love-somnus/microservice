@@ -4,14 +4,15 @@ import com.somnus.microservice.commons.redis.handler.RedisHandler;
 import com.somnus.microservice.commons.redis.handler.RedisHandlerImpl;
 import com.somnus.microservice.limit.LimitDelegate;
 import com.somnus.microservice.limit.LimitExecutor;
+import com.somnus.microservice.limit.configuration.LimitAopConfiguration;
 import com.somnus.microservice.limit.redis.condition.RedisLimitCondition;
 import com.somnus.microservice.limit.redis.impl.RedisLimitDelegateImpl;
 import com.somnus.microservice.limit.redis.impl.RedisLimitExecutorImpl;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
@@ -22,7 +23,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  * @description: TODO
  * @date 2019/7/10 17:06
  */
-@Configuration
+@AutoConfigureBefore(LimitAopConfiguration.class)
+@ConditionalOnProperty(prefix = "limit",value = "enabled",havingValue = "true")
 public class RedisLimitConfiguration {
     @Bean
     @Conditional(RedisLimitCondition.class)
