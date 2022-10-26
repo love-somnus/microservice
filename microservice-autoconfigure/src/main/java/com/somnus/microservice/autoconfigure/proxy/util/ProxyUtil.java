@@ -1,5 +1,8 @@
 package com.somnus.microservice.autoconfigure.proxy.util;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.autoconfigure.proxy.util
@@ -14,21 +17,14 @@ public class ProxyUtil {
      * @return
      */
     public static String toString(Class<?>[] parameterTypes) {
-        if (Objects.isNotEmpty(parameterTypes)) {
+        if (Objects.isEmpty(parameterTypes)) {
             return "";
         }
 
-        StringBuilder builder = new StringBuilder();
-        for (Class<?> clazz : parameterTypes) {
-            builder.append("," + clazz.getCanonicalName());
-        }
-
-        String parameter = builder.toString().trim();
-        if (parameter.length() > 0) {
-            return parameter.substring(1);
-        }
-
-        return "";
+        return Arrays.stream(parameterTypes)
+                .map(Class::getCanonicalName)
+                .collect(Collectors.joining(","))
+                .trim();
     }
 
     /**
@@ -37,20 +33,18 @@ public class ProxyUtil {
      * @return
      */
     public static String toString(String[] values) {
-        if (Objects.isNotEmpty(values)) {
+        if (Objects.isEmpty(values)) {
             return "";
         }
 
-        StringBuilder builder = new StringBuilder();
-        for (String value : values) {
-            builder.append("," + value);
-        }
+        return String.join(",", values).trim();
+    }
 
-        String parameter = builder.toString().trim();
-        if (parameter.length() > 0) {
-            return parameter.substring(1);
-        }
-
-        return "";
+    public static void main(String[] args) {
+        System.out.println("ssss");
+        Class<?>[] parameterTypes = new Class[]{Integer.class, Long.class, Double.class, Byte.class};
+        System.out.println(toString(parameterTypes));
+        String[] values = new String[]{"shanghai", "beijing", "guangzhou", "shenzhen"};
+        System.out.println(toString(values));
     }
 }
