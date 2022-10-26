@@ -177,7 +177,7 @@ public class AuthorizationServerConfiguration {
                 .tokenIntrospectionEndpoint("/introspect")
                 // 配置查看jwk(公钥)的端点路径(当前是默认的，可以更改)
                 .jwkSetEndpoint("/jwks")
-                .issuer("http://localhost:" + port)
+                /*.issuer("http://localhost:" + port)*/
                 .build();
     }
 
@@ -236,11 +236,11 @@ public class AuthorizationServerConfiguration {
         /*CustomeOAuth2AccessTokenGenerator accessTokenGenerator = new CustomeOAuth2AccessTokenGenerator();*/
         /*accessTokenGenerator.setAccessTokenCustomizer(new CustomeOAuth2TokenCustomizer());*/
 
-        JwtGenerator JwtGenerator = new JwtGenerator(jwtEncoder);
+        JwtGenerator jwtGenerator = new JwtGenerator(jwtEncoder);
         /* 注入Token 增加关联用户信息 */
-        JwtGenerator.setJwtCustomizer(new CustomeOAuth2JwtTokenCustomizer());
+        jwtGenerator.setJwtCustomizer(new CustomeOAuth2JwtTokenCustomizer());
 
-        return new DelegatingOAuth2TokenGenerator(JwtGenerator, new OAuth2RefreshTokenGenerator());
+        return new DelegatingOAuth2TokenGenerator(jwtGenerator, new OAuth2RefreshTokenGenerator());
     }
 
 }

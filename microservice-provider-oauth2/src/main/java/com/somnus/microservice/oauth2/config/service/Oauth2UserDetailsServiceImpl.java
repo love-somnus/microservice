@@ -1,6 +1,5 @@
 package com.somnus.microservice.oauth2.config.service;
 
-import cn.hutool.core.util.StrUtil;
 import com.somnus.microservice.commons.security.core.constant.SecurityConstants;
 import com.somnus.microservice.commons.security.core.principal.Oauth2User;
 import com.somnus.microservice.commons.security.service.Oauth2UserDetailsService;
@@ -39,8 +38,7 @@ public class Oauth2UserDetailsServiceImpl implements Oauth2UserDetailsService {
 
         // 构造security用户
         return new Oauth2User(user.getId(), user.getUsername(),
-                SecurityConstants.BCRYPT + user.getPassword(), user.getMobile(), true, true, true,
-                StrUtil.equals(user.getStatus(), SecurityConstants.STATUS_NORMAL), authorities);
+                SecurityConstants.BCRYPT + user.getPassword(), user.getMobile(), authorities);
     }
 
     @Override

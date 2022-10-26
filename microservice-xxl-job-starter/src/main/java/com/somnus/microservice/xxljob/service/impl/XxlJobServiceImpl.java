@@ -30,11 +30,11 @@ import java.util.*;
 @Slf4j
 public class XxlJobServiceImpl implements XxlJobService {
 
-    private HttpHeader loginHeader;
+    private final HttpHeader loginHeader;
 
-    private XxlJobProperties properties;
+    private final XxlJobProperties properties;
 
-    private int timeout;
+    private final int timeout;
 
     public XxlJobServiceImpl(HttpHeader loginHeader, XxlJobProperties properties) {
         this.loginHeader = loginHeader;
@@ -121,7 +121,7 @@ public class XxlJobServiceImpl implements XxlJobService {
     }
 
     @Override
-    public void update(XxlJobInfo jobInfo) {
+    public Wrapper<String> update(XxlJobInfo jobInfo) {
 
         String url = properties.getAdmin().getAddresses() + jobUpdatePath;
 
@@ -140,6 +140,8 @@ public class XxlJobServiceImpl implements XxlJobService {
         Wrapper<String> wrapper = JacksonUtil.parseJson(body, new TypeReference<Wrapper<String>>(){});
 
         Assert.isTrue(status == 200, wrapper.getMsg());
+
+        return wrapper;
     }
 
     @Override
@@ -169,7 +171,7 @@ public class XxlJobServiceImpl implements XxlJobService {
     }
 
     @Override
-    public void stop(int id) {
+    public Wrapper<String> stop(int id) {
 
         String url = properties.getAdmin().getAddresses() + jobStopPath;
 
@@ -190,10 +192,12 @@ public class XxlJobServiceImpl implements XxlJobService {
         log.info("xxl-job动态停止任务响应报文:{}", JacksonUtil.toJson(wrapper));
 
         Assert.isTrue(status == 200, wrapper.getMsg());
+
+        return wrapper;
     }
 
     @Override
-    public void remove(int id) {
+    public Wrapper<String> remove(int id) {
 
         String url = properties.getAdmin().getAddresses() + jobRemovePath;
 
@@ -214,12 +218,14 @@ public class XxlJobServiceImpl implements XxlJobService {
         log.info("xxl-job动态移除任务响应报文:{}", JacksonUtil.toJson(wrapper));
 
         Assert.isTrue(status == 200, wrapper.getMsg());
+
+        return wrapper;
     }
 
     @Override
-    public void cancle(int id) {
-        this.stop(id);
-        this.remove(id);
+    public Wrapper<String> cancel(int id) {
+        /*this.stop(id);*/
+        return this.remove(id);
     }
 
     @Override

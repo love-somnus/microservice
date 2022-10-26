@@ -8,7 +8,7 @@ import com.alibaba.excel.write.builder.ExcelWriterSheetBuilder;
 import com.alibaba.excel.write.handler.WriteHandler;
 import com.alibaba.excel.write.metadata.WriteSheet;
 
-import com.somnus.microservice.easyexcel.aop.EasyexcelInterceptor;
+import com.somnus.microservice.easyexcel.aop.EasyExcelInterceptor;
 import com.somnus.microservice.easyexcel.context.ThreadLocalContext;
 import com.somnus.microservice.easyexcel.converter.LocalDateStringConverter;
 import com.somnus.microservice.easyexcel.converter.LocalDateTimeStringConverter;
@@ -20,9 +20,7 @@ import com.somnus.microservice.easyexcel.properties.ExcelConfigProperties;
 import com.somnus.microservice.easyexcel.annotation.ResponseExcel;
 import com.somnus.microservice.easyexcel.annotation.Sheet;
 import com.somnus.microservice.easyexcel.webmvc.enhance.WriterBuilderEnhancer;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeansException;
@@ -33,6 +31,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
+import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -47,9 +46,6 @@ import java.util.List;
 
 /**
  * @author kevin.liu
- * @title: AbstractSheetWriteHandler
- * @projectName microservice
- * @description: TODO
  * @date 2021/12/9 11:34
  */
 @RequiredArgsConstructor
@@ -63,7 +59,6 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
 
     private ApplicationContext applicationContext;
 
-    @Getter
     private final I18nHeaderCellWriteHandler i18nHeaderCellWriteHandler;
 
     @Override
@@ -77,7 +72,7 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
     @SneakyThrows
     public void export(Object o, HttpServletResponse response, ResponseExcel responseExcel) {
         check(responseExcel);
-        String name = ThreadLocalContext.get(EasyexcelInterceptor.EXCEL_NAME_KEY);
+        String name = ThreadLocalContext.get(EasyExcelInterceptor.EXCEL_NAME_KEY);
         String fileName = String.format("%s%s", URLEncoder.encode(name, StandardCharsets.UTF_8.name()), responseExcel.suffix().getValue());
         // 根据实际的文件类型找到对应的 contentType
         String contentType = MediaTypeFactory.getMediaType(fileName).map(MediaType::toString).orElse("application/vnd.ms-excel");
@@ -85,7 +80,7 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileName);
         write(o, response, responseExcel);
-        ThreadLocalContext.remove(EasyexcelInterceptor.EXCEL_NAME_KEY);
+        ThreadLocalContext.remove(EasyExcelInterceptor.EXCEL_NAME_KEY);
     }
 
     /**
@@ -106,11 +101,11 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
         }
 
         if (responseExcel.include().length != 0) {
-            writerBuilder.includeColumnFiledNames(Arrays.asList(responseExcel.include()));
+            writerBuilder.includeColumnFieldNames(Arrays.asList(responseExcel.include()));
         }
 
         if (responseExcel.exclude().length != 0) {
-            writerBuilder.excludeColumnFiledNames(Arrays.asList(responseExcel.exclude()));
+            writerBuilder.includeColumnFieldNames(Arrays.asList(responseExcel.exclude()));
         }
 
         if (responseExcel.writeHandler().length != 0) {
@@ -128,7 +123,7 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
         registerCustomConverter(writerBuilder);
 
         if (responseExcel.converter().length != 0) {
-            for (Class<? extends Converter> clazz : responseExcel.converter()) {
+            for (Class<? extends Converter<?>> clazz : responseExcel.converter()) {
                 writerBuilder.registerConverter(BeanUtils.instantiateClass(clazz));
             }
         }
@@ -187,10 +182,10 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
         else if (dataClass != null) {
             writerSheetBuilder.head(dataClass);
             if (sheet.excludes().length > 0) {
-                writerSheetBuilder.excludeColumnFiledNames(Arrays.asList(sheet.excludes()));
+                writerSheetBuilder.excludeColumnFieldNames(Arrays.asList(sheet.excludes()));
             }
             if (sheet.includes().length > 0) {
-                writerSheetBuilder.includeColumnFiledNames(Arrays.asList(sheet.includes()));
+                writerSheetBuilder.includeColumnFieldNames(Arrays.asList(sheet.includes()));
             }
         }
 
@@ -207,7 +202,7 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
         Assert.notNull(headGenerator, "The header generated bean does not exist.");
         HeadMeta head = headGenerator.head(dataClass);
         writerSheetBuilder.head(head.getHead());
-        writerSheetBuilder.excludeColumnFiledNames(head.getIgnoreHeadFields());
+        writerSheetBuilder.excludeColumnFieldNames(head.getIgnoreHeadFields());
     }
 
     /**
@@ -220,7 +215,7 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 

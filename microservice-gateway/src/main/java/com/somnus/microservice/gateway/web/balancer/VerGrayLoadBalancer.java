@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -41,7 +42,6 @@ public class VerGrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
      * loadbalancer 提供的访问的服务列表
      */
     private final ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider;
-
 
     public VerGrayLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider, String serviceId) {
         this(serviceInstanceListSupplierProvider, serviceId, new Random().nextInt(1000));
@@ -74,7 +74,7 @@ public class VerGrayLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
         List<ServiceInstance> serviceInstances = instances.stream()
                 .filter(instance -> Objects.isNotEmpty(requestVersion))
-                .filter(instance -> requestVersion.equals(instance.getMetadata().get("version")))
+                .filter(instance -> requestVersion.equals(Optional.ofNullable(instance.getMetadata().get("version")).orElse("release")))
                 .collect(Collectors.toList());
 
         if (serviceInstances.size() > 0) {

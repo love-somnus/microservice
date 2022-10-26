@@ -1,5 +1,7 @@
 package com.somnus.microservice.autoconfigure.registrar;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.BeansException;
@@ -8,18 +10,22 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.lang.NonNull;
+
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.autoconfigure.registrar
- * @title: RegistrarFactoryBean
- * @description: TODO
  * @date 2019/6/14 9:58
  */
 public class RegistrarFactoryBean implements ApplicationContextAware, FactoryBean<Object>, InitializingBean, BeanClassLoaderAware {
+
     private ApplicationContext  applicationContext;
 
+    @Getter
+    @Setter
     private Class<?>            interfaze;
 
+    @Getter
+    @Setter
     private MethodInterceptor   interceptor;
 
     private Object              proxy;
@@ -27,7 +33,7 @@ public class RegistrarFactoryBean implements ApplicationContextAware, FactoryBea
     private ClassLoader         classLoader;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
@@ -61,23 +67,8 @@ public class RegistrarFactoryBean implements ApplicationContextAware, FactoryBea
     }
 
     @Override
-    public void setBeanClassLoader(ClassLoader classLoader) {
+    public void setBeanClassLoader(@NonNull ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
-    public Class<?> getInterfaze() {
-        return interfaze;
-    }
-
-    public void setInterfaze(Class<?> interfaze) {
-        this.interfaze = interfaze;
-    }
-
-    public MethodInterceptor getInterceptor() {
-        return interceptor;
-    }
-
-    public void setInterceptor(MethodInterceptor interceptor) {
-        this.interceptor = interceptor;
-    }
 }
