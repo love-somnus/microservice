@@ -17,7 +17,7 @@ public class ProxyUtil {
      * @return
      */
     public static String toString(Class<?>[] parameterTypes) {
-        if (Objects.isNotEmpty(parameterTypes)) {
+        if (Objects.isEmpty(parameterTypes)) {
             return "";
         }
 
@@ -33,10 +33,18 @@ public class ProxyUtil {
      * @return
      */
     public static String toString(String[] values) {
-        if (Objects.isNotEmpty(values)) {
+        if (Objects.isEmpty(values)) {
             return "";
         }
 
         return String.join(",", values).trim();
+    }
+
+    public static void main(String[] args) {
+        System.out.println("ssss");
+        Class<?>[] parameterTypes = new Class[]{Integer.class, Long.class, Double.class, Byte.class};
+        System.out.println(toString(parameterTypes));
+        String[] values = new String[]{"shanghai", "beijing", "guangzhou", "shenzhen"};
+        System.out.println(toString(values));
     }
 }

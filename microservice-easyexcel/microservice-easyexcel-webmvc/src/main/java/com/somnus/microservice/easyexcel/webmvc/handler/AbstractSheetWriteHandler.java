@@ -123,7 +123,7 @@ public abstract class AbstractSheetWriteHandler implements SheetWriteHandler, Ap
         registerCustomConverter(writerBuilder);
 
         if (responseExcel.converter().length != 0) {
-            for (Class<? extends Converter<?>> clazz : responseExcel.converter()) {
+            for (Class<? extends Converter> clazz : responseExcel.converter()) {
                 writerBuilder.registerConverter(BeanUtils.instantiateClass(clazz));
             }
         }
