@@ -1,5 +1,8 @@
 package com.somnus.microservice.autoconfigure.proxy.util;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 /**
  * @author Kevin
  * @packageName com.somnus.microservice.autoconfigure.proxy.util
@@ -18,17 +21,10 @@ public class ProxyUtil {
             return "";
         }
 
-        StringBuilder builder = new StringBuilder();
-        for (Class<?> clazz : parameterTypes) {
-            builder.append("," + clazz.getCanonicalName());
-        }
-
-        String parameter = builder.toString().trim();
-        if (parameter.length() > 0) {
-            return parameter.substring(1);
-        }
-
-        return "";
+        return Arrays.stream(parameterTypes)
+                .map(Class::getCanonicalName)
+                .collect(Collectors.joining(","))
+                .trim();
     }
 
     /**
@@ -41,16 +37,6 @@ public class ProxyUtil {
             return "";
         }
 
-        StringBuilder builder = new StringBuilder();
-        for (String value : values) {
-            builder.append("," + value);
-        }
-
-        String parameter = builder.toString().trim();
-        if (parameter.length() > 0) {
-            return parameter.substring(1);
-        }
-
-        return "";
+        return String.join(",", values).trim();
     }
 }
