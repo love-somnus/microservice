@@ -19,24 +19,18 @@ import org.springframework.security.oauth2.server.authorization.authentication.O
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.context.ProviderContextHolder;
 import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
-import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import static com.somnus.microservice.commons.security.util.OAuth2AuthenticationProviderUtils.getAuthenticatedClientElseThrowInvalidClient;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Supplier;
 /**
  * <p>处理自定义授权</p>
  * @author kevin.liu
- * @title: OAuth2BaseAuthenticationProvider
- * @projectName microservice
- * @description: TODO
  * @date 2022/6/14 14:43
  */
 @Slf4j
@@ -114,7 +108,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 
         OAuth2BaseAuthenticationToken baseAuthentication = (OAuth2BaseAuthenticationToken) authentication;
 
-        /**
+        /*
          * @see com.somnus.microservice.commons.security.converter.OAuth2BaseAuthenticationConverter#convert(HttpServletRequest)
          */
         OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(baseAuthentication);
@@ -137,7 +131,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
             /* 自行构造UsernamePasswordAuthenticationToken，用来去数据库进行校验 */
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = assemble(reqParameters);
 
-            /**
+            /*
              * @see org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider#authenticate(Authentication)
              * @return UsernamePasswordAuthenticationToken 更加丰富信息的【principal】
              */
@@ -165,7 +159,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
                     generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
             // -------------------- Access token end --------------------
 
-            /**
+            /*
              * 封装OAuth2Authorization，给OAuth2AuthorizationService保存信息
              * @see org.springframework.security.oauth2.server.authorization.authentication.OAuth2RefreshTokenAuthenticationProvider#authenticate(Authentication)
              * 两个attribute属性放在这是因为OAuth2RefreshTokenAuthenticationProvider调用authorizationService.findByToken读取用
@@ -174,10 +168,11 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
                     .withRegisteredClient(registeredClient).principalName(principal.getName())
                     .id(((Oauth2User)principal.getPrincipal()).getUsername())
                     .authorizationGrantType(baseAuthentication.getAuthorizationGrantType())
-                    .attribute(Principal.class.getName(), principal)
-                    .attribute(OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME, authorizedScopes);
+                    /*.attribute(Principal.class.getName(), principal)
+                    .attribute(OAuth2Authorization.AUTHORIZED_SCOPE_ATTRIBUTE_NAME, authorizedScopes)*/
+                    ;
 
-            /**
+            /*
              * 如果Generator有扩展信息输出增强
              * @see com.somnus.microservice.commons.security.core.customizer.CustomeOAuth2JwtTokenCustomizer#customize(JwtEncodingContext)
              * @see org.springframework.security.oauth2.server.authorization.OAuth2Authorization.Builder#token(OAuth2Token)

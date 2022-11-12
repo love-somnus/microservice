@@ -5,17 +5,13 @@ import java.util.stream.Collectors;
 
 /**
  * @author Kevin
- * @packageName com.somnus.microservice.autoconfigure.proxy.util
- * @title: ProxyUtil
- * @description: TODO
  * @date 2019/6/14 9:57
  */
 public class ProxyUtil {
     /**
      * 转换Class数组成字符串格式
-     *
-     * @param parameterTypes
-     * @return
+     * @param parameterTypes Class<?>[]
+     * @return String
      */
     public static String toString(Class<?>[] parameterTypes) {
         return Objects.isEmpty(parameterTypes) ? "" :
@@ -27,9 +23,8 @@ public class ProxyUtil {
 
     /**
      * 转换String数组成字符串格式
-     *
-     * @param values
-     * @return
+     * @param values String[]
+     * @return String
      */
     public static String toString(String[] values) {
         return Objects.isEmpty(values) ? "" : String.join(",", values).trim();
