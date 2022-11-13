@@ -111,8 +111,7 @@ public class CustomeOAuth2AccessTokenGenerator implements OAuth2TokenGenerator<O
 
         private final Map<String, Object> claims;
 
-        private OAuth2AccessTokenClaims(TokenType tokenType, String tokenValue, Instant issuedAt, Instant expiresAt,
-                                        Set<String> scopes, Map<String, Object> claims) {
+        private OAuth2AccessTokenClaims(TokenType tokenType, String tokenValue, Instant issuedAt, Instant expiresAt, Set<String> scopes, Map<String, Object> claims) {
             super(tokenType, tokenValue, issuedAt, expiresAt, scopes);
             this.claims = claims;
         }

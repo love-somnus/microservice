@@ -81,16 +81,24 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 
         if (authentication.getCredentials() == null) {
             this.logger.debug("Failed to authenticate since no credentials provided");
-            throw new BadCredentialsException(this.messages
-                    .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+            throw new BadCredentialsException(
+                    this.messages.getMessage(
+                            "AbstractUserDetailsAuthenticationProvider.badCredentials",
+                            "Bad credentials"
+                    )
+            );
         }
 
         if (StrUtil.equals(SecurityConstants.SMS, grantType)) {
             String code = authentication.getCredentials().toString();
             if(!StrUtil.equals(code, "123456")){
                 this.logger.debug("Failed to authenticate since code does not match stored value");
-                throw new BadCaptchaException(this.messages
-                        .getMessage("AbstractUserDetailsAuthenticationProvider.badCaptcha", "Bad captcha"));
+                throw new BadCaptchaException(
+                        this.messages.getMessage(
+                                "AbstractUserDetailsAuthenticationProvider.badCaptcha",
+                                "Bad captcha"
+                        )
+                );
             }
         }
 
@@ -99,8 +107,12 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
             String encodedPassword = extractEncodedPassword(userDetails.getPassword());
             if (!this.passwordEncoder.matches(presentedPassword, encodedPassword)) {
                 this.logger.debug("Failed to authenticate since password does not match stored value");
-                throw new BadCredentialsException(this.messages
-                        .getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+                throw new BadCredentialsException(
+                        this.messages.getMessage(
+                                "AbstractUserDetailsAuthenticationProvider.badCredentials",
+                                "Bad credentials"
+                        )
+                );
             }
         }
 
