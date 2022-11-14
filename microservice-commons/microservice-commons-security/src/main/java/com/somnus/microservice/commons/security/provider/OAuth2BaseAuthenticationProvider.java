@@ -36,17 +36,16 @@ import java.util.function.Supplier;
 @Slf4j
 public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthenticationToken> implements AuthenticationProvider {
 
-    private static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1";
+    public static final String ERROR_URI = "https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1";
+
+    private Supplier<String> refreshTokenGenerator;
+    private final MessageSourceAccessor messages;
+
+    private final AuthenticationManager authenticationManager;
 
     private final OAuth2AuthorizationService authorizationService;
 
     private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
-
-    private final AuthenticationManager authenticationManager;
-
-    private final MessageSourceAccessor messages;
-
-    private Supplier<String> refreshTokenGenerator;
 
     /**
      * Constructs an {@code OAuth2AuthorizationCodeAuthenticationProvider} using the
@@ -76,22 +75,22 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 
     /**
      * 封装简易principal
-     * @param reqParameters
-     * @return
+     * @param reqParameters 请求参数
+     * @return Principal
      */
     public abstract UsernamePasswordAuthenticationToken assemble(Map<String, Object> reqParameters);
 
     /**
      * 当前provider是否支持此令牌类型
-     * @param authentication
-     * @return
+     * @param authentication 认证
+     * @return boolean
      */
     @Override
     public abstract boolean supports(Class<?> authentication);
 
     /**
      * 当前的请求客户端是否支持此模式
-     * @param registeredClient
+     * @param registeredClient 客户端
      */
     public abstract void checkClient(RegisteredClient registeredClient);
 
@@ -236,44 +235,72 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
     private OAuth2AuthenticationException oAuth2AuthenticationException(Authentication authentication,
                                                                         AuthenticationException authenticationException) {
         if (authenticationException instanceof UsernameNotFoundException) {
-            return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USERNAME_NOT_FOUND,
-                    this.messages.getMessage("JdbcDaoImpl.notFound", new Object[] { authentication.getName() }, "Username {0} not found"), ""));
+            return new OAuth2AuthenticationException(
+                    new OAuth2Error(
+                            OAuth2ErrorCodesExpand.USERNAME_NOT_FOUND,
+                            this.messages.getMessage("JdbcDaoImpl.notFound", new Object[] { authentication.getName() }, "Username {0} not found"),
+                            ERROR_URI
+                    )
+
+            );
         }
         if (authenticationException instanceof BadCaptchaException) {
             return new OAuth2AuthenticationException(
-                    new OAuth2Error(OAuth2ErrorCodesExpand.BAD_CAPTCHA, this.messages.getMessage(
-                            "AbstractUserDetailsAuthenticationProvider.badCaptcha", "Bad captcha"), ""));
+                    new OAuth2Error(
+                            OAuth2ErrorCodesExpand.BAD_CAPTCHA, this.messages.getMessage(
+                            "AbstractUserDetailsAuthenticationProvider.badCaptcha", "Bad captcha"),
+                            ERROR_URI
+                    )
+            );
         }
         if (authenticationException instanceof BadCredentialsException) {
             return new OAuth2AuthenticationException(
-                    new OAuth2Error(OAuth2ErrorCodesExpand.BAD_CREDENTIALS, this.messages.getMessage(
-                            "AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"), ""));
+                    new OAuth2Error(
+                            OAuth2ErrorCodesExpand.BAD_CREDENTIALS,
+                            this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"),
+                            ERROR_URI
+                    )
+            );
         }
         if (authenticationException instanceof LockedException) {
-            return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USER_LOCKED, this.messages
-                    .getMessage("AbstractUserDetailsAuthenticationProvider.locked", "User account is locked"), ""));
+            return new OAuth2AuthenticationException(
+                    new OAuth2Error(
+                            OAuth2ErrorCodesExpand.USER_LOCKED,
+                            this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.locked", "User account is locked"),
+                            ERROR_URI
+                    )
+            );
         }
         if (authenticationException instanceof DisabledException) {
-            return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USER_DISABLE,
-                    this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled", "User is disabled"),
-                    ""));
+            return new OAuth2AuthenticationException(
+                    new OAuth2Error(
+                            OAuth2ErrorCodesExpand.USER_DISABLE,
+                            this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled", "User is disabled"),
+                            ERROR_URI
+                    )
+            );
         }
         if (authenticationException instanceof AccountExpiredException) {
-            return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.USER_EXPIRED, this.messages
-                    .getMessage("AbstractUserDetailsAuthenticationProvider.expired", "User account has expired"), ""));
+            return new OAuth2AuthenticationException(
+                    new OAuth2Error(
+                            OAuth2ErrorCodesExpand.USER_EXPIRED,
+                            this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.expired", "User account has expired"),
+                            ERROR_URI
+                    )
+            );
         }
         if (authenticationException instanceof CredentialsExpiredException) {
-            return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.CREDENTIALS_EXPIRED,
-                    this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired",
-                            "User credentials have expired"),
-                    ""));
+            return new OAuth2AuthenticationException(
+                    new OAuth2Error(
+                            OAuth2ErrorCodesExpand.CREDENTIALS_EXPIRED,
+                            this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired", "User credentials have expired"),
+                            ERROR_URI
+                    )
+            );
         }
-        if (authenticationException instanceof InternalAuthenticationServiceException) {
-            return new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodesExpand.CREDENTIALS_EXPIRED,
-                    authenticationException.getMessage(),
-                    ""));
-        }
-        return new OAuth2AuthenticationException(OAuth2ErrorCodesExpand.UN_KNOW_LOGIN_ERROR);
+        return new OAuth2AuthenticationException(
+                new OAuth2Error(OAuth2ErrorCodesExpand.UN_KNOW_LOGIN_ERROR, authenticationException.getMessage(), ERROR_URI)
+        );
     }
 
 }
