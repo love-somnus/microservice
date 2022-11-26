@@ -6,9 +6,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableMap;
 import com.somnus.microservice.commons.base.utils.JacksonUtil;
 import com.somnus.microservice.xxljob.constants.Wrapper;
+import com.somnus.microservice.xxljob.response.HttpHeader;
 import com.somnus.microservice.xxljob.service.XxlJobService;
 import com.somnus.microservice.xxljob.service.impl.XxlJobServiceImpl;
-import com.somnus.microservice.xxljob.response.HttpHeader;
 import com.xxl.job.core.executor.impl.XxlJobSpringExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.net.HttpCookie;
 import java.util.Map;
@@ -35,11 +34,9 @@ import java.util.Map;
 @EnableConfigurationProperties({XxlJobProperties.class})
 public class XxlJobAutoConfiguration {
 
-    private final XxlJobProperties properties;
-
     @Bean
     @ConditionalOnProperty(prefix = "xxl.job",value = "enable",havingValue = "true")
-    public XxlJobSpringExecutor xxlJobExecutor() {
+    public XxlJobSpringExecutor xxlJobExecutor(XxlJobProperties properties) {
         log.info(">>>>>>>>>>> xxl-job config init.");
 
         XxlJobSpringExecutor xxlJobSpringExecutor = new XxlJobSpringExecutor();
