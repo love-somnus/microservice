@@ -117,8 +117,9 @@ public abstract class AbstractInterceptor implements MethodInterceptor {
 
     /**
      * 解析SpEL表达式
-     * 非模板表达式: #username
-     * 模板表达式:"#{#username}"
+     * 非模板表达式: "#username"
+     * 非模板表达式: "#username + \"-\" + #password"
+     * 模板表达式:"#{#username}-#{#password}"
      *
      * @param invocation  方法
      * @param condition   表达式
