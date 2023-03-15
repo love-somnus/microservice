@@ -10,9 +10,9 @@
 
     <properties>
         <spring-boot.version>2.7.2</spring-boot.version>
-        <spring-cloud.version>2021.0.3</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.0.1.0</spring-cloud-alibaba.version>
-        <oauth2-authorization-server.version>0.3.1</oauth2-authorization-server.version>
+        <spring-cloud.version>2021.0.4</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.4.0</spring-cloud-alibaba.version>
+        <oauth2-authorization-server.version>1.0.1</oauth2-authorization-server.version>
 
         <reactivefeign.version>3.2.3</reactivefeign.version>
         <mybatis-plus.version>3.4.3</mybatis-plus.version>
