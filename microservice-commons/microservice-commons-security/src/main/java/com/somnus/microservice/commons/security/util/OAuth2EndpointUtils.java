@@ -48,8 +48,7 @@ public class OAuth2EndpointUtils {
      * 格式化输出token 信息
      * @param authentication 用户认证信息
      * @param claims 扩展信息
-     * @return
-     * @throws IOException
+     * @return OAuth2AccessTokenResponse
      */
     public OAuth2AccessTokenResponse sendAccessTokenResponse(OAuth2Authorization authentication, Map<String, Object> claims) {
 

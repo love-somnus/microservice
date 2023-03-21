@@ -4,10 +4,10 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.core.ClaimAccessor;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.OAuth2TokenFormat;
-import org.springframework.security.oauth2.core.OAuth2TokenType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -38,8 +38,8 @@ public class CustomeOAuth2AccessTokenGenerator implements OAuth2TokenGenerator<O
         }
 
         String issuer = null;
-        if (context.getProviderContext() != null) {
-            issuer = context.getProviderContext().getIssuer();
+        if (context.getAuthorizationServerContext() != null) {
+            issuer = context.getAuthorizationServerContext().getIssuer();
         }
         RegisteredClient registeredClient = context.getRegisteredClient();
 
@@ -66,12 +66,12 @@ public class CustomeOAuth2AccessTokenGenerator implements OAuth2TokenGenerator<O
         if (this.accessTokenCustomizer != null) {
             // @formatter:off
             OAuth2TokenClaimsContext.Builder accessTokenContextBuilder = OAuth2TokenClaimsContext.with(claimsBuilder)
-                    .registeredClient(context.getRegisteredClient())
                     .principal(context.getPrincipal())
-                    .providerContext(context.getProviderContext())
-                    .authorizedScopes(context.getAuthorizedScopes())
                     .tokenType(context.getTokenType())
-                    .authorizationGrantType(context.getAuthorizationGrantType());
+                    .registeredClient(context.getRegisteredClient())
+                    .authorizedScopes(context.getAuthorizedScopes())
+                    .authorizationGrantType(context.getAuthorizationGrantType())
+                    .authorizationServerContext(context.getAuthorizationServerContext());
             if (context.getAuthorization() != null) {
                 accessTokenContextBuilder.authorization(context.getAuthorization());
             }

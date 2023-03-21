@@ -24,15 +24,15 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.*;
 import org.springframework.security.oauth2.server.authorization.web.authentication.*;
 import org.springframework.security.web.DefaultSecurityFilterChain;
@@ -58,9 +58,9 @@ public class AuthorizationServerConfiguration {
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-        OAuth2AuthorizationServerConfigurer<HttpSecurity> authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer<>();
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
-        OAuth2AuthorizationServerConfigurer<HttpSecurity> configurer = authorizationServerConfigurer.tokenEndpoint(
+        OAuth2AuthorizationServerConfigurer configurer = authorizationServerConfigurer.tokenEndpoint(
             // 个性化认证授权端点
             (tokenEndpoint) -> {
                 tokenEndpoint.accessTokenRequestConverter(accessTokenRequestConverter()) // 注入自定义的授权认证Converter
@@ -167,8 +167,8 @@ public class AuthorizationServerConfiguration {
      * @return
      */
     @Bean
-    public ProviderSettings providerSettings(@Value("${server.port}") Integer port) {
-        return ProviderSettings.builder()
+    public AuthorizationServerSettings providerSettings(@Value("${server.port}") Integer port) {
+        return AuthorizationServerSettings.builder()
                 // 配置获取token的端点路径(当前是默认的，可以更改)
                 .tokenEndpoint("/token")
                 // 配置获取code的端点路径(当前是默认的，可以更改)

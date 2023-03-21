@@ -27,7 +27,7 @@ public interface Oauth2UserDetailsService extends UserDetailsService, Ordered {
     /**
      * 通过用户实体查询
      * @param Oauth2User user
-     * @return
+     * @return UserDetails
      */
     default UserDetails loadUserByUser(Oauth2User Oauth2User) {
         return this.loadUserByUsername(Oauth2User.getUsername());
