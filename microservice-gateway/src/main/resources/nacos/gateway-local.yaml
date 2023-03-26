@@ -33,6 +33,15 @@ secure:
       - /swagger-ui.html
       - /webjars/**
       - /v3/api-docs/**
+      
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        opaquetoken:
+          client-id: apple
+          client-secret: apple_secret
+          introspection-uri: http://localhost:8000/oauth2/introspect      
 
 spring:
   security:
