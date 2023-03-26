@@ -65,7 +65,7 @@ public class WebFluxSecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity httpSecurity) {
         // opaque处理
         httpSecurity.oauth2ResourceServer().opaqueToken();
-        // 自定义处理JWT请求头过期或签名错误的结果                      // 自定义处理JWT请求头鉴权失败的结果
+        // 自定义处理token请求头过期或签名错误的结果                      // 自定义处理token请求头鉴权失败的结果
         httpSecurity.oauth2ResourceServer().authenticationEntryPoint(defaultAuthenticationEntryPoint).accessDeniedHandler(defaultServerAccessDeniedHandler);
         /* 请求拦截处理 */
         httpSecurity.authorizeExchange(exchange -> {
